@@ -264,7 +264,7 @@ document.addEventListener('DOMContentLoaded', function() {
             logoutBtn.className = 'fas fa-sign-out-alt';
             logoutBtn.style.marginLeft = '10px';
             logoutBtn.style.cursor = 'pointer';
-            logoutBtn.style.color = '#513B56';
+            logoutBtn.style.color = '#ffffff';
             logoutBtn.title = 'Logout';
             
             logoutBtn.addEventListener('click', function() {

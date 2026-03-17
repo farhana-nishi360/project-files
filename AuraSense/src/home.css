@@ -1,15 +1,14 @@
-body {
+/*body {
     font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
     background: linear-gradient(135deg, #fee8c3 0%, #f6d8c0 100%);
     min-height: 100vh;
     display: flex;
     justify-content: center;
     align-items: center;
-}
-
+}*/
 .app-container {
     width: 100%;
-    background:#f6d8c0;
+    background:linear-gradient(135deg,#fcf1e9 30%,#f0e8f5 40%,#fde1cc 10%);
     border-radius: 30px 30px 0 0;
     box-shadow: 0 10px 30px rgba(81, 59, 86, 0.1);
     overflow-y: auto;
@@ -23,23 +22,23 @@ body {
     justify-content: space-between;
     align-items: center;
     padding: 25px 20px;
-    background: #f6d8c0;
+    background: #513B56;
     border-radius: 30px 30px 0 0;
 }
 
 .greeting h1 {
-    color: #513B56;
+    color: #ffffff;
     font-size: 24px;
     margin-bottom: 5px;
 }
 
 .user-name {
-    color: #3a293d;
+    color: #ffffff;
     font-weight: 600;
 }
 
 .welcome-message {
-    color: #8e7d91;
+    color: #dad1dc;
     font-size: 14px;
 }
 
@@ -50,7 +49,7 @@ body {
 
 .header-icons i {
     font-size: 22px;
-    color: #513B56;
+    color: #ffffff;
     cursor: pointer;
 }
 
@@ -61,20 +60,23 @@ body {
 
 .section-title {
     color: #513B56;
-    font-size: 18px;
+    font-size: 30px;
     margin: 20px 0 15px;
     font-weight: 600;
 }
 
 /* Consultation Cards */
 .consultation-cards {
+    
     display: flex;
     flex-direction: row;
-    gap: 100px;
+    gap: 50px;
     
 }
 
 .consult-card {
+    width:50%;
+    height: 50%;
     background: white;
     border-radius: 20px;
     padding: 20px;
@@ -395,7 +397,7 @@ body {
 .bottom-nav {
     position: sticky;
     bottom: 0;
-    background: white;
+    background: #513B56;
     display: flex;
     justify-content: space-around;
     padding: 15px 20px;
@@ -405,17 +407,17 @@ body {
 
 .bottom-nav i {
     font-size: 22px;
-    color: #8e7d91;
+    color: #d4bfd8;
     cursor: pointer;
     transition: color 0.3s;
 }
 
 .bottom-nav i.active {
-    color: #513B56;
+    color: #f3eff4;
 }
 
 .bottom-nav i:hover {
-    color: #513B56;
+    color: #ffffff;
 }
 
 /* Scrollbar Styling */
