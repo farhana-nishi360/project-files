@@ -1,0 +1,6 @@
+/* Add this to your existing style.css */
+.form-title {
+    white-space: nowrap;
+    font-size: clamp(1.4rem, 6vw, 2.2rem);
+    margin-bottom: 40px;
+}

@@ -1,0 +1,129 @@
+:root {
+    /* Colors from your updated lavender/cream palette */
+    --c1: #FEE8C8;
+    --c2: #F6D8C0;
+    --c3: #E3CDC8;
+    --c4: #D2BDCC;
+    --c5: #BFA8C7;
+    --dark-purple: #513B56; /* Darkest color for button and text */
+}
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body, html {
+    height: 100%;
+    font-family: 'Segoe UI', system-ui, sans-serif;
+    overflow: hidden;
+}
+
+/* Background Stripes setup */
+.striped-bg {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    display: flex;
+    z-index: -1;
+}
+
+.stripe { flex: 1; height: 100%; }
+.s1 { background-color: var(--c1); }
+.s2 { background-color: var(--c2); }
+.s3 { background-color: var(--c3); }
+.s4 { background-color: var(--c4); }
+.s5 { background-color: var(--c5); }
+
+/* Responsive Layout */
+.app-container {
+    width: 100%;
+    max-width: 450px; /* Limits width on desktop */
+    margin: 0 auto;
+    height: 100vh;
+    display: flex;
+    flex-direction: column;
+    position: relative;
+    text-align: center;
+}
+
+.hero {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    z-index: 10;
+}
+
+.brand-logo {
+    width: clamp(100px, 20vw, 130px);
+    margin-bottom: 15px;
+}
+
+.brand-name {
+    font-size: clamp(2.2rem, 8vw, 2.8rem);
+    color: var(--dark-purple);
+    font-weight: 800;
+}
+
+.tagline {
+    color: var(--dark-purple);
+    opacity: 0.8;
+    font-size: 1rem;
+    margin-top: 5px;
+}
+
+/* Wave & Sparkle */
+.wave-container {
+    position: absolute;
+    bottom: 0;
+    width: 100%;
+    height: 250px;
+    z-index: 1;
+}
+
+.wave-svg {
+    width: 100%;
+    height: 100%;
+    fill: rgba(255, 255, 255, 0.3); /* Translucent wave like the image */
+}
+
+.sparkle {
+    position: absolute;
+    bottom: 40px;
+    right: 15%;
+    color: white;
+    font-size: 1.5rem;
+    opacity: 0.8;
+}
+
+/* Action Button */
+.footer-action {
+    padding-bottom: 60px;
+    z-index: 20;
+    display: flex;
+    justify-content: center;
+}
+
+.btn-primary {
+    background-color: var(--dark-purple);
+    color: white;
+    border: none;
+    padding: 18px 0;
+    width: 80%;
+    max-width: 300px;
+    border-radius: 50px;
+    font-size: 1.1rem;
+    font-weight: 700;
+    cursor: pointer;
+    box-shadow: 0 10px 20px rgba(0,0,0,0.15);
+    transition: transform 0.2s, background-color 0.2s;
+}
+
+.btn-primary:hover {
+    filter: brightness(1.1);
+}

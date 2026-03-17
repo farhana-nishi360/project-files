@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AuraSense | Create Account</title>
+    <link rel="stylesheet" href="createAcc.css">
+</head>
+<body>
+    <div class="app-container">
+        <main class="signup-card">
+            <h1 class="form-title">Create Account</h1>
+            <form id="signupForm">
+                <input type="text" id="name" placeholder="Full Name" required>
+                <input type="email" id="email" placeholder="Email Address" required>
+                <input type="tel" id="phone" placeholder="Phone Number" required>
+                <input type="password" id="password" placeholder="Password" required>
+                <input type="password" id="confirmPassword" placeholder="Confirm Password" required>
+
+                <div class="login-section">
+                    <p>Already have an account?</p>
+                    <a href="login.html" class="btn-secondary">Login</a>
+                </div>
+
+                <button type="submit" id="submitBtn" class="btn-primary">Create Account</button>
+            </form>
+        </main>
+    </div>
+    <script src="createAcc.js"></script>
+</body>
+</html>

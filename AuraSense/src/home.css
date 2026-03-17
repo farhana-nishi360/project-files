@@ -1,0 +1,445 @@
+body {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    background: linear-gradient(135deg, #fee8c3 0%, #f6d8c0 100%);
+    min-height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.app-container {
+    width: 100%;
+    background:#f6d8c0;
+    border-radius: 30px 30px 0 0;
+    box-shadow: 0 10px 30px rgba(81, 59, 86, 0.1);
+    overflow-y: auto;
+    height: 100%;
+    position: relative;
+}
+
+/* Header Styles */
+.header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 25px 20px;
+    background: #f6d8c0;
+    border-radius: 30px 30px 0 0;
+}
+
+.greeting h1 {
+    color: #513B56;
+    font-size: 24px;
+    margin-bottom: 5px;
+}
+
+.user-name {
+    color: #3a293d;
+    font-weight: 600;
+}
+
+.welcome-message {
+    color: #8e7d91;
+    font-size: 14px;
+}
+
+.header-icons {
+    display: flex;
+    gap: 15px;
+}
+
+.header-icons i {
+    font-size: 22px;
+    color: #513B56;
+    cursor: pointer;
+}
+
+/* Main Content */
+.main-content {
+    padding: 0 20px 20px;
+}
+
+.section-title {
+    color: #513B56;
+    font-size: 18px;
+    margin: 20px 0 15px;
+    font-weight: 600;
+}
+
+/* Consultation Cards */
+.consultation-cards {
+    display: flex;
+    flex-direction: row;
+    gap: 100px;
+    
+}
+
+.consult-card {
+    background: white;
+    border-radius: 20px;
+    padding: 20px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    box-shadow: 0 5px 15px rgba(81, 59, 86, 0.05);
+    transition: transform 0.3s;
+}
+
+.consult-card:hover {
+    transform: translateY(-3px);
+}
+
+.feeling-low {
+    background: linear-gradient(135deg, #ffe5d9 0%, #ffd5c2 100%);
+}
+
+.take-appointment {
+    background: linear-gradient(135deg, #e8e0f0 0%, #d8cce8 100%);
+}
+
+.card-content {
+    flex: 1;
+}
+
+.card-title {
+    color: #513B56;
+    font-size: 16px;
+    font-weight: 600;
+    margin-bottom: 8px;
+}
+
+.card-subtitle {
+    color: #8e7d91;
+    font-size: 14px;
+    line-height: 1.4;
+    margin-bottom: 12px;
+}
+
+.card-btn {
+    background: #513B56;
+    color: white;
+    border: none;
+    padding: 8px 15px;
+    border-radius: 20px;
+    font-size: 12px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: background 0.3s;
+}
+
+.card-btn:hover {
+    background: #3d2c41;
+}
+
+.card-icon i {
+    font-size: 40px;
+    color: #513B56;
+    opacity: 0.7;
+}
+
+/* Lumi Section */
+.lumi-header {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 15px;
+}
+
+.lumi-header i {
+    color: #513B56;
+    font-size: 20px;
+}
+
+.meditation-preview {
+    background: white;
+    border-radius: 20px;
+    padding: 15px;
+}
+
+.meditation-title {
+    color: #513B56;
+    font-size: 14px;
+    margin-bottom: 10px;
+    font-weight: 600;
+}
+
+.lumi-card {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    background: #f8f4fa;
+    padding: 12px;
+    border-radius: 15px;
+    cursor: pointer;
+    transition: background 0.3s;
+}
+
+.lumi-card:hover {
+    background: #f0e8f5;
+}
+
+.lumi-avatar {
+    width: 50px;
+    height: 50px;
+    background: #513B56;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.lumi-avatar i {
+    color: white;
+    font-size: 24px;
+}
+
+.lumi-info {
+    flex: 1;
+}
+
+.lumi-name {
+    color: #513B56;
+    font-weight: 600;
+    margin-bottom: 5px;
+}
+
+.lumi-message {
+    color: #8e7d91;
+    font-size: 13px;
+}
+
+/* Music Section */
+.music-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 15px;
+    margin-top: 15px;
+}
+
+.music-card {
+    cursor: pointer;
+    transition: transform 0.3s;
+}
+
+.music-card:hover {
+    transform: translateY(-5px);
+}
+
+.music-thumbnail {
+    position: relative;
+    width: 100%;
+    aspect-ratio: 1;
+    border-radius: 15px;
+    overflow: hidden;
+    margin-bottom: 8px;
+}
+
+.music-thumbnail img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.music-thumbnail i {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    color: white;
+    font-size: 30px;
+    opacity: 0;
+    transition: opacity 0.3s;
+    z-index: 2;
+}
+
+.music-card:hover .music-thumbnail i {
+    opacity: 1;
+}
+
+.music-thumbnail::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(81, 59, 86, 0.3);
+    opacity: 0;
+    transition: opacity 0.3s;
+}
+
+.music-card:hover .music-thumbnail::after {
+    opacity: 1;
+}
+
+.music-name {
+    color: #513B56;
+    font-size: 12px;
+    text-align: center;
+    font-weight: 500;
+}
+/* Add these styles to your existing home.css */
+
+/* YouTube Player Container */
+.youtube-player {
+    position: fixed;
+    bottom: 80px;
+    right: 20px;
+    width: 300px;
+    height: 170px;
+    border-radius: 10px;
+    overflow: hidden;
+    box-shadow: 0 5px 20px rgba(81, 59, 86, 0.3);
+    z-index: 1000;
+    background: #000;
+    border: 2px solid #513B56;
+}
+
+/* Music Player Controls */
+.music-player-controls {
+    display: flex;
+    justify-content: flex-end;
+    margin-bottom: 15px;
+}
+
+.music-control-btn {
+    background: #513B56;
+    color: white;
+    border: none;
+    padding: 8px 15px;
+    border-radius: 20px;
+    font-size: 12px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    transition: background 0.3s;
+}
+
+.music-control-btn:hover {
+    background: #3d2c41;
+}
+
+.music-control-btn i {
+    font-size: 12px;
+}
+
+/* Now Playing Indicator */
+.now-playing {
+    position: fixed;
+    bottom: 80px;
+    left: 20px;
+    background: #513B56;
+    color: white;
+    padding: 10px 20px;
+    border-radius: 30px;
+    font-size: 14px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    box-shadow: 0 5px 15px rgba(81, 59, 86, 0.3);
+    z-index: 1000;
+    animation: slideIn 0.3s ease;
+}
+
+.now-playing i {
+    animation: pulse 1.5s infinite;
+}
+
+@keyframes slideIn {
+    from {
+        transform: translateX(-100%);
+        opacity: 0;
+    }
+    to {
+        transform: translateX(0);
+        opacity: 1;
+    }
+}
+
+@keyframes pulse {
+    0% { transform: scale(1); }
+    50% { transform: scale(1.1); }
+    100% { transform: scale(1); }
+}
+
+/* Music Card Playing State */
+.music-card.playing .music-thumbnail {
+    border: 2px solid #513B56;
+    box-shadow: 0 0 15px rgba(81, 59, 86, 0.5);
+}
+
+.music-card.playing .music-name {
+    color: #513B56;
+    font-weight: bold;
+}
+
+/* Mobile Responsive */
+@media (max-width: 400px) {
+    .youtube-player {
+        width: 250px;
+        height: 140px;
+        bottom: 70px;
+        right: 10px;
+    }
+    
+    .now-playing {
+        bottom: 70px;
+        left: 10px;
+        font-size: 12px;
+        padding: 8px 15px;
+    }
+}
+
+/* Bottom Navigation */
+.bottom-nav {
+    position: sticky;
+    bottom: 0;
+    background: white;
+    display: flex;
+    justify-content: space-around;
+    padding: 15px 20px;
+    border-top: 1px solid #e0dce2;
+    margin-top: 20px;
+}
+
+.bottom-nav i {
+    font-size: 22px;
+    color: #8e7d91;
+    cursor: pointer;
+    transition: color 0.3s;
+}
+
+.bottom-nav i.active {
+    color: #513B56;
+}
+
+.bottom-nav i:hover {
+    color: #513B56;
+}
+
+/* Scrollbar Styling */
+.app-container::-webkit-scrollbar {
+    width: 5px;
+}
+
+.app-container::-webkit-scrollbar-track {
+    background: #f1f1f1;
+}
+
+.app-container::-webkit-scrollbar-thumb {
+    background: #513B56;
+    border-radius: 5px;
+}
+
+/* Responsive Design */
+@media (max-width: 400px) {
+    .app-container {
+        height: 100vh;
+        border-radius: 0;
+    }
+    
+    .music-grid {
+        gap: 10px;
+    }
+}

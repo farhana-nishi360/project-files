@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Set New Password - AuraSense</title>
+    <link rel="stylesheet" href="new-pass.css">
+</head>
+<body>
+    <div class="card">
+        
+        <h2 class="form-title">Set New Password</h2>
+        <p class="form-subtitle">Create a strong password to protect your AuraSense account</p>
+        
+        <div class="input-group">
+            <label>New Password</label>
+            <input type="password" id="new-password" placeholder="Enter new password" class="password-input">
+            <small class="password-hint">Minimum 6 characters</small>
+        </div>
+        
+        <div class="input-group">
+            <label>Confirm Password</label>
+            <input type="password" id="confirm-password" placeholder="Confirm new password" class="password-input">
+        </div>
+        
+        <div id="password-match" class="error-message" style="display: none;">Passwords do not match</div>
+        
+        <button class="btn-primary" onclick="updatePassword()">Update Password</button>
+        
+        <p class="back-link">
+            <a href="Login.html">Back to Login</a>
+        </p>
+        
+    </div>
+
+    <script src="new-pass.js"></script>
+</body>
+</html>

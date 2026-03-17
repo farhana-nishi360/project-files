@@ -1,0 +1,113 @@
+/* Add this to your existing style.css */
+body {
+    background-color: #fee8c3;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    margin: 0;
+}
+/* Import your existing otp.css styles and add these */
+
+.card {
+    background: #f6d8c0;
+    padding: 2.5rem;
+    border-radius: 25px;
+    box-shadow: 0 10px 30px rgba(81, 59, 86, 0.1);
+    width: 100%;
+    max-width: 360px;
+    text-align: center;
+}
+
+.form-title {
+    color: #513B56;
+    font-size: 1.8rem;
+    margin-bottom: 10px;
+}
+
+.form-subtitle {
+    color: #8e7d91;
+    font-size: 0.9rem;
+    margin-bottom: 30px;
+    line-height: 1.5;
+}
+
+.input-group {
+    text-align: left;
+    margin-bottom: 20px;
+}
+
+.input-group label {
+    display: block;
+    font-size: 0.85rem;
+    color: #513B56;
+    margin-bottom: 8px;
+    font-weight: 600;
+}
+
+.password-input {
+    width: 100%;
+    padding: 12px;
+    border: 1.5px solid #e0dce2;
+    border-radius: 10px;
+    box-sizing: border-box;
+    transition: border-color 0.3s;
+    font-size: 1rem;
+}
+
+.password-input:focus {
+    outline: none;
+    border-color: #513B56;
+}
+
+.password-hint {
+    color: #8e7d91;
+    font-size: 0.75rem;
+    display: block;
+    margin-top: 5px;
+}
+
+.error-message {
+    color: #ff6b6b;
+    font-size: 0.9rem;
+    margin-bottom: 20px;
+    text-align: left;
+    padding-left: 5px;
+}
+
+.btn-primary {
+    width: 100%;
+    padding: 14px;
+    background-color: #513B56;
+    color: white;
+    border: none;
+    border-radius: 12px;
+    font-size: 1rem;
+    font-weight: bold;
+    cursor: pointer;
+    transition: background 0.3s;
+    margin-top: 10px;
+}
+
+.btn-primary:hover {
+    background-color: #3d2c41;
+}
+
+.back-link {
+    margin-top: 25px;
+    font-size: 0.9rem;
+}
+
+.back-link a {
+    color: #513B56;
+    text-decoration: underline;
+    font-weight: 600;
+    transition: opacity 0.3s;
+}
+
+.back-link a:hover {
+    text-decoration: underline;
+    font-size: large;
+}
+

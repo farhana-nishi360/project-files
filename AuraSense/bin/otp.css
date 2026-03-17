@@ -1,0 +1,76 @@
+/* otp.css */
+body {
+    background-color: #f4f1f5;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    margin: 0;
+}
+
+.card {
+    background: white;
+    padding: 2.5rem;
+    border-radius: 25px;
+    box-shadow: 0 10px 30px rgba(81, 59, 86, 0.1);
+    width: 100%;
+    max-width: 360px;
+    text-align: center;
+}
+
+.form-title {
+    color: #513B56;
+    margin-bottom: 8px;
+}
+
+.email-highlight {
+    color: #513B56;
+    font-weight: bold;
+    display: block;
+    margin-top: 5px;
+}
+
+.otp-input-container {
+    margin: 40px 0;
+}
+
+/* Styled specifically for a 4-digit entry */
+#otp {
+    width: 80%;
+    letter-spacing: 15px;
+    font-size: 2.5rem;
+    font-weight: bold;
+    text-align: center;
+    border: none;
+    border-bottom: 3px solid #e0dce2;
+    color: #513B56;
+    padding-bottom: 10px;
+    transition: border-color 0.3s;
+}
+
+#otp:focus {
+    outline: none;
+    border-bottom-color: #513B56;
+}
+
+#otp::placeholder {
+    color: #e0dce2;
+    letter-spacing: 15px;
+}
+
+.btn-primary {
+    width: 100%;
+    padding: 14px;
+    background-color: #513B56;
+    color: white;
+    border: none;
+    border-radius: 12px;
+    font-size: 1rem;
+    font-weight: bold;
+    cursor: pointer;
+}
+
+.btn-primary:hover {
+    background-color: #3d2c41;
+}
