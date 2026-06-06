@@ -1,20 +1,15 @@
-// Wait for DOM to fully load
 document.addEventListener('DOMContentLoaded', function() {
     
-    // CHECK LOGIN STATUS FIRST
-    const isLoggedIn = localStorage.getItem('isLoggedIn');
     const userName = localStorage.getItem('userName') || 'Guest';
     const userEmail = localStorage.getItem('userEmail') || '';
     
     console.log('Home page loaded for:', userName);
     
-    // Update user name in greeting
     const userNameElement = document.querySelector('.user-name');
     if (userNameElement) {
         userNameElement.textContent = userName;
     }
     
-    // Update welcome message
     const welcomeMessage = document.querySelector('.welcome-message');
     if (welcomeMessage) {
         const hour = new Date().getHours();
@@ -27,32 +22,16 @@ document.addEventListener('DOMContentLoaded', function() {
         }
     }
 
-    // YouTube Music Player Variables
+    // YouTube iFrame Player Variables
     let currentPlayer = null;
     let currentMusicName = '';
-    const players = {};
 
-    // Initialize YouTube API
-    function loadYouTubeAPI() {
-        if (!window.YT) {
-            const tag = document.createElement('script');
-            tag.src = 'https://www.youtube.com/iframe_api';
-            const firstScriptTag = document.getElementsByTagName('script')[0];
-            firstScriptTag.parentNode.insertBefore(tag, firstScriptTag);
-        }
-    }
-
-    // This will be called by YouTube API when ready
-    window.onYouTubeIframeAPIReady = function() {
-        console.log('YouTube API Ready');
-    };
-
-    // Toggle music play/pause
+    // Toggle music play/pause with iFrame
     window.toggleMusic = function(musicId) {
         const playerDiv = document.getElementById(musicId);
         const playIcon = document.getElementById('play-' + musicId);
-        
-        if (!playerDiv) return;
+        const musicCard = playerDiv.closest('.music-card');
+        const musicName = musicCard.querySelector('.music-name').textContent;
         
         // If this music is already playing, stop it
         if (currentPlayer === musicId) {
@@ -68,46 +47,25 @@ document.addEventListener('DOMContentLoaded', function() {
         // Show and play new music
         playerDiv.style.display = 'block';
         
-        // Create or get YouTube player
-        if (!players[musicId]) {
-            players[musicId] = new YT.Player(musicId + ' iframe', {
-                events: {
-                    'onReady': function(event) {
-                        event.target.playVideo();
-                    }
-                }
-            });
-        } else {
-            players[musicId].playVideo();
-        }
-        
-        // Update UI
+        // Change play icon to pause
         if (playIcon) {
             playIcon.className = 'fas fa-pause-circle';
         }
         
         currentPlayer = musicId;
+        currentMusicName = musicName;
         
-        // Get music name
-        const musicCard = playerDiv.closest('.music-card');
-        if (musicCard) {
-            currentMusicName = musicCard.querySelector('.music-name').textContent;
-        }
-        
-        // Show now playing
-        showNowPlaying(currentMusicName);
-        
-        // Visual feedback
-        const musicCards = document.querySelectorAll('.music-card');
-        musicCards.forEach(card => {
+        // Add playing class to music card
+        document.querySelectorAll('.music-card').forEach(card => {
             card.classList.remove('playing');
         });
-        if (musicCard) {
-            musicCard.classList.add('playing');
-        }
+        musicCard.classList.add('playing');
+        
+        // Show now playing indicator
+        showNowPlaying(musicName);
         
         // Store last played
-        localStorage.setItem('lastPlayedMusic', currentMusicName);
+        localStorage.setItem('lastPlayedMusic', musicName);
     };
 
     // Stop current music
@@ -116,12 +74,17 @@ document.addEventListener('DOMContentLoaded', function() {
             const playerDiv = document.getElementById(currentPlayer);
             const playIcon = document.getElementById('play-' + currentPlayer);
             
-            if (players[currentPlayer]) {
-                players[currentPlayer].pauseVideo();
-            }
-            
             if (playerDiv) {
                 playerDiv.style.display = 'none';
+                // Stop the iframe video by reloading
+                const iframe = playerDiv.querySelector('iframe');
+                if (iframe) {
+                    const src = iframe.src;
+                    iframe.src = '';
+                    setTimeout(() => {
+                        iframe.src = src;
+                    }, 100);
+                }
             }
             
             if (playIcon) {
@@ -134,6 +97,7 @@ document.addEventListener('DOMContentLoaded', function() {
             });
             
             currentPlayer = null;
+            currentMusicName = '';
             hideNowPlaying();
         }
     }
@@ -145,13 +109,20 @@ document.addEventListener('DOMContentLoaded', function() {
         if (nowPlaying && nowPlayingText) {
             nowPlayingText.textContent = `Now playing: ${musicName}`;
             nowPlaying.style.display = 'flex';
+            
+            // Auto hide after 5 seconds
+            setTimeout(() => {
+                if (!currentPlayer) {
+                    nowPlaying.style.display = 'none';
+                }
+            }, 5000);
         }
     }
 
     // Hide now playing indicator
     function hideNowPlaying() {
         const nowPlaying = document.getElementById('nowPlaying');
-        if (nowPlaying) {
+        if (nowPlaying && !currentPlayer) {
             nowPlaying.style.display = 'none';
         }
     }
@@ -164,9 +135,6 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     }
 
-    // Load YouTube API
-    loadYouTubeAPI();
-
     // Lumi chat interaction
     const lumiCard = document.querySelector('.lumi-card');
     if (lumiCard) {
@@ -176,18 +144,18 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     }
 
-    // Consultation buttons
+    // Consultation buttons - UPDATED to navigate to new pages
     document.querySelectorAll('.card-btn').forEach(btn => {
         btn.addEventListener('click', function(e) {
             e.stopPropagation();
             const action = this.textContent;
             
             if (action.includes('expert')) {
-                alert('Connecting you with an expert...');
-                localStorage.setItem('consultationType', 'expert');
+                // Navigate to Talk with Expert page
+                window.location.href = 'expert.html';
             } else if (action.includes('Book')) {
-                alert('Opening appointment booking...');
-                localStorage.setItem('appointmentRequest', 'true');
+                // Navigate to Book a Call page
+                window.location.href = 'booking.html';
             }
         });
     });
@@ -233,7 +201,7 @@ document.addEventListener('DOMContentLoaded', function() {
     if (profileIcon) {
         profileIcon.addEventListener('click', function() {
             if (userName !== 'Guest') {
-                alert(`Logged in as: ${userName}\nEmail: ${userEmail || 'No email provided'}`);
+                alert(`Logged in as: ${userName}\nEmail: ${userEmail}`);
             } else {
                 if (confirm('You are not logged in. Go to login page?')) {
                     window.location.href = 'login.html';
@@ -265,12 +233,12 @@ document.addEventListener('DOMContentLoaded', function() {
             logoutBtn.style.marginLeft = '10px';
             logoutBtn.style.cursor = 'pointer';
             logoutBtn.style.color = '#ffffff';
+            logoutBtn.style.fontSize = '22px';
             logoutBtn.title = 'Logout';
             
             logoutBtn.addEventListener('click', function() {
                 if (confirm('Are you sure you want to logout?')) {
-                    // Stop music if playing
-                    stopCurrentMusic();
+                    stopCurrentMusic(); // Stop music on logout
                     localStorage.clear();
                     alert('Logged out successfully');
                     window.location.href = 'login.html';

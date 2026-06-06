@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Login - AuraSense</title>
+    <link rel="stylesheet" href="login.css">
+</head>
+<body>
+    <div class="app-container">
+        <main class="login-card">
+            <h1 class="form-title">🔐 Admin Login</h1>
+            <p style="text-align: center; color: #8e7d91; margin-bottom: 20px;">
+                Secure access for administrators only
+            </p>
+            
+            <form id="adminLoginForm">
+                <div class="input-group">
+                    <input type="email" id="email" placeholder="Admin Email" required>
+                </div>
+                
+                <div class="input-group">
+                    <input type="password" id="password" placeholder="Password" required>
+                </div>
+
+                <button type="submit" class="btn-primary">
+                    Admin Login
+                </button>
+                
+                <div style="margin-top: 20px; text-align: center;">
+                    <a href="login.html" style="color: #513B56;">← Back to User Login</a>
+                </div>
+            </form>
+        </main>
+    </div>
+    
+    <script>
+        document.getElementById('adminLoginForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            
+            const email = document.getElementById('email').value;
+            const password = document.getElementById('password').value;
+            
+            try {
+                const response = await fetch('/api/auth/admin-login', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ email, password })
+                });
+                
+                const data = await response.json();
+                
+                if (data.success) {
+                    localStorage.setItem('adminId', data.user.id);
+                    localStorage.setItem('adminName', data.user.name);
+                    alert(`Welcome Admin, ${data.user.name}!`);
+                    window.location.href = "admin-view-users.html";
+                } else {
+                    alert(data.message);
+                }
+            } catch (error) {
+                alert('Cannot connect to server');
+            }
+        });
+    </script>
+</body>
+</html>

@@ -8,29 +8,40 @@
 </head>
 <body>
     <div class="card">
+        <div style="background: white; padding: 10px; border-radius: 12px; display: inline-block;">
+    <svg width="40" height="40" viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <path d="M48.5 15L35 70H45L50 50L55 70H65L51.5 15H48.5Z" fill="#513B56"/>
+        <path d="M62 45L75 80H85L68 35L62 45Z" fill="#513B56"/>
+        <path d="M25 80C35 55 65 55 90 80C75 65 45 65 25 80Z" fill="url(#logo-gradient)"/>
+        <circle cx="82" cy="40" r="5" fill="#FEE8C3"/>
+        <defs>
+            <linearGradient id="logo-gradient" x1="25" y1="80" x2="90" y2="80" gradientUnits="userSpaceOnUse">
+                <stop offset="0%" stop-color="#BFA8C7" />
+                <stop offset="50%" stop-color="#D2BDCC" />
+                <stop offset="100%" stop-color="#FEE8C3" />
+            </linearGradient>
+        </defs>
+    </svg>
+    <p style="color: #513B56; margin-top: 0%;padding: 0%;"><b>AuraSense</b></p>
+</div>
+        <h2>Verify OTP</h2>
+        <p style="text-align: center; color: #666; margin-bottom: 10px;">We sent a code to</p>
+        <p style="text-align: center; font-weight: 600; color: #513B56; margin-bottom: 30px;" id="user-email">abc@gmail.com</p>
         
-                <h2>Verify OTP</h2>
-                <p style="text-align: center; color: #666; margin-bottom: 10px;">We sent a code to</p>
-                <p style="text-align: center; font-weight: 600; color: #764ba2; margin-bottom: 30px;" id="user-email">abc@gmail.com</p>
-                
-                <div class="otp-boxes">
-                    <input type="text" class="otp-box" maxlength="1" onkeyup="moveToNext(this, 0)" onkeydown="handleBackspace(event, this, 0)" autofocus>
-                    <input type="text" class="otp-box" maxlength="1" onkeyup="moveToNext(this, 1)" onkeydown="handleBackspace(event, this, 1)">
-                    <input type="text"class="otp-box" maxlength="1" onkeyup="moveToNext(this, 2)" onkeydown="handleBackspace(event, this, 2)">
-                    <input type="text" class="otp-box"  maxlength="1" onkeyup="moveToNext(this, 3)" onkeydown="handleBackspace(event, this, 3)">
-                </div>
-                
-                <p style="text-align: center; color: #513b56; margin: 20px 0;">Didn't receive code? <a href="#" onclick="resendOTP()" style="color: #764ba2;">Resend</a></p>
-                
-                <button class="btn-primary" onclick="verifyOTP()">Verify & Proceed</button>
-                
-                <div class="link-reset">
-                    <a href="reset.html">Back to Reset</a>
-                </div>
-                    
-                
-            
-    
+        <div class="otp-boxes">
+            <input type="text" class="otp-box" maxlength="1" onkeyup="moveToNext(this, 0)" onkeydown="handleBackspace(event, this, 0)" autofocus>
+            <input type="text" class="otp-box" maxlength="1" onkeyup="moveToNext(this, 1)" onkeydown="handleBackspace(event, this, 1)">
+            <input type="text" class="otp-box" maxlength="1" onkeyup="moveToNext(this, 2)" onkeydown="handleBackspace(event, this, 2)">
+            <input type="text" class="otp-box" maxlength="1" onkeyup="moveToNext(this, 3)" onkeydown="handleBackspace(event, this, 3)">
+        </div>
+        
+        <p style="text-align: center; color: #513B56; margin: 20px 0;">Didn't receive code? <a href="#" onclick="resendOTP()" style="color: #513B56; font-weight: 600;">Resend</a></p>
+        
+        <button class="btn-primary" onclick="verifyOTP()">Verify & Proceed</button>
+        
+        <p style="margin-top: 20px; font-size: 0.9rem;">
+            <a href="reset.html" style="color: #513B56; text-decoration: none; font-weight: 600;">← Back to Reset</a>
+        </p>
     </div>
 
     <script src="otp.js"></script>

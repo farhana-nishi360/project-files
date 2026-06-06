@@ -1,134 +1,106 @@
-:root {
-    --plain-bg: #F6D8C0;
-    --dark-plum: #513B56;
-    --input-bg: #FFFFFF;
-    --text-muted: #BFA8C7;
-}
-
-* {
-    margin: 0;
-    padding: 0;
-    box-sizing: border-box;
-}
-
-html, body {
-    background-color: var(--plain-bg) !important;
+body {
+    background-color: #fee8c3;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    display: flex;
+    justify-content: center;
+    align-items: center;
     height: 100vh;
-    font-family: 'Segoe UI', sans-serif;
+    margin: 0;
+}
+
+.app-container {
+    width: 100%;
     display: flex;
     justify-content: center;
     align-items: center;
 }
 
-.app-container {
-    width: 100%;
-    max-width: 450px;
-    padding: 20px;
-}
-
 .login-card {
+    background: white;
+    padding: 2rem;
+    border-radius: 20px;
+    box-shadow: 0 10px 25px rgba(0,0,0,0.05);
     width: 100%;
+    max-width: 350px;
     text-align: center;
 }
 
 .form-title {
-    color: var(--dark-plum);
-    font-size: clamp(2rem, 10vw, 2.8rem);
-    font-weight: 800;
-    font-style: italic;
+    color: #513B56;
+    font-size: 1.8rem;
     margin-bottom: 30px;
 }
 
-/* Input Styles */
-input {
-    width: 100%;
-    padding: 18px 25px;
-    border: none;
-    border-radius: 30px;
-    background-color: var(--input-bg);
-    color: var(--dark-plum);
-    font-size: 1.1rem;
-    margin-bottom: 15px;
-    box-shadow: 0 4px 10px rgba(0,0,0,0.05);
-    outline: none;
+.input-group {
+    text-align: left;
+    margin-bottom: 20px;
 }
 
-/* Forgot Password Link */
+.input-group input {
+    width: 100%;
+    padding: 12px;
+    border: 1.5px solid #e0dce2;
+    border-radius: 10px;
+    box-sizing: border-box;
+    transition: border-color 0.3s;
+    font-size: 1rem;
+}
+
+.input-group input:focus {
+    outline: none;
+    border-color: #513B56;
+}
+
 .forgot-password-container {
     text-align: right;
-    margin-top: -10px;
-    margin-bottom: 20px;
-    padding-right: 10px;
+    margin-top: 8px;
 }
 
 .forgot-link {
-    color: var(--dark-plum);
-    font-size: 0.9rem;
-    text-decoration: underline;
+    color: #8e7d91;
+    font-size: 0.8rem;
+    text-decoration: none;
 }
 
-/* UPDATED: Sign Up Hyperlink Logic */
+.forgot-link:hover {
+    color: #513B56;
+}
+
 .signup-redirect {
-    margin-bottom: 35px;
+    margin: 20px 0;
+    text-align: center;
 }
 
 .signup-redirect p {
-    color: var(--dark-plum);
-    font-size: 1rem;
-    opacity: 0.8;
+    color: #8e7d91;
+    font-size: 0.9rem;
+    margin-bottom: 5px;
 }
 
 .signup-hyperlink {
-    color: var(--dark-plum);
-    font-weight: 800;
-    font-size: 1.1rem;
+    color: #513B56;
     text-decoration: none;
-    display: inline-block;
-    position: relative;
-    padding-top: 5px;
+    font-weight: bold;
+    font-size: 1rem;
 }
 
-/* Hover effect: Smooth underline appearing */
-.signup-hyperlink::after {
-    content: '';
-    position: absolute;
-    width: 100%;
-    height: 2px;
-    bottom: -2px;
-    left: 0;
-    background-color: var(--dark-plum);
-    transform: scaleX(0);
-    transition: transform 0.3s ease;
+.signup-hyperlink:hover {
+    text-decoration: underline;
 }
 
-.signup-hyperlink:hover::after {
-    transform: scaleX(1);
-}
-
-/* Primary Button */
 .btn-primary {
-    background-color: var(--dark-plum);
+    width: 100%;
+    padding: 14px;
+    background-color: #513B56;
     color: white;
     border: none;
-    padding: 18px 0;
-    width: 100%;
-    border-radius: 50px;
-    font-size: 1.2rem;
-    font-weight: bold;
+    border-radius: 10px;
+    font-size: 1rem;
+    font-weight: 600;
     cursor: pointer;
-    box-shadow: 0 8px 15px rgba(0,0,0,0.15);
-    transition: transform 0.1s ease;
+    transition: background 0.3s;
 }
 
-.btn-primary:active {
-    transform: scale(0.97);
-}
-
-/* Responsive Tablet/Desktop tweaks */
-@media (min-width: 600px) {
-    .login-card {
-        padding: 40px;
-        background: rgba(255, 255, 255, 0.1); /* Subtle container on larger screens */
-        border-radius: 40px;
-    }
+.btn-primary:hover {
+    background-color: #3d2c41;
 }

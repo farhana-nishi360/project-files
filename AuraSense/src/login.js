@@ -1,93 +1,46 @@
 document.getElementById('loginForm').addEventListener('submit', async (e) => {
     e.preventDefault();
     
-    // Grabbing the values - FIXED: using 'name' not 'email'
-    const name = document.getElementById('name').value; 
+    const email = document.getElementById('email').value;
     const password = document.getElementById('password').value;
-
-    // Basic validation
-    if (!name || !password) {
-        alert('Please enter both name and password');
+    
+    if (!email || !password) {
+        alert('Please enter both email and password');
         return;
     }
-
+    
     try {
-        // Since you're using name instead of email, we'll simulate a successful login
-        // or you can modify your backend to accept 'name'
-        
-        // FOR TESTING WITHOUT BACKEND - Comment this section once your backend is ready
-        // Simulate successful login
-        if (name && password.length >= 6) {
-            // Clear any old data first
-            localStorage.clear();
-            
-            // Store user info for homepage
-            localStorage.setItem('userName', name);
-            localStorage.setItem('userEmail', name + '@example.com'); // Simulated email
-            localStorage.setItem('isLoggedIn', 'true');
-            
-            console.log('Login successful for:', name);
-            
-            alert(`Welcome back, ${name}!`);
-            
-            // Redirect to home.html
-            window.location.href = "home.html";
-            return;
-        } else {
-            alert('Password must be at least 6 characters');
-            return;
-        }
-        
-        /* UNCOMMENT THIS WHEN YOUR BACKEND IS READY
-        const response = await fetch('http://localhost:3000/login', {
+        const response = await fetch('http://localhost:3000/api/auth/login', {
             method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ name, password }) // Changed from email to name
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({ email, password })
         });
-
-        const result = await response.json();
-
-        if (result.success) {
-            // Clear any old data first
-            localStorage.clear();
-            
-            // Store user info for homepage
-            localStorage.setItem('userName', result.name);
-            localStorage.setItem('userEmail', result.email);
+        
+        const data = await response.json();
+        
+        if (data.success) {
+            // Store user info
+            localStorage.setItem('userName', data.user.name);
+            localStorage.setItem('userEmail', data.user.email);
+            localStorage.setItem('userId', data.user.id);
             localStorage.setItem('isLoggedIn', 'true');
             
-            console.log('Login successful for:', result.name);
-            
-            alert(`Welcome back, ${result.name}!`);
-            
-            // Redirect to home.html
+            alert(`Welcome back, ${data.user.name}!`);
             window.location.href = "home.html";
         } else {
-            alert("Error: " + result.message);
+            alert(data.message || 'Invalid email or password');
         }
-        */
-    } catch (err) {
-        console.error('Login error:', err);
-        alert("Cannot connect to server. Using test mode. Please try again.");
+    } catch (error) {
+        console.error('Error:', error);
+        alert('Cannot connect to server. Make sure the backend server is running on port 3000');
     }
 });
 
 // Enter key support
-const passwordField = document.getElementById('password');
-if (passwordField) {
-    passwordField.addEventListener('keypress', function(event) {
-        if (event.key === 'Enter') {
-            document.getElementById('loginForm').dispatchEvent(new Event('submit'));
-        }
-    });
-}
-
-// Check if already logged in
-window.addEventListener('load', function() {
-    const isLoggedIn = localStorage.getItem('isLoggedIn');
-    if (isLoggedIn === 'true') {
-        console.log('User already logged in');
-        // Uncomment to auto-redirect
-        // window.location.href = "home.html";
+document.getElementById('password').addEventListener('keypress', function(event) {
+    if (event.key === 'Enter') {
+        document.getElementById('loginForm').dispatchEvent(new Event('submit'));
     }
 });

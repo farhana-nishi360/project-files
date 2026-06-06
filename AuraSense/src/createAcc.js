@@ -3,30 +3,55 @@ document.getElementById('signupForm').addEventListener('submit', async (e) => {
     
     const name = document.getElementById('name').value;
     const email = document.getElementById('email').value;
-    const phone = document.getElementById('phone').value;
     const password = document.getElementById('password').value;
-    const confirm = document.getElementById('confirmPassword').value;
-
-    if (password !== confirm) {
-        alert("Passwords do not match!");
+    const confirmPassword = document.getElementById('confirmPassword').value;
+    
+    if (!name || !email || !password || !confirmPassword) {
+        alert('Please fill in all fields');
         return;
     }
-
+    
+    if (password !== confirmPassword) {
+        alert('Passwords do not match');
+        return;
+    }
+    
+    if (password.length < 6) {
+        alert('Password must be at least 6 characters');
+        return;
+    }
+    
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    if (!emailRegex.test(email)) {
+        alert('Please enter a valid email address');
+        return;
+    }
+    
     try {
-        const response = await fetch('http://localhost:3000/signup', {
+        const response = await fetch('http://localhost:3000/api/auth/register', {
             method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ name, email, phone, password })
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({ name, email, password })
         });
-
-        if (response.ok) {
-            alert("Account Created! You can now use the Reset Password flow with this email.");
-            window.location.href = "login.html";
+        
+        const data = await response.json();
+        
+        if (data.success) {
+            alert('Account created successfully! Please login.');
+            window.location.href = 'login.html';
         } else {
-            const err = await response.json();
-            alert(err.message);
+            alert(data.message || 'Registration failed');
         }
     } catch (error) {
-        alert("Server is offline. Start it with 'node server.js'");
+        console.error('Error:', error);
+        alert('Cannot connect to server. Make sure the backend server is running on port 3000');
+    }
+});
+
+document.getElementById('confirmPassword').addEventListener('keypress', function(event) {
+    if (event.key === 'Enter') {
+        document.getElementById('signupForm').dispatchEvent(new Event('submit'));
     }
 });

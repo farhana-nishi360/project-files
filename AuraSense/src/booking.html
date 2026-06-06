@@ -1,0 +1,219 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=yes">
+    <title>Book a Call - AuraSense</title>
+    <link rel="stylesheet" href="booking.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+</head>
+<body>
+    <div class="app-container">
+        <!-- Header -->
+        <header class="header">
+            <div class="back-btn" onclick="goBack()">
+                <i class="fas fa-arrow-left"></i>
+            </div>
+            <div class="header-title">
+                <div style="background: white; padding: 5px; border-radius: 12px; display: inline-block;">
+                    <svg width="35" height="35" viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <path d="M48.5 15L35 70H45L50 50L55 70H65L51.5 15H48.5Z" fill="#513B56"/>
+                        <path d="M62 45L75 80H85L68 35L62 45Z" fill="#513B56"/>
+                        <path d="M25 80C35 55 65 55 90 80C75 65 45 65 25 80Z" fill="url(#logo-gradient)"/>
+                        <circle cx="82" cy="40" r="5" fill="#FEE8C3"/>
+                        <defs>
+                            <linearGradient id="logo-gradient" x1="25" y1="80" x2="90" y2="80" gradientUnits="userSpaceOnUse">
+                                <stop offset="0%" stop-color="#BFA8C7" />
+                                <stop offset="50%" stop-color="#D2BDCC" />
+                                <stop offset="100%" stop-color="#FEE8C3" />
+                            </linearGradient>
+                        </defs>
+                    </svg>
+                </div>
+                <h1>Take an Appointment</h1>
+                <p>Book your consultation online</p>
+            </div>
+            <div class="header-icons">
+                <i class="fas fa-bell"></i>
+            </div>
+        </header>
+
+        <main class="main-content">
+            <!-- Hero Section -->
+            <section class="hero-section">
+                <div class="hero-icon">
+                    <i class="fas fa-calendar-check"></i>
+                </div>
+                <h2>Schedule Your Appointment</h2>
+                <p>Choose from our trusted healthcare partners</p>
+            </section>
+
+            <!-- Healthcare Partners List -->
+            <div class="partners-list">
+                <!-- Partner 1 - Lifespring -->
+                <div class="partner-card">
+                    <div class="partner-icon">
+                        <i class="fas fa-hospital-user"></i>
+                    </div>
+                    <div class="partner-info">
+                        <h3 class="partner-name">Lifespring</h3>
+                        <p class="partner-website">
+                            <i class="fas fa-globe"></i> lifespringint.com
+                        </p>
+                        <p class="partner-email">
+                            <i class="fas fa-envelope"></i> appointments@lifespringint.com
+                        </p>
+                        <p class="partner-phone">
+                            <i class="fas fa-phone"></i> +8809638 505 505
+                        </p>
+                    </div>
+                    <div class="partner-actions">
+                        <button class="call-btn" onclick="makeCall('+8809638505505')">
+                            <i class="fas fa-phone-alt"></i> Call Now
+                        </button>
+                        <button class="email-btn" onclick="showEmailOptions('Lifespring', 'appointments@lifespringint.com')">
+                            <i class="fas fa-envelope"></i> Send Email
+                        </button>
+                        <button class="whatsapp-btn" onclick="openWhatsApp('8809638505505', 'Lifespring')">
+                            <i class="fab fa-whatsapp"></i> WhatsApp
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Partner 2 - Enlightened BD -->
+                <div class="partner-card">
+                    <div class="partner-icon">
+                        <i class="fas fa-brain"></i>
+                    </div>
+                    <div class="partner-info">
+                        <h3 class="partner-name">Enlightened BD</h3>
+                        <p class="partner-website">
+                            <i class="fas fa-globe"></i> enlightenedbd.com
+                        </p>
+                        <p class="partner-email">
+                            <i class="fas fa-envelope"></i> book@enlightenedbd.com
+                        </p>
+                        <p class="partner-phone">
+                            <i class="fas fa-phone"></i> +8801329 800 947
+                        </p>
+                    </div>
+                    <div class="partner-actions">
+                        <button class="call-btn" onclick="makeCall('+8801329800947')">
+                            <i class="fas fa-phone-alt"></i> Call Now
+                        </button>
+                        <button class="email-btn" onclick="showEmailOptions('Enlightened BD', 'book@enlightenedbd.com')">
+                            <i class="fas fa-envelope"></i> Send Email
+                        </button>
+                        <button class="whatsapp-btn" onclick="openWhatsApp('8801329800947', 'Enlightened BD')">
+                            <i class="fab fa-whatsapp"></i> WhatsApp
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Partner 3 - Green Life Hospital -->
+                <div class="partner-card">
+                    <div class="partner-icon">
+                        <i class="fas fa-heartbeat"></i>
+                    </div>
+                    <div class="partner-info">
+                        <h3 class="partner-name">Green Life Hospital</h3>
+                        <p class="partner-website">
+                            <i class="fas fa-globe"></i> greenlifehospital.com.bd
+                        </p>
+                        <p class="partner-email">
+                            <i class="fas fa-envelope"></i> appointments@greenlifehospital.com.bd
+                        </p>
+                        <p class="partner-phone">
+                            <i class="fas fa-phone"></i> +8801618 106 530
+                        </p>
+                    </div>
+                    <div class="partner-actions">
+                        <button class="call-btn" onclick="makeCall('+8801618106530')">
+                            <i class="fas fa-phone-alt"></i> Call Now
+                        </button>
+                        <button class="email-btn" onclick="showEmailOptions('Green Life Hospital', 'appointments@greenlifehospital.com.bd')">
+                            <i class="fas fa-envelope"></i> Send Email
+                        </button>
+                        <button class="whatsapp-btn" onclick="openWhatsApp('8801618106530', 'Green Life Hospital')">
+                            <i class="fab fa-whatsapp"></i> WhatsApp
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Video Consultation Options -->
+            <section class="video-consult-section">
+                <h3 class="section-subtitle">
+                    <i class="fas fa-video"></i> Video Consultation
+                </h3>
+                <div class="video-options-grid">
+                    <div class="video-option-card" onclick="openVideoConsultation('google meet')">
+                        <i class="fab fa-google"></i>
+                        <span>Google Meet</span>
+                        <small>Send meeting invite</small>
+                    </div>
+                    <div class="video-option-card" onclick="openVideoConsultation('zoom')">
+                        <i class="fab fa-zoom"></i>
+                        <span>Zoom</span>
+                        <small>Schedule video call</small>
+                    </div>
+                    <div class="video-option-card" onclick="openVideoConsultation('skype')">
+                        <i class="fab fa-skype"></i>
+                        <span>Skype</span>
+                        <small>Connect via Skype</small>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Email History Section -->
+            <section class="email-history-section">
+                <div class="history-header">
+                    <h3 class="section-subtitle">
+                        <i class="fas fa-history"></i> Your Email History
+                    </h3>
+                    <button class="refresh-history-btn" onclick="loadEmailHistoryFromLocal()">
+                        <i class="fas fa-sync-alt"></i> Refresh
+                    </button>
+                </div>
+                
+                <div id="emailHistoryContainer" class="email-history-container">
+                    <div class="table-wrapper">
+                        <table class="email-history-table">
+                            <thead>
+                                <tr>
+                                    <th>Date</th>
+                                    <th>To</th>
+                                    <th>Email Address</th>
+                                    <th>Subject</th>
+                                    <th>Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody id="emailHistoryTableBody">
+                                <tr>
+                                    <td colspan="5" style="text-align: center; padding: 40px;">📭 No emails sent yet. Click "Send Email" to get started!</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Info Note -->
+            <div class="info-note">
+                <i class="fas fa-info-circle"></i>
+                <p>Click "Call Now" for immediate phone consultation, "WhatsApp" for chat, or "Send Email" to book an appointment. All communications are saved in your history.</p>
+            </div>
+        </main>
+
+        <!-- Bottom Navigation -->
+        <nav class="bottom-nav">
+            <i class="fas fa-home" onclick="window.location.href='home.html'"></i>
+            <i class="fas fa-compass"></i>
+            <i class="fas fa-music"></i>
+            <i class="fas fa-user"></i>
+        </nav>
+    </div>
+
+    <script src="booking.js"></script>
+</body>
+</html>

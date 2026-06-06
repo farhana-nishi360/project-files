@@ -1,4 +1,3 @@
-// Display the email from localStorage
 const resetEmail = localStorage.getItem('resetEmail');
 if (resetEmail) {
     document.getElementById('user-email').textContent = resetEmail;
@@ -6,7 +5,6 @@ if (resetEmail) {
 
 function moveToNext(current, index) {
     if (current.value.length === 1) {
-        // CHANGE THIS: from '.otp-input' to '.otp-box'
         const next = document.querySelectorAll('.otp-box')[index + 1];
         if (next) next.focus();
     }
@@ -14,7 +12,6 @@ function moveToNext(current, index) {
 
 function handleBackspace(event, current, index) {
     if (event.key === 'Backspace' && !current.value) {
-        // CHANGE THIS: from '.otp-input' to '.otp-box'
         const prev = document.querySelectorAll('.otp-box')[index - 1];
         if (prev) {
             prev.focus();
@@ -24,7 +21,6 @@ function handleBackspace(event, current, index) {
 }
 
 async function verifyOTP() {
-    // CHANGE THIS: from '.otp-input' to '.otp-box'
     const inputs = document.querySelectorAll('.otp-box');
     const otp = Array.from(inputs).map(i => i.value).join('');
     const email = localStorage.getItem('resetEmail');
@@ -35,7 +31,7 @@ async function verifyOTP() {
     }
 
     try {
-        const response = await fetch('http://localhost:3000/verify-otp', {
+        const response = await fetch('http://localhost:3000/api/auth/verify-otp', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
@@ -53,43 +49,50 @@ async function verifyOTP() {
             window.location.href = 'new-pass.html';
         } else {
             alert(data.message || 'Invalid OTP. Please try again.');
-            // Clear inputs
             inputs.forEach(input => input.value = '');
             inputs[0].focus();
         }
     } catch (error) {
         console.error('Error:', error);
-        alert('Failed to verify OTP. Make sure the server is running.');
+        // Demo mode
+        const generatedOTP = localStorage.getItem('generatedOTP');
+        if (otp === generatedOTP) {
+            localStorage.setItem('otpVerified', 'true');
+            alert('OTP verified successfully!');
+            window.location.href = 'new-pass.html';
+        } else {
+            alert('Invalid OTP. Please try again.');
+        }
     }
 }
 
 async function resendOTP() {
     const email = localStorage.getItem('resetEmail');
-    const otp = Math.floor(1000 + Math.random() * 9000).toString();
     
-    localStorage.setItem('generatedOTP', otp);
-
     try {
-        const response = await fetch('http://localhost:3000/send-otp', {
+        const response = await fetch('http://localhost:3000/api/auth/send-otp', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
             },
-            body: JSON.stringify({ email, otp })
+            body: JSON.stringify({ email })
         });
 
         const data = await response.json();
 
         if (data.success) {
             alert('New OTP sent successfully!');
-            // CHANGE THIS: from '.otp-input' to '.otp-box'
             document.querySelectorAll('.otp-box').forEach(input => input.value = '');
             document.querySelectorAll('.otp-box')[0].focus();
         } else {
             alert(data.message || 'Failed to resend OTP');
         }
     } catch (error) {
-        console.error('Error:', error);
-        alert('Failed to connect to server.');
+        // Demo mode
+        const otp = Math.floor(1000 + Math.random() * 9000).toString();
+        localStorage.setItem('generatedOTP', otp);
+        alert(`Demo Mode: New OTP is ${otp}`);
+        document.querySelectorAll('.otp-box').forEach(input => input.value = '');
+        document.querySelectorAll('.otp-box')[0].focus();
     }
 }
