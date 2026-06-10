@@ -32,7 +32,11 @@ app.use('/api/auth', authRoutes);
 
 // Serve HTML files
 app.get('/', (req, res) => {
-    res.sendFile(path.join(__dirname, 'login.html'));
+    res.sendFile(path.join(__dirname, 'homepage.html'));
+});
+
+app.get('/homepage.html', (req, res) => {
+    res.sendFile(path.join(__dirname, 'homepage.html'));
 });
 
 app.get('/login.html', (req, res) => {
@@ -59,8 +63,59 @@ app.get('/new-pass.html', (req, res) => {
     res.sendFile(path.join(__dirname, 'new-pass.html'));
 });
 
-// Start server
+app.get('/expert.html', (req, res) => {
+    res.sendFile(path.join(__dirname, 'expert.html'));
+});
+
+app.get('/booking.html', (req, res) => {
+    res.sendFile(path.join(__dirname, 'booking.html'));
+});
+
+app.get('/profile.html', (req, res) => {
+    res.sendFile(path.join(__dirname, 'profile.html'));
+});
+
+app.get('/admin-login.html', (req, res) => {
+    res.sendFile(path.join(__dirname, 'admin-login.html'));
+});
+
+app.get('/admin-view-users.html', (req, res) => {
+    res.sendFile(path.join(__dirname, 'admin-view-users.html'));
+});
+
+app.get('/admin-dashboard.html', (req, res) => {
+    res.sendFile(path.join(__dirname, 'admin-dashboard.html'));
+});
+
+app.get('/admin-settings.html', (req, res) => {
+    res.sendFile(path.join(__dirname, 'admin-settings.html'));
+});
+
+// IMPORTANT: Add both routes for notification page
+app.get('/notification.html', (req, res) => {
+    res.sendFile(path.join(__dirname, 'notification.html'));
+});
+
+app.get('/notifications.html', (req, res) => {
+    res.sendFile(path.join(__dirname, 'notification.html'));
+});
+
+// Start server - NO AUTO-OPEN BROWSER
 const PORT = process.env.PORT || 3000;
+
 app.listen(PORT, () => {
     console.log(`✅ Server running on http://localhost:${PORT}`);
+    console.log(`📁 Serving files from: ${__dirname}`);
+    console.log('');
+    console.log('📄 Available pages:');
+    console.log(`   - http://localhost:${PORT}/ (Splash Screen - homepage.html)`);
+    console.log(`   - http://localhost:${PORT}/login.html (Login Page)`);
+    console.log(`   - http://localhost:${PORT}/createAcc.html (Sign Up Page)`);
+    console.log(`   - http://localhost:${PORT}/home.html (Main Home Page)`);
+    console.log(`   - http://localhost:${PORT}/profile.html (Profile Page)`);
+    console.log(`   - http://localhost:${PORT}/expert.html (Expert Consultation)`);
+    console.log(`   - http://localhost:${PORT}/booking.html (Book Appointment)`);
+    console.log(`   - http://localhost:${PORT}/admin-login.html (Admin Login)`);
+    console.log(`   - http://localhost:${PORT}/notification.html (Notifications Page)`);
+    console.log('');
 });

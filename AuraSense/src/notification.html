@@ -1,0 +1,479 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=yes">
+    <title>All Notifications - AuraSense</title>
+    <link rel="stylesheet" href="home.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            background: linear-gradient(120deg, #d8cce8, #ffd5c2, #f6d8c0);
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            min-height: 100vh;
+        }
+
+        .app-container {
+            width: 100%;
+            min-height: 100vh;
+            background: linear-gradient(120deg, #d8cce8, #ffd5c2, #f6d8c0);
+            display: flex;
+            flex-direction: column;
+        }
+
+        @media (min-width: 768px) {
+            .app-container {
+                max-width: 100%;
+                margin: 0;
+                border-radius: 0;
+            }
+        }
+
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 20px 25px;
+            background: #513B56;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            box-shadow: 0 2px 15px rgba(81, 59, 86, 0.08);
+        }
+
+        .back-btn {
+            cursor: pointer;
+        }
+
+        .back-btn i {
+            font-size: 24px;
+            color: white;
+            transition: transform 0.3s;
+        }
+
+        .back-btn i:hover {
+            transform: translateX(-3px);
+        }
+
+        .header-title {
+            text-align: center;
+            flex: 1;
+        }
+
+        .header-title h1 {
+            color: white;
+            font-size: 20px;
+            margin-bottom: 4px;
+        }
+
+        .header-title p {
+            color: #dfcce2;
+            font-size: 12px;
+        }
+
+        .header-icons {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .header-icons i {
+            font-size: 22px;
+            color: white;
+            cursor: pointer;
+            transition: transform 0.3s;
+        }
+
+        .main-content {
+            flex: 1;
+            padding: 20px 25px;
+            width: 100%;
+        }
+
+        .notifications-container {
+            max-width: 800px;
+            margin: 0 auto;
+        }
+
+        .notifications-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 25px;
+            padding-bottom: 15px;
+            border-bottom: 2px solid #e0dce2;
+            flex-wrap: wrap;
+            gap: 15px;
+        }
+
+        .notifications-header h1 {
+            color: #513B56;
+            font-size: 24px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .mark-all-btn {
+            background: #513B56;
+            color: white;
+            border: none;
+            padding: 8px 16px;
+            border-radius: 20px;
+            cursor: pointer;
+            font-size: 13px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            transition: all 0.3s;
+        }
+
+        .mark-all-btn:hover {
+            background: #3d2c41;
+            transform: scale(1.02);
+        }
+
+        .notification-card {
+            background: white;
+            border-radius: 16px;
+            padding: 20px;
+            margin-bottom: 15px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+            transition: transform 0.3s;
+            border-left: 4px solid #ff9800;
+        }
+
+        .notification-card:hover {
+            transform: translateX(5px);
+        }
+
+        .notification-card-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 10px;
+            flex-wrap: wrap;
+            gap: 10px;
+        }
+
+        .notification-title {
+            font-size: 16px;
+            font-weight: 600;
+            color: #513B56;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .notification-time {
+            font-size: 11px;
+            color: #aaa;
+        }
+
+        .notification-message {
+            color: #8e7d91;
+            font-size: 14px;
+            margin-bottom: 12px;
+            line-height: 1.5;
+        }
+
+        .notification-actions {
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+        }
+
+        .complete-task-btn {
+            background: #28a745;
+            color: white;
+            border: none;
+            padding: 6px 12px;
+            border-radius: 15px;
+            font-size: 12px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 5px;
+            transition: all 0.3s;
+        }
+
+        .complete-task-btn:hover {
+            background: #218838;
+            transform: scale(1.02);
+        }
+
+        .delete-notification-btn {
+            background: #dc3545;
+            color: white;
+            border: none;
+            padding: 6px 12px;
+            border-radius: 15px;
+            font-size: 12px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 5px;
+            transition: all 0.3s;
+        }
+
+        .delete-notification-btn:hover {
+            background: #c82333;
+            transform: scale(1.02);
+        }
+
+        .empty-notifications {
+            text-align: center;
+            padding: 60px;
+            background: white;
+            border-radius: 20px;
+            color: #8e7d91;
+        }
+
+        .empty-notifications i {
+            font-size: 64px;
+            margin-bottom: 20px;
+            color: #513B56;
+        }
+
+        .loading {
+            text-align: center;
+            padding: 60px;
+            color: #8e7d91;
+        }
+
+        .bottom-nav {
+            position: sticky;
+            bottom: 0;
+            background: #513B56;
+            display: flex;
+            justify-content: space-around;
+            padding: 15px 20px;
+            border-top: 1px solid #e0dce2;
+            margin-top: 20px;
+            box-shadow: 0 -2px 15px rgba(0, 0, 0, 0.05);
+            width: 100%;
+        }
+
+        @media (min-width: 768px) {
+            .bottom-nav {
+                justify-content: center;
+                gap: 80px;
+                padding: 18px 20px;
+            }
+        }
+
+        .bottom-nav i {
+            font-size: 22px;
+            color: #f0cae5;
+            cursor: pointer;
+            transition: color 0.3s, transform 0.2s;
+        }
+
+        .bottom-nav i:hover {
+            color: white;
+            transform: translateY(-3px);
+        }
+
+        @media (max-width: 550px) {
+            .main-content { padding: 15px; }
+            .notifications-header { flex-direction: column; align-items: flex-start; }
+            .notification-card-header { flex-direction: column; align-items: flex-start; }
+        }
+    </style>
+</head>
+<body>
+    <div class="app-container">
+        <header class="header">
+            <div class="back-btn" onclick="window.location.href='home.html'">
+                <i class="fas fa-arrow-left"></i>
+            </div>
+            <div class="header-title">
+                <div style="background: white; padding: 10px; border-radius: 12px; display: inline-block;">
+                    <svg width="40" height="40" viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <path d="M48.5 15L35 70H45L50 50L55 70H65L51.5 15H48.5Z" fill="#513B56"/>
+                        <path d="M62 45L75 80H85L68 35L62 45Z" fill="#513B56"/>
+                        <path d="M25 80C35 55 65 55 90 80C75 65 45 65 25 80Z" fill="url(#logo-gradient)"/>
+                        <circle cx="82" cy="40" r="5" fill="#FEE8C3"/>
+                        <defs>
+                            <linearGradient id="logo-gradient" x1="25" y1="80" x2="90" y2="80" gradientUnits="userSpaceOnUse">
+                                <stop offset="0%" stop-color="#BFA8C7" />
+                                <stop offset="50%" stop-color="#D2BDCC" />
+                                <stop offset="100%" stop-color="#FEE8C3" />
+                            </linearGradient>
+                        </defs>
+                    </svg>
+                </div>
+                <h1>All Notifications</h1>
+                <p>Your activity and reminders</p>
+            </div>
+            <div class="header-icons">
+                <i class="fas fa-bell"></i>
+                <i class="fas fa-user-circle" onclick="window.location.href='profile.html'"></i>
+            </div>
+        </header>
+
+        <main class="main-content">
+            <div class="notifications-container">
+                <div class="notifications-header">
+                    <h1><i class="fas fa-bell"></i> Notifications</h1>
+                    <button class="mark-all-btn" onclick="markAllNotifications()"><i class="fas fa-check-double"></i> Mark all as read</button>
+                </div>
+                
+                <div id="notificationsList" class="notifications-list">
+                    <div class="loading"><i class="fas fa-spinner fa-spin"></i> Loading notifications...</div>
+                </div>
+            </div>
+        </main>
+
+        <nav class="bottom-nav">
+            <i class="fas fa-home" onclick="window.location.href='home.html'"></i>
+            <i class="fas fa-user-shield" onclick="window.location.href='admin-login.html'"></i>
+            <i class="fas fa-music" onclick="window.location.href='home.html'"></i>
+            <i class="fas fa-user" onclick="window.location.href='profile.html'"></i>
+        </nav>
+    </div>
+
+    <script>
+        const userId = localStorage.getItem('userId');
+        let allNotifications = [];
+
+        async function loadAllNotifications() {
+            const container = document.getElementById('notificationsList');
+            container.innerHTML = '<div class="loading"><i class="fas fa-spinner fa-spin"></i> Loading notifications...</div>';
+            
+            try {
+                const response = await fetch(`/api/auth/tasks?userId=${userId}`);
+                const data = await response.json();
+                
+                if (data.success && data.tasks) {
+                    generateAllNotifications(data.tasks);
+                    displayAllNotifications();
+                } else {
+                    container.innerHTML = '<div class="empty-notifications"><i class="fas fa-bell-slash"></i><p>No notifications yet</p><small>Complete tasks to get notifications!</small></div>';
+                }
+            } catch (error) {
+                console.error('Error loading notifications:', error);
+                container.innerHTML = '<div class="empty-notifications"><i class="fas fa-exclamation-triangle"></i><p>Error loading notifications</p><small>Please try again later</small></div>';
+            }
+        }
+
+        function generateAllNotifications(tasks) {
+            allNotifications = [];
+            const today = new Date().toDateString();
+            const now = new Date();
+            
+            tasks.forEach(task => {
+                const taskDate = new Date(task.createdAt).toDateString();
+                if (taskDate === today && !task.completed) {
+                    allNotifications.push({
+                        id: `task_${task._id}`,
+                        type: 'pending',
+                        title: 'Pending Task',
+                        message: `You have a pending task: "${task.title}"`,
+                        time: new Date(task.createdAt),
+                        taskId: task._id,
+                        read: false
+                    });
+                }
+            });
+            
+            allNotifications.sort((a, b) => b.time - a.time);
+        }
+
+        function displayAllNotifications() {
+            const container = document.getElementById('notificationsList');
+            
+            if (allNotifications.length === 0) {
+                container.innerHTML = '<div class="empty-notifications"><i class="fas fa-bell-slash"></i><p>No notifications yet</p><small>Complete tasks to get notifications!</small></div>';
+                return;
+            }
+            
+            container.innerHTML = '';
+            allNotifications.forEach(notification => {
+                const card = document.createElement('div');
+                card.className = 'notification-card';
+                const timeAgo = getTimeAgo(notification.time);
+                
+                card.innerHTML = `
+                    <div class="notification-card-header">
+                        <div class="notification-title">
+                            <i class="fas fa-clock" style="color: #ff9800;"></i>
+                            ${notification.title}
+                        </div>
+                        <div class="notification-time">${timeAgo}</div>
+                    </div>
+                    <div class="notification-message">${escapeHtml(notification.message)}</div>
+                    <div class="notification-actions">
+                        <button class="complete-task-btn" onclick="completeTaskFromNotification('${notification.taskId}')">
+                            <i class="fas fa-check"></i> Complete Task
+                        </button>
+                        <button class="delete-notification-btn" onclick="deleteNotification('${notification.id}')">
+                            <i class="fas fa-trash"></i> Dismiss
+                        </button>
+                    </div>
+                `;
+                container.appendChild(card);
+            });
+        }
+
+        async function completeTaskFromNotification(taskId) {
+            try {
+                const response = await fetch(`/api/auth/tasks/toggle/${taskId}`, {
+                    method: 'PUT',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ userId })
+                });
+                const data = await response.json();
+                if (data.success) {
+                    alert('✅ Task completed!');
+                    await loadAllNotifications();
+                }
+            } catch (error) {
+                alert('Error completing task');
+            }
+        }
+
+        function deleteNotification(notificationId) {
+            const index = allNotifications.findIndex(n => n.id === notificationId);
+            if (index !== -1) {
+                allNotifications.splice(index, 1);
+                displayAllNotifications();
+            }
+        }
+
+        function markAllNotifications() {
+            if (confirm('Mark all notifications as read?')) {
+                allNotifications = [];
+                displayAllNotifications();
+                alert('All notifications cleared');
+            }
+        }
+
+        function getTimeAgo(date) {
+            const seconds = Math.floor((new Date() - date) / 1000);
+            if (seconds < 60) return 'just now';
+            const minutes = Math.floor(seconds / 60);
+            if (minutes < 60) return `${minutes} minute${minutes > 1 ? 's' : ''} ago`;
+            const hours = Math.floor(minutes / 60);
+            if (hours < 24) return `${hours} hour${hours > 1 ? 's' : ''} ago`;
+            const days = Math.floor(hours / 24);
+            if (days < 7) return `${days} day${days > 1 ? 's' : ''} ago`;
+            return date.toLocaleDateString();
+        }
+
+        function escapeHtml(text) {
+            const div = document.createElement('div');
+            div.textContent = text;
+            return div.innerHTML;
+        }
+
+        loadAllNotifications();
+    </script>
+</body>
+</html>

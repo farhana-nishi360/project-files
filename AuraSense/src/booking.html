@@ -34,9 +34,28 @@
                 <p>Book your consultation online</p>
             </div>
             <div class="header-icons">
-                <i class="fas fa-bell"></i>
+                <!-- Notification Icon Container -->
+                <div class="notification-icon-container" id="notificationIconContainer">
+                    <i class="fas fa-bell" id="notificationBell"></i>
+                    <span class="notification-dot" id="notificationDot"></span>
+                </div>
+                <i class="fas fa-user-circle" id="profileIconBtn" style="cursor: pointer;"></i>
             </div>
         </header>
+
+        <!-- Notification Dropdown Panel -->
+        <div class="notification-dropdown" id="notificationDropdown">
+            <div class="notification-dropdown-header">
+                <h3><i class="fas fa-bell"></i> Notifications</h3>
+                <button class="mark-all-read" onclick="markAllNotificationsRead()">Mark all as read</button>
+            </div>
+            <div class="notification-dropdown-body" id="notificationDropdownBody">
+                <div class="loading-notifications">Loading notifications...</div>
+            </div>
+            <div class="notification-dropdown-footer">
+                <button onclick="openFullNotifications()">View All Notifications</button>
+            </div>
+        </div>
 
         <main class="main-content">
             <!-- Hero Section -->
@@ -68,6 +87,9 @@
                         </p>
                     </div>
                     <div class="partner-actions">
+                        <button class="visit-btn" onclick="visitWebsite('https://lifespringint.com')">
+                            <i class="fas fa-external-link-alt"></i> Visit Website
+                        </button>
                         <button class="call-btn" onclick="makeCall('+8809638505505')">
                             <i class="fas fa-phone-alt"></i> Call Now
                         </button>
@@ -98,6 +120,9 @@
                         </p>
                     </div>
                     <div class="partner-actions">
+                        <button class="visit-btn" onclick="visitWebsite('https://enlightenedbd.com')">
+                            <i class="fas fa-external-link-alt"></i> Visit Website
+                        </button>
                         <button class="call-btn" onclick="makeCall('+8801329800947')">
                             <i class="fas fa-phone-alt"></i> Call Now
                         </button>
@@ -128,6 +153,9 @@
                         </p>
                     </div>
                     <div class="partner-actions">
+                        <button class="visit-btn" onclick="visitWebsite('https://greenlifehospital.com.bd')">
+                            <i class="fas fa-external-link-alt"></i> Visit Website
+                        </button>
                         <button class="call-btn" onclick="makeCall('+8801618106530')">
                             <i class="fas fa-phone-alt"></i> Call Now
                         </button>
@@ -201,19 +229,19 @@
             <!-- Info Note -->
             <div class="info-note">
                 <i class="fas fa-info-circle"></i>
-                <p>Click "Call Now" for immediate phone consultation, "WhatsApp" for chat, or "Send Email" to book an appointment. All communications are saved in your history.</p>
+                <p>Click "Call Now" for immediate phone consultation, "WhatsApp" for chat, "Visit Website" to book online, or "Send Email" to book an appointment. All communications are saved in your history.</p>
             </div>
         </main>
 
         <!-- Bottom Navigation -->
         <nav class="bottom-nav">
-            <i class="fas fa-home" onclick="window.location.href='home.html'"></i>
-            <i class="fas fa-compass"></i>
-            <i class="fas fa-music"></i>
-            <i class="fas fa-user"></i>
+            <i class="fas fa-home" id="footerHome"></i>
+            <i class="fas fa-user-shield" id="footerAdmin"></i>
+            <i class="fas fa-music" id="footerMusic"></i>
+            <i class="fas fa-user" id="footerUser"></i>
         </nav>
     </div>
-
+    <script src="utils.js"></script>
     <script src="booking.js"></script>
 </body>
 </html>

@@ -19,6 +19,27 @@ body {
     position: relative;
 }
 
+/* Force full width on all screen sizes */
+.app-container {
+    max-width: 100% !important;
+    width: 100% !important;
+    margin: 0 !important;
+    border-radius: 0 !important;
+}
+
+.header, .bottom-nav {
+    width: 100% !important;
+    border-radius: 0 !important;
+}
+
+@media (min-width: 768px) {
+    .app-container {
+        max-width: 100% !important;
+        margin: 0 !important;
+        border-radius: 0 !important;
+    }
+}
+
 @media (min-width: 768px) {
     .app-container {
         max-width: 90%;
@@ -77,10 +98,232 @@ body {
     font-size: 12px;
 }
 
+/* Notification Icon Container */
+.notification-icon-container {
+    position: relative;
+    cursor: pointer;
+    display: inline-block;
+}
+
+.notification-icon-container i {
+    font-size: 22px;
+    color: white;
+    transition: transform 0.3s;
+}
+
+.notification-icon-container:hover i {
+    transform: scale(1.1);
+}
+
+/* Header Icons */
+.header-icons {
+    display: flex;
+    align-items: center;
+    gap: 25px;
+}
+
 .header-icons i {
     font-size: 22px;
     color: white;
     cursor: pointer;
+    transition: transform 0.3s;
+}
+
+.header-icons i:hover {
+    transform: scale(1.1);
+}
+
+/* User Icon */
+.header-icons .fa-user-circle {
+    cursor: pointer;
+}
+
+.header-icons .fa-user-circle:hover {
+    transform: scale(1.1);
+}
+
+/* Red Dot Badge */
+.notification-dot {
+    position: absolute;
+    top: -5px;
+    right: -8px;
+    width: 10px;
+    height: 10px;
+    background-color: #dc3545;
+    border-radius: 50%;
+    border: 2px solid #513B56;
+    display: none;
+    animation: pulse 1.5s infinite;
+}
+
+.notification-dot.show {
+    display: block;
+}
+
+.notification-dot.has-number {
+    width: auto;
+    min-width: 18px;
+    height: 18px;
+    font-size: 10px;
+    font-weight: bold;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: white;
+    background-color: #dc3545;
+    border-radius: 50%;
+    top: -8px;
+    right: -10px;
+    padding: 0 4px;
+}
+
+/* Notification Dropdown */
+.notification-dropdown {
+    position: absolute;
+    top: 70px;
+    right: 20px;
+    width: 380px;
+    max-height: 500px;
+    background: white;
+    border-radius: 16px;
+    box-shadow: 0 10px 40px rgba(0, 0, 0, 0.15);
+    z-index: 1000;
+    display: none;
+    overflow: hidden;
+    animation: slideDown 0.3s ease;
+}
+
+.notification-dropdown.open {
+    display: block;
+}
+
+@keyframes slideDown {
+    from {
+        opacity: 0;
+        transform: translateY(-20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.notification-dropdown-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 15px 20px;
+    background: #513B56;
+    color: white;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.notification-dropdown-header h3 {
+    margin: 0;
+    font-size: 16px;
+}
+
+.mark-all-read {
+    background: rgba(255, 255, 255, 0.2);
+    border: none;
+    color: white;
+    padding: 5px 10px;
+    border-radius: 15px;
+    font-size: 11px;
+    cursor: pointer;
+    transition: background 0.3s;
+}
+
+.mark-all-read:hover {
+    background: rgba(255, 255, 255, 0.3);
+}
+
+.notification-dropdown-body {
+    max-height: 380px;
+    overflow-y: auto;
+}
+
+.notification-item {
+    display: flex;
+    align-items: flex-start;
+    padding: 15px;
+    border-bottom: 1px solid #e0dce2;
+    cursor: pointer;
+    transition: background 0.3s;
+}
+
+.notification-item:hover {
+    background: #f8f4fa;
+}
+
+.notification-icon {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    background: #f8f4fa;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-right: 12px;
+}
+
+.notification-icon i {
+    font-size: 18px;
+    color: #513B56;
+}
+
+.notification-content {
+    flex: 1;
+}
+
+.notification-title {
+    font-size: 14px;
+    font-weight: 600;
+    color: #513B56;
+    margin-bottom: 4px;
+}
+
+.notification-message {
+    font-size: 12px;
+    color: #8e7d91;
+    margin-bottom: 4px;
+}
+
+.notification-time {
+    font-size: 10px;
+    color: #aaa;
+}
+
+.notification-dropdown-footer {
+    padding: 12px;
+    text-align: center;
+    border-top: 1px solid #e0dce2;
+}
+
+.notification-dropdown-footer button {
+    background: none;
+    border: none;
+    color: #513B56;
+    font-size: 12px;
+    cursor: pointer;
+}
+
+.empty-notifications {
+    text-align: center;
+    padding: 40px;
+    color: #8e7d91;
+}
+
+.empty-notifications i {
+    font-size: 48px;
+    margin-bottom: 15px;
+    color: #513B56;
+}
+
+@keyframes pulse {
+    0% { transform: scale(0.95); opacity: 0.7; }
+    70% { transform: scale(1.1); opacity: 1; }
+    100% { transform: scale(0.95); opacity: 0.7; }
 }
 
 /* Main Content */
@@ -185,6 +428,27 @@ body {
     gap: 10px;
     flex-wrap: wrap;
     margin-top: 10px;
+}
+
+/* Visit Website Button */
+.visit-btn {
+    background: #17a2b8;
+    color: white;
+    border: none;
+    padding: 10px 18px;
+    border-radius: 25px;
+    font-size: 13px;
+    font-weight: 600;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    transition: all 0.3s;
+}
+
+.visit-btn:hover {
+    background: #138496;
+    transform: scale(1.02);
 }
 
 /* Call Button */
@@ -404,6 +668,26 @@ body {
     transform: scale(1.02);
 }
 
+.copy-btn {
+    background: #17a2b8;
+    color: white;
+}
+
+.copy-btn:hover {
+    background: #138496;
+    transform: scale(1.02);
+}
+
+.send-btn {
+    background: #28a745;
+    color: white;
+}
+
+.send-btn:hover {
+    background: #218838;
+    transform: scale(1.02);
+}
+
 /* Info Note */
 .info-note {
     display: flex;
@@ -474,7 +758,7 @@ body {
         justify-content: center;
     }
     
-    .call-btn, .email-btn, .whatsapp-btn {
+    .call-btn, .email-btn, .whatsapp-btn, .visit-btn {
         flex: 1;
         justify-content: center;
         padding: 8px 12px;
@@ -494,7 +778,15 @@ body {
         padding: 8px 6px;
         font-size: 11px;
     }
+    
+    .notification-dropdown {
+        width: calc(100% - 20px);
+        right: 10px;
+        left: 10px;
+        top: 65px;
+    }
 }
+
 /* Email Modal for viewing */
 .email-modal {
     position: fixed;
@@ -566,6 +858,7 @@ body {
     margin-top: 20px;
     display: flex;
     justify-content: flex-end;
+    gap: 10px;
 }
 
 .copy-email-btn {
@@ -586,64 +879,24 @@ body {
     transform: scale(1.02);
 }
 
-/* Copy button in history table */
-.copy-btn {
-    background: #17a2b8;
-    color: white;
-}
-
-.copy-btn:hover {
-    background: #138496;
-    transform: scale(1.02);
-}
-/* Send Button */
-.send-btn {
-    background: #28a745;
-    color: white;
-}
-
-.send-btn:hover {
-    background: #218838;
-    transform: scale(1.02);
-}
-
-/* Modal action buttons */
-.modal-actions {
-    display: flex;
-    gap: 10px;
-    margin-top: 20px;
-    justify-content: flex-end;
-}
-
-.copy-email-btn, .send-email-btn {
-    border: none;
-    padding: 8px 16px;
-    border-radius: 20px;
-    cursor: pointer;
-    font-size: 13px;
-    display: flex;
-    align-items: center;
-    gap: 8px;
-    transition: all 0.3s;
-}
-
-.copy-email-btn {
-    background: #17a2b8;
-    color: white;
-}
-
-.copy-email-btn:hover {
-    background: #138496;
-}
-
 .send-email-btn {
     background: #28a745;
     color: white;
+    border: none;
+    padding: 10px 20px;
+    border-radius: 25px;
+    cursor: pointer;
+    font-size: 14px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
 }
 
 .send-email-btn:hover {
     background: #218838;
+    transform: scale(1.02);
 }
+
 /* Email Options Modal */
 .email-options-modal {
     position: fixed;

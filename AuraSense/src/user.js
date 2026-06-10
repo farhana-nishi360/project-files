@@ -1,6 +1,72 @@
 const mongoose = require('mongoose');
 const bcrypt = require('bcryptjs');
 
+// Task Schema
+const TaskSchema = new mongoose.Schema({
+    title: {
+        type: String,
+        required: true
+    },
+    priority: {
+        type: String,
+        enum: ['high', 'medium', 'low'],
+        default: 'medium'
+    },
+    completed: {
+        type: Boolean,
+        default: false
+    },
+    createdAt: {
+        type: Date,
+        default: Date.now
+    },
+    completedAt: {
+        type: Date,
+        default: null
+    }
+});
+
+// Progress Report Schema
+const ProgressReportSchema = new mongoose.Schema({
+    weekStart: {
+        type: Date,
+        required: true
+    },
+    weekEnd: {
+        type: Date,
+        required: true
+    },
+    totalTasks: {
+        type: Number,
+        default: 0
+    },
+    completedTasks: {
+        type: Number,
+        default: 0
+    },
+    completionRate: {
+        type: Number,
+        default: 0
+    },
+    dailyBreakdown: {
+        type: Map,
+        of: Number,
+        default: {}
+    },
+    streak: {
+        type: Number,
+        default: 0
+    },
+    insights: {
+        type: String,
+        default: ''
+    },
+    generatedAt: {
+        type: Date,
+        default: Date.now
+    }
+});
+
 const UserSchema = new mongoose.Schema({
     name: {
         type: String,
@@ -29,6 +95,8 @@ const UserSchema = new mongoose.Schema({
     otpExpires: {
         type: Date
     },
+    tasks: [TaskSchema],
+    progressReports: [ProgressReportSchema],
     createdAt: {
         type: Date,
         default: Date.now

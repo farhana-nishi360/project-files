@@ -10,7 +10,7 @@ document.getElementById('loginForm').addEventListener('submit', async (e) => {
     }
     
     try {
-        const response = await fetch('http://localhost:3000/api/auth/login', {
+        const response = await fetch('/api/auth/login', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
@@ -21,14 +21,14 @@ document.getElementById('loginForm').addEventListener('submit', async (e) => {
         const data = await response.json();
         
         if (data.success) {
-            // Store user info
+            // Store ALL user info including userId
             localStorage.setItem('userName', data.user.name);
             localStorage.setItem('userEmail', data.user.email);
             localStorage.setItem('userId', data.user.id);
             localStorage.setItem('isLoggedIn', 'true');
             
             alert(`Welcome back, ${data.user.name}!`);
-            window.location.href = "home.html";
+            window.location.replace('/home.html');
         } else {
             alert(data.message || 'Invalid email or password');
         }

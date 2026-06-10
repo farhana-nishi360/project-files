@@ -12,28 +12,48 @@
         <header class="header">
             <div class="greeting">
                 <div style="background: white; padding: 0;margin-top: 10px; border-radius: 12px; display: inline-block;align-content: center;">
-    <svg width="50" height="50" viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg">
-        <path d="M48.5 15L35 70H45L50 50L55 70H65L51.5 15H48.5Z" fill="#513B56"/>
-        <path d="M62 45L75 80H85L68 35L62 45Z" fill="#513B56"/>
-        <path d="M25 80C35 55 65 55 90 80C75 65 45 65 25 80Z" fill="url(#logo-gradient)"/>
-        <circle cx="82" cy="40" r="5" fill="#FEE8C3"/>
-        <defs>
-            <linearGradient id="logo-gradient" x1="25" y1="80" x2="90" y2="80" gradientUnits="userSpaceOnUse">
-                <stop offset="0%" stop-color="#BFA8C7" />
-                <stop offset="50%" stop-color="#D2BDCC" />
-                <stop offset="100%" stop-color="#FEE8C3" />
-            </linearGradient>
-        </defs>
-    </svg>
-</div>
+                    <svg width="50" height="50" viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <path d="M48.5 15L35 70H45L50 50L55 70H65L51.5 15H48.5Z" fill="#513B56"/>
+                        <path d="M62 45L75 80H85L68 35L62 45Z" fill="#513B56"/>
+                        <path d="M25 80C35 55 65 55 90 80C75 65 45 65 25 80Z" fill="url(#logo-gradient)"/>
+                        <circle cx="82" cy="40" r="5" fill="#FEE8C3"/>
+                        <defs>
+                            <linearGradient id="logo-gradient" x1="25" y1="80" x2="90" y2="80" gradientUnits="userSpaceOnUse">
+                                <stop offset="0%" stop-color="#BFA8C7" />
+                                <stop offset="50%" stop-color="#D2BDCC" />
+                                <stop offset="100%" stop-color="#FEE8C3" />
+                            </linearGradient>
+                        </defs>
+                    </svg>
+                </div>
                 <h1>Hi!! <span class="user-name">Guest</span></h1>
                 <p class="welcome-message">Welcome back!</p>
             </div>
             <div class="header-icons">
-                <i class="fas fa-bell"></i>
-                <i class="fas fa-user-circle"></i>
+                <!-- Notification Icon Container with Bell -->
+                <div class="notification-icon-container" id="notificationIconContainer">
+                    <i class="fas fa-bell" id="notificationBell"></i>
+                    <span class="notification-dot" id="notificationDot"></span>
+                </div>
+                <i class="fas fa-user-circle" id="profileIconBtn"></i>
             </div>
         </header>
+
+        <!-- Notification Dropdown Panel -->
+         
+        <div class="notification-dropdown" id="notificationDropdown">
+            <div class="notification-dropdown-header">
+                <h3><i class="fas fa-bell"></i> Notifications</h3>
+                <button class="mark-all-read" onclick="markAllNotificationsRead()">Mark all as read</button>
+            </div>
+            <div class="notification-dropdown-body" id="notificationDropdownBody">
+                <div class="loading-notifications">Loading notifications...</div>
+            </div>
+             <div class="notification-dropdown-footer">
+    <button onclick="window.location.href='notification.html'">View All Notifications</button>
+</div>
+        </div>
+       
 
         <main class="main-content">
             <!-- Consultation Section -->
@@ -65,7 +85,7 @@
                 </div>
             </section>
 
-            <!-- Lumi Section - Title above chatbox -->
+            <!-- Lumi Section -->
             <section class="lumi-section">
                 <div class="lumi-header">
                     <h2 class="section-title">Talk with Lumi</h2>
@@ -86,83 +106,108 @@
                 </div>
             </section>
 
-            <!-- Meditation Music Section with iFrames -->
-<section class="music-section">
-    <h2 class="section-title">Meditation Music</h2>
-    
-    <div class="music-grid">
-        <!-- Music Card 1 - Ocean Waves -->
-        <div class="music-card">
-            <div class="music-thumbnail" onclick="toggleMusic('oceanWaves')">
-                <i class="fas fa-play-circle" id="play-oceanWaves"></i>
-                <img src="https://images.stockcake.com/public/b/6/6/b66c3aa6-305d-4b30-a473-73fda35826d6_large/majestic-ocean-wave-stockcake.jpg" alt="Ocean Waves" style="width: 100%; height: 100%; object-fit: cover;">
-            </div>
-            <p class="music-name">Ocean Waves</p>
-            <div class="youtube-player" id="oceanWaves" style="display: none;">
-                <iframe class="youtube-player iframe" width="100%" height="100%" src="https://www.youtube.com/embed/bn9F19Hi1Lk?si=2sYZId1lyj4I89ir" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe>
-            </div>
-        </div>
+            <!-- Meditation Music Section -->
+            <section class="music-section" id="meditationMusicSection">
+                <h2 class="section-title">Meditation Music</h2>
+                
+                <div class="music-grid">
+                    <!-- Music Card 1 - Ocean Waves -->
+                    <div class="music-card">
+                        <div class="music-thumbnail" onclick="toggleMusic('oceanWaves')">
+                            <i class="fas fa-play-circle" id="play-oceanWaves"></i>
+                            <img src="https://images.stockcake.com/public/b/6/6/b66c3aa6-305d-4b30-a473-73fda35826d6_large/majestic-ocean-wave-stockcake.jpg" alt="Ocean Waves" style="width: 100%; height: 100%; object-fit: cover;">
+                        </div>
+                        <p class="music-name">Ocean Waves</p>
+                        <div class="youtube-player" id="oceanWaves" style="display: none;">
+                            <iframe width="100%" height="100%" src="https://www.youtube.com/embed/bn9F19Hi1Lk?si=2sYZId1lyj4I89ir" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe>
+                        </div>
+                    </div>
 
-        <!-- Music Card 2 - Forest Rain -->
-        <div class="music-card">
-            <div class="music-thumbnail" onclick="toggleMusic('forestRain')">
-                <i class="fas fa-play-circle" id="play-forestRain"></i>
-                <img src="https://images.stockcake.com/public/f/3/5/f3528741-c600-4ce2-a663-0a9f7cf44fbf_large/rainy-forest-view-stockcake.jpg" alt="Forest Rain" style="width: 100%; height: 100%; object-fit: cover;">
-            </div>
-            <p class="music-name">Forest Rain</p>
-            <div class="youtube-player" id="forestRain" style="display: none;">
-                <iframe width="100%" height="100%" src="https://www.youtube.com/embed/9LaKPpsFRHI?si=xtxDbsVnoAD4YDFx" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe>
-            </div>
-        </div>
+                    <!-- Music Card 2 - Forest Rain -->
+                    <div class="music-card">
+                        <div class="music-thumbnail" onclick="toggleMusic('forestRain')">
+                            <i class="fas fa-play-circle" id="play-forestRain"></i>
+                            <img src="https://images.stockcake.com/public/f/3/5/f3528741-c600-4ce2-a663-0a9f7cf44fbf_large/rainy-forest-view-stockcake.jpg" alt="Forest Rain" style="width: 100%; height: 100%; object-fit: cover;">
+                        </div>
+                        <p class="music-name">Forest Rain</p>
+                        <div class="youtube-player" id="forestRain" style="display: none;">
+                            <iframe width="100%" height="100%" src="https://www.youtube.com/embed/9LaKPpsFRHI?si=xtxDbsVnoAD4YDFx" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe>
+                        </div>
+                    </div>
 
-        <!-- Music Card 3 - Mountain Stream -->
-        <div class="music-card">
-            <div class="music-thumbnail" onclick="toggleMusic('mountainStream')">
-                <i class="fas fa-play-circle" id="play-mountainStream"></i>
-                <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQt513NbZgDauzKXf923ZOPJ6wWir9VdlsO6g&s" alt="Mountain Stream" style="width: 100%; height: 100%; object-fit: cover;">
-            </div>
-            <p class="music-name">Mountain Stream</p>
-            <div class="youtube-player" id="mountainStream" style="display: none;">
-                <iframe width="100%" height="100%" src="https://www.youtube.com/embed/c2NmyoXBXmE?si=hFaXMMuLl0k4_k7c" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe>
-            </div>
-        </div>
+                    <!-- Music Card 3 - Mountain Stream -->
+                    <div class="music-card">
+                        <div class="music-thumbnail" onclick="toggleMusic('mountainStream')">
+                            <i class="fas fa-play-circle" id="play-mountainStream"></i>
+                            <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQt513NbZgDauzKXf923ZOPJ6wWir9VdlsO6g&s" alt="Mountain Stream" style="width: 100%; height: 100%; object-fit: cover;">
+                        </div>
+                        <p class="music-name">Mountain Stream</p>
+                        <div class="youtube-player" id="mountainStream" style="display: none;">
+                            <iframe width="100%" height="100%" src="https://www.youtube.com/embed/c2NmyoXBXmE?si=hFaXMMuLl0k4_k7c" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe>
+                        </div>
+                    </div>
 
-        <!-- Music Card 4 - Calm Piano -->
-        <div class="music-card">
-            <div class="music-thumbnail" onclick="toggleMusic('calmPiano')">
-                <i class="fas fa-play-circle" id="play-calmPiano"></i>
-                <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSZP9-2vk54HY6ju8svTtspraR1hpzMtzakgQ&s" alt="Calm Piano" style="width: 100%; height: 100%; object-fit: cover;">
-            </div>
-            <p class="music-name">Calm Piano</p>
-            <div class="youtube-player" id="calmPiano" style="display: none;">
-                <iframe width="100%" height="100%" src="https://www.youtube.com/embed/eKO9BGdQ7Wk?si=FT8QkD21QqIIAIFj" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe>
-            </div>
-        </div>
-    </div>
+                    <!-- Music Card 4 - Calm Piano -->
+                    <div class="music-card">
+                        <div class="music-thumbnail" onclick="toggleMusic('calmPiano')">
+                            <i class="fas fa-play-circle" id="play-calmPiano"></i>
+                            <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSZP9-2vk54HY6ju8svTtspraR1hpzMtzakgQ&s" alt="Calm Piano" style="width: 100%; height: 100%; object-fit: cover;">
+                        </div>
+                        <p class="music-name">Calm Piano</p>
+                        <div class="youtube-player" id="calmPiano" style="display: none;">
+                            <iframe width="100%" height="100%" src="https://www.youtube.com/embed/eKO9BGdQ7Wk?si=FT8QkD21QqIIAIFj" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe>
+                        </div>
+                    </div>
 
-    <!-- Stop All Music Button -->
-    <div class="stop-music-container">
-        <button id="stopAllMusic" class="stop-music-btn">
-            <i class="fas fa-stop-circle"></i> Stop All Music
-        </button>
-    </div>
+                    <!-- Music Card 5 - Relaxing Music -->
+                    <div class="music-card">
+                        <div class="music-thumbnail" onclick="toggleMusic('relaxingMusic')">
+                            <i class="fas fa-play-circle" id="play-relaxingMusic"></i>
+                            <img src="https://images.pexels.com/photos/66997/pexels-photo-66997.jpeg?w=400&h=225&fit=crop" alt="Relaxing Music" style="width: 100%; height: 100%; object-fit: cover;">
+                        </div>
+                        <p class="music-name">Relaxing Music</p>
+                        <div class="youtube-player" id="relaxingMusic" style="display: none;">
+                            <iframe width="100%" height="100%" src="https://www.youtube.com/embed/I3OJUwILelU?si=ig1Paj-Av1LJJZct" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe>
+                        </div>
+                    </div>
 
-    <!-- Now Playing Indicator -->
-    <div id="nowPlaying" class="now-playing" style="display: none;">
-        <i class="fas fa-music"></i>
-        <span id="nowPlayingText">Now playing: </span>
-    </div>
-</section>
+                    <!-- Music Card 6 - Concentration Music -->
+                    <div class="music-card">
+                        <div class="music-thumbnail" onclick="toggleMusic('concentrationMusic')">
+                            <i class="fas fa-play-circle" id="play-concentrationMusic"></i>
+                            <img src="https://images.pexels.com/photos/210647/pexels-photo-210647.jpeg?w=400&h=225&fit=crop" alt="Concentration Music" style="width: 100%; height: 100%; object-fit: cover;">
+                        </div>
+                        <p class="music-name">Concentration Music</p>
+                        <div class="youtube-player" id="concentrationMusic" style="display: none;">
+                            <iframe width="100%" height="100%" src="https://www.youtube.com/embed/oPVte6aMprI?si=MQFIvecMP5XLS2o4" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Stop All Music Button -->
+                <div class="stop-music-container">
+                    <button id="stopAllMusic" class="stop-music-btn">
+                        <i class="fas fa-stop-circle"></i> Stop All Music
+                    </button>
+                </div>
+
+                <!-- Now Playing Indicator -->
+                <div id="nowPlaying" class="now-playing" style="display: none;">
+                    <i class="fas fa-music"></i>
+                    <span id="nowPlayingText">Now playing: </span>
+                </div>
+            </section>
         </main>
 
+        <!-- Bottom Navigation -->
         <nav class="bottom-nav">
-            <i class="fas fa-home active"></i>
-            <i class="fas fa-compass"></i>
-            <i class="fas fa-music"></i>
-            <i class="fas fa-user"></i>
+            <i class="fas fa-home active" id="footerHome"></i>
+            <i class="fas fa-user-shield" id="footerAdmin"></i>
+            <i class="fas fa-music" id="bottomMusicIcon"></i>
+            <i class="fas fa-user" id="footerUser"></i>
         </nav>
     </div>
-
+    <script src="utils.js"></script>
     <script src="home.js"></script>
 </body>
 </html>

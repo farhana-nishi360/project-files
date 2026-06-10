@@ -24,6 +24,7 @@
     </svg>
     <p style="color: #513B56; margin-top: 0%;padding: 0%;"><b>AuraSense</b></p>
 </div>
+
         <h2>Verify OTP</h2>
         <p style="text-align: center; color: #666; margin-bottom: 10px;">We sent a code to</p>
         <p style="text-align: center; font-weight: 600; color: #513B56; margin-bottom: 30px;" id="user-email">abc@gmail.com</p>
@@ -35,9 +36,11 @@
             <input type="text" class="otp-box" maxlength="1" onkeyup="moveToNext(this, 3)" onkeydown="handleBackspace(event, this, 3)">
         </div>
         
-        <p style="text-align: center; color: #513B56; margin: 20px 0;">Didn't receive code? <a href="#" onclick="resendOTP()" style="color: #513B56; font-weight: 600;">Resend</a></p>
+        <div id="messageDiv" style="text-align: center; margin: 10px 0; font-size: 14px;"></div>
         
-        <button class="btn-primary" onclick="verifyOTP()">Verify & Proceed</button>
+        <p style="text-align: center; color: #513B56; margin: 20px 0;">Didn't receive code? <a href="#" id="resendLink" style="color: #513B56; font-weight: 600;">Resend</a></p>
+        
+        <button class="btn-primary" id="verifyBtn">Verify & Proceed</button>
         
         <p style="margin-top: 20px; font-size: 0.9rem;">
             <a href="reset.html" style="color: #513B56; text-decoration: none; font-weight: 600;">← Back to Reset</a>

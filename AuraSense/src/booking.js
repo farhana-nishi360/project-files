@@ -5,10 +5,38 @@ document.addEventListener('DOMContentLoaded', function() {
     
     // Load email history from localStorage
     loadEmailHistoryFromLocal();
+    
+    // Initialize music navigation
+    if (typeof initMusicNavigation === 'function') {
+        initMusicNavigation();
+    }
+    
+    // Initialize notifications
+    initNotifications();
+    
+    // User Icon Click Handler
+    const profileIconBtn = document.getElementById('profileIconBtn');
+    if (profileIconBtn) {
+        profileIconBtn.addEventListener('click', function() {
+            const userName = localStorage.getItem('userName');
+            if (userName && userName !== 'Guest') {
+                window.location.href = 'profile.html';
+            } else {
+                if (confirm('Please login to view profile. Go to login page?')) {
+                    window.location.href = 'login.html';
+                }
+            }
+        });
+    }
 });
 
 function goBack() {
     window.location.href = 'home.html';
+}
+
+// Visit Website
+function visitWebsite(url) {
+    window.open(url, '_blank');
 }
 
 // Make phone call
@@ -67,16 +95,11 @@ Thank you.
 Best regards,
 ${userName}`;
     
-    // Option 1: Try to open email client with auto-filled address
     const mailtoLink = `mailto:${partnerEmail}?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
-    
-    // Try to open default email client
     window.location.href = mailtoLink;
     
-    // Save to email history
     saveEmailToLocalStorage(partnerName, partnerEmail, subject, body);
     
-    // Show instructions
     setTimeout(() => {
         alert(`📧 Email window should open with:\n\nTo: ${partnerEmail}\nSubject: ${subject}\n\nIf email didn't open, please check your default email settings.\n\nThe email has been saved to your history.`);
         loadEmailHistoryFromLocal();
@@ -103,12 +126,9 @@ Thank you.
 Best regards,
 ${userName}`;
     
-    // Gmail compose URL with auto-filled fields
     const gmailUrl = `https://mail.google.com/mail/?view=cm&fs=1&to=${encodeURIComponent(partnerEmail)}&su=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
-    
     window.open(gmailUrl, '_blank');
     
-    // Save to email history
     saveEmailToLocalStorage(partnerName, partnerEmail, subject, body);
     
     alert(`📧 Gmail opened with auto-filled email!\n\nTo: ${partnerEmail}\n\nEmail saved to history.`);
@@ -135,12 +155,9 @@ Thank you.
 Best regards,
 ${userName}`;
     
-    // Outlook web compose URL
     const outlookUrl = `https://outlook.live.com/mail/0/deeplink/compose?to=${encodeURIComponent(partnerEmail)}&subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
-    
     window.open(outlookUrl, '_blank');
     
-    // Save to email history
     saveEmailToLocalStorage(partnerName, partnerEmail, subject, body);
     
     alert(`📧 Outlook opened with auto-filled email!\n\nTo: ${partnerEmail}\n\nEmail saved to history.`);
@@ -149,7 +166,6 @@ ${userName}`;
 
 // Show email options menu
 function showEmailOptions(partnerName, partnerEmail) {
-    // Create modal with options
     const modal = document.createElement('div');
     modal.className = 'email-options-modal';
     modal.innerHTML = `
@@ -346,7 +362,6 @@ function resendExistingEmail(emailId) {
     const email = window.emailList?.find(e => e.id == emailId);
     if (!email) return;
     
-    // Open email with auto-filled address
     const mailtoLink = `mailto:${email.toEmail}?subject=${encodeURIComponent(email.subject)}&body=${encodeURIComponent(email.body)}`;
     window.location.href = mailtoLink;
     
@@ -382,21 +397,203 @@ function openVideoConsultation(platform) {
     setTimeout(() => loadEmailHistoryFromLocal(), 500);
 }
 
-// Bottom navigation
-document.querySelectorAll('.bottom-nav i').forEach(icon => {
-    icon.addEventListener('click', function() {
-        const iconClass = this.className;
-        if (iconClass.includes('fa-home')) {
-            window.location.href = 'home.html';
-        } else if (iconClass.includes('fa-user')) {
-            const userName = localStorage.getItem('userName');
-            if (userName) {
-                alert(`Logged in as: ${userName}`);
-            } else {
-                window.location.href = 'login.html';
-            }
-        } else {
-            alert('Coming soon!');
+// ============ NOTIFICATION FUNCTIONS ============
+
+let notificationCheckInterval = null;
+let notifications = [];
+let unreadCount = 0;
+
+function initNotifications() {
+    const iconContainer = document.getElementById('notificationIconContainer');
+    if (iconContainer) {
+        iconContainer.addEventListener('click', toggleNotificationDropdown);
+    }
+    loadNotifications();
+    checkTaskReminders();
+    if (notificationCheckInterval) clearInterval(notificationCheckInterval);
+    notificationCheckInterval = setInterval(checkTaskReminders, 30000);
+}
+
+function toggleNotificationDropdown(event) {
+    event.stopPropagation();
+    const dropdown = document.getElementById('notificationDropdown');
+    if (dropdown) {
+        dropdown.classList.toggle('open');
+        if (dropdown.classList.contains('open')) {
+            loadNotifications();
         }
+    }
+}
+
+async function loadNotifications() {
+    const userId = localStorage.getItem('userId');
+    if (!userId) return;
+    
+    const dropdownBody = document.getElementById('notificationDropdownBody');
+    if (dropdownBody) {
+        dropdownBody.innerHTML = '<div class="loading-notifications">Loading notifications...</div>';
+    }
+    
+    try {
+        const response = await fetch(`/api/auth/tasks?userId=${userId}`);
+        const data = await response.json();
+        
+        if (data.success && data.tasks) {
+            generateNotifications(data.tasks);
+            displayNotifications();
+        } else if (dropdownBody) {
+            dropdownBody.innerHTML = '<div class="empty-notifications"><i class="fas fa-check-circle"></i><p>No notifications</p><small>You\'re all caught up!</small></div>';
+        }
+    } catch (error) {
+        console.error('Error loading notifications:', error);
+        if (dropdownBody) {
+            dropdownBody.innerHTML = '<div class="empty-notifications"><i class="fas fa-exclamation-triangle"></i><p>Error loading notifications</p></div>';
+        }
+    }
+}
+
+function generateNotifications(tasks) {
+    const today = new Date().toDateString();
+    notifications = [];
+    const todayTasks = tasks.filter(task => new Date(task.createdAt).toDateString() === today && !task.completed);
+    todayTasks.forEach(task => {
+        notifications.push({ 
+            id: `task_${task._id}`, 
+            type: 'pending', 
+            title: 'Pending Task', 
+            message: `You have a pending task: "${task.title}"`, 
+            time: new Date(task.createdAt), 
+            priority: task.priority, 
+            taskId: task._id, 
+            read: false 
+        });
     });
+    
+    notifications.sort((a, b) => b.time - a.time);
+    unreadCount = notifications.length;
+    updateNotificationDot();
+}
+
+function displayNotifications() {
+    const dropdownBody = document.getElementById('notificationDropdownBody');
+    if (!dropdownBody) return;
+    
+    if (notifications.length === 0) {
+        dropdownBody.innerHTML = '<div class="empty-notifications"><i class="fas fa-check-circle"></i><p>No notifications</p><small>You\'re all caught up!</small></div>';
+        return;
+    }
+    
+    let html = '';
+    notifications.forEach(notification => {
+        const icon = notification.type === 'pending' ? 'fa-clock' : 'fa-exclamation-triangle';
+        const iconColor = notification.type === 'pending' ? '#ff9800' : '#dc3545';
+        html += `<div class="notification-item" onclick="handleNotificationClick('${notification.id}', '${notification.taskId}')">
+            <div class="notification-icon" style="background: ${iconColor}20;"><i class="fas ${icon}" style="color: ${iconColor};"></i></div>
+            <div class="notification-content">
+                <div class="notification-title">${escapeHtml(notification.title)}</div>
+                <div class="notification-message">${escapeHtml(notification.message)}</div>
+                <div class="notification-time">${getTimeAgo(notification.time)}</div>
+            </div>
+        </div>`;
+    });
+    dropdownBody.innerHTML = html;
+}
+
+function updateNotificationDot() {
+    const dot = document.getElementById('notificationDot');
+    if (!dot) return;
+    dot.classList.remove('show', 'has-number');
+    dot.textContent = '';
+    if (unreadCount > 0) {
+        dot.classList.add('show');
+        if (unreadCount > 9) {
+            dot.classList.add('has-number');
+            dot.textContent = unreadCount > 99 ? '99+' : unreadCount;
+        }
+    }
+}
+
+async function handleNotificationClick(notificationId, taskId) {
+    const notificationIndex = notifications.findIndex(n => n.id === notificationId);
+    if (notificationIndex !== -1) {
+        notifications.splice(notificationIndex, 1);
+        unreadCount = notifications.length;
+        updateNotificationDot();
+        displayNotifications();
+    }
+    if (taskId) {
+        closeNotificationDropdown();
+        window.location.href = 'profile.html';
+    }
+}
+
+async function checkTaskReminders() {
+    const userId = localStorage.getItem('userId');
+    if (!userId) return;
+    try {
+        const response = await fetch(`/api/auth/tasks?userId=${userId}`);
+        const data = await response.json();
+        if (data.success && data.tasks) {
+            generateNotifications(data.tasks);
+            displayNotifications();
+        }
+    } catch (error) {}
+}
+
+function markAllNotificationsRead() {
+    notifications = [];
+    unreadCount = 0;
+    updateNotificationDot();
+    displayNotifications();
+}
+
+function closeNotificationDropdown() {
+    const dropdown = document.getElementById('notificationDropdown');
+    if (dropdown) dropdown.classList.remove('open');
+}
+
+function openFullNotifications() {
+    closeNotificationDropdown();
+    window.location.href = 'notification.html';
+}
+
+function getTimeAgo(date) {
+    const seconds = Math.floor((new Date() - date) / 1000);
+    if (seconds < 60) return 'just now';
+    const minutes = Math.floor(seconds / 60);
+    if (minutes < 60) return `${minutes} minute${minutes > 1 ? 's' : ''} ago`;
+    const hours = Math.floor(minutes / 60);
+    if (hours < 24) return `${hours} hour${hours > 1 ? 's' : ''} ago`;
+    const days = Math.floor(hours / 24);
+    if (days < 7) return `${days} day${days > 1 ? 's' : ''} ago`;
+    return date.toLocaleDateString();
+}
+
+// Close dropdown when clicking outside
+document.addEventListener('click', function(event) {
+    const dropdown = document.getElementById('notificationDropdown');
+    const iconContainer = document.getElementById('notificationIconContainer');
+    if (dropdown && dropdown.classList.contains('open') && iconContainer && !iconContainer.contains(event.target) && !dropdown.contains(event.target)) {
+        dropdown.classList.remove('open');
+    }
 });
+
+// Escape key to close dropdown
+document.addEventListener('keydown', function(event) {
+    if (event.key === 'Escape') {
+        const dropdown = document.getElementById('notificationDropdown');
+        if (dropdown) dropdown.classList.remove('open');
+    }
+});
+
+// Clean up interval
+window.addEventListener('beforeunload', function() {
+    if (notificationCheckInterval) {
+        clearInterval(notificationCheckInterval);
+    }
+});
+
+// Make functions available globally
+window.openFullNotifications = openFullNotifications;
+window.markAllNotificationsRead = markAllNotificationsRead;
+window.handleNotificationClick = handleNotificationClick;

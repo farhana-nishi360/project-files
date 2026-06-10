@@ -22,32 +22,58 @@ document.addEventListener('DOMContentLoaded', function() {
         }
     }
 
+    // Function to scroll to meditation music section
+    function scrollToMeditationMusic() {
+        const musicSection = document.getElementById('meditationMusicSection');
+        if (musicSection) {
+            musicSection.scrollIntoView({ 
+                behavior: 'smooth', 
+                block: 'start' 
+            });
+            musicSection.style.transition = 'background 0.5s ease';
+            musicSection.style.background = 'rgba(81, 59, 86, 0.05)';
+            musicSection.style.borderRadius = '20px';
+            setTimeout(() => {
+                musicSection.style.background = '';
+            }, 1000);
+        }
+    }
+
+    // Add event listener for music icon in bottom navigation
+    const bottomMusicIcon = document.getElementById('bottomMusicIcon');
+    if (bottomMusicIcon) {
+        bottomMusicIcon.addEventListener('click', scrollToMeditationMusic);
+    }
+
     // YouTube iFrame Player Variables
     let currentPlayer = null;
     let currentMusicName = '';
 
     // Toggle music play/pause with iFrame
     window.toggleMusic = function(musicId) {
+        console.log('Toggling music:', musicId);
+        
         const playerDiv = document.getElementById(musicId);
+        if (!playerDiv) {
+            console.error('Player div not found for:', musicId);
+            return;
+        }
+        
         const playIcon = document.getElementById('play-' + musicId);
         const musicCard = playerDiv.closest('.music-card');
         const musicName = musicCard.querySelector('.music-name').textContent;
         
-        // If this music is already playing, stop it
         if (currentPlayer === musicId) {
             stopCurrentMusic();
             return;
         }
         
-        // Stop current music if playing
         if (currentPlayer) {
             stopCurrentMusic();
         }
         
-        // Show and play new music
         playerDiv.style.display = 'block';
         
-        // Change play icon to pause
         if (playIcon) {
             playIcon.className = 'fas fa-pause-circle';
         }
@@ -55,16 +81,13 @@ document.addEventListener('DOMContentLoaded', function() {
         currentPlayer = musicId;
         currentMusicName = musicName;
         
-        // Add playing class to music card
         document.querySelectorAll('.music-card').forEach(card => {
             card.classList.remove('playing');
         });
         musicCard.classList.add('playing');
         
-        // Show now playing indicator
         showNowPlaying(musicName);
         
-        // Store last played
         localStorage.setItem('lastPlayedMusic', musicName);
     };
 
@@ -76,7 +99,6 @@ document.addEventListener('DOMContentLoaded', function() {
             
             if (playerDiv) {
                 playerDiv.style.display = 'none';
-                // Stop the iframe video by reloading
                 const iframe = playerDiv.querySelector('iframe');
                 if (iframe) {
                     const src = iframe.src;
@@ -91,7 +113,6 @@ document.addEventListener('DOMContentLoaded', function() {
                 playIcon.className = 'fas fa-play-circle';
             }
             
-            // Remove playing class
             document.querySelectorAll('.music-card').forEach(card => {
                 card.classList.remove('playing');
             });
@@ -110,7 +131,6 @@ document.addEventListener('DOMContentLoaded', function() {
             nowPlayingText.textContent = `Now playing: ${musicName}`;
             nowPlaying.style.display = 'flex';
             
-            // Auto hide after 5 seconds
             setTimeout(() => {
                 if (!currentPlayer) {
                     nowPlaying.style.display = 'none';
@@ -144,17 +164,15 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     }
 
-    // Consultation buttons - UPDATED to navigate to new pages
+    // Consultation buttons
     document.querySelectorAll('.card-btn').forEach(btn => {
         btn.addEventListener('click', function(e) {
             e.stopPropagation();
             const action = this.textContent;
             
             if (action.includes('expert')) {
-                // Navigate to Talk with Expert page
                 window.location.href = 'expert.html';
             } else if (action.includes('Book')) {
-                // Navigate to Book a Call page
                 window.location.href = 'booking.html';
             }
         });
@@ -172,13 +190,13 @@ document.addEventListener('DOMContentLoaded', function() {
             const iconClass = this.className;
             if (iconClass.includes('fa-home')) {
                 window.scrollTo({ top: 0, behavior: 'smooth' });
-            } else if (iconClass.includes('fa-compass')) {
-                alert('Explore page coming soon!');
+            } else if (iconClass.includes('fa-user-shield')) {
+                window.location.href = 'admin-login.html';
             } else if (iconClass.includes('fa-music')) {
-                alert('Music library coming soon!');
+                scrollToMeditationMusic();
             } else if (iconClass.includes('fa-user')) {
                 if (userName !== 'Guest') {
-                    alert(`Profile for ${userName}\nEmail: ${userEmail}`);
+                    window.location.href = 'profile.html';
                 } else {
                     if (confirm('Please login to view profile. Go to login page?')) {
                         window.location.href = 'login.html';
@@ -188,20 +206,12 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     });
 
-    // Header notifications
-    const notificationBell = document.querySelector('.fa-bell');
-    if (notificationBell) {
-        notificationBell.addEventListener('click', function() {
-            alert('No new notifications');
-        });
-    }
-
     // Header profile icon
     const profileIcon = document.querySelector('.fa-user-circle');
     if (profileIcon) {
         profileIcon.addEventListener('click', function() {
             if (userName !== 'Guest') {
-                alert(`Logged in as: ${userName}\nEmail: ${userEmail}`);
+                window.location.href = 'profile.html';
             } else {
                 if (confirm('You are not logged in. Go to login page?')) {
                     window.location.href = 'login.html';
@@ -238,7 +248,7 @@ document.addEventListener('DOMContentLoaded', function() {
             
             logoutBtn.addEventListener('click', function() {
                 if (confirm('Are you sure you want to logout?')) {
-                    stopCurrentMusic(); // Stop music on logout
+                    stopCurrentMusic();
                     localStorage.clear();
                     alert('Logged out successfully');
                     window.location.href = 'login.html';
@@ -251,4 +261,209 @@ document.addEventListener('DOMContentLoaded', function() {
     
     addLogoutButton();
 
+    // ============ NOTIFICATION FUNCTIONS (Same as profile.js) ============
+    
+    let notificationCheckInterval = null;
+    let notifications = [];
+    let unreadCount = 0;
+
+    function initNotifications() {
+        const iconContainer = document.getElementById('notificationIconContainer');
+        if (iconContainer) {
+            iconContainer.addEventListener('click', toggleNotificationDropdown);
+        }
+        loadNotifications();
+        checkTaskReminders();
+        if (notificationCheckInterval) clearInterval(notificationCheckInterval);
+        notificationCheckInterval = setInterval(checkTaskReminders, 30000);
+    }
+
+    function toggleNotificationDropdown(event) {
+        event.stopPropagation();
+        const dropdown = document.getElementById('notificationDropdown');
+        if (dropdown) {
+            dropdown.classList.toggle('open');
+            if (dropdown.classList.contains('open')) {
+                loadNotifications();
+            }
+        }
+    }
+
+    async function loadNotifications() {
+        const userId = localStorage.getItem('userId');
+        if (!userId) return;
+        
+        const dropdownBody = document.getElementById('notificationDropdownBody');
+        if (dropdownBody) {
+            dropdownBody.innerHTML = '<div class="loading-notifications">Loading notifications...</div>';
+        }
+        
+        try {
+            const response = await fetch(`/api/auth/tasks?userId=${userId}`);
+            const data = await response.json();
+            
+            if (data.success && data.tasks) {
+                generateNotifications(data.tasks);
+                displayNotifications();
+            } else if (dropdownBody) {
+                dropdownBody.innerHTML = '<div class="empty-notifications"><i class="fas fa-check-circle"></i><p>No notifications</p><small>You\'re all caught up!</small></div>';
+            }
+        } catch (error) {
+            console.error('Error loading notifications:', error);
+        }
+    }
+
+    function generateNotifications(tasks) {
+        const today = new Date().toDateString();
+        notifications = [];
+        const todayTasks = tasks.filter(task => new Date(task.createdAt).toDateString() === today && !task.completed);
+        todayTasks.forEach(task => {
+            notifications.push({ id: `task_${task._id}`, type: 'pending', title: 'Pending Task', message: `You have a pending task: "${task.title}"`, time: new Date(task.createdAt), priority: task.priority, taskId: task._id, read: false });
+        });
+        
+        notifications.sort((a, b) => b.time - a.time);
+        unreadCount = notifications.length;
+        updateNotificationDot();
+    }
+
+    function displayNotifications() {
+        const dropdownBody = document.getElementById('notificationDropdownBody');
+        if (!dropdownBody) return;
+        
+        if (notifications.length === 0) {
+            dropdownBody.innerHTML = '<div class="empty-notifications"><i class="fas fa-check-circle"></i><p>No notifications</p><small>You\'re all caught up!</small></div>';
+            return;
+        }
+        
+        let html = '';
+        notifications.forEach(notification => {
+            const icon = notification.type === 'pending' ? 'fa-clock' : 'fa-exclamation-triangle';
+            const iconColor = notification.type === 'pending' ? '#ff9800' : '#dc3545';
+            html += `<div class="notification-item" onclick="handleNotificationClick('${notification.id}', '${notification.taskId}')">
+                <div class="notification-icon" style="background: ${iconColor}20;"><i class="fas ${icon}" style="color: ${iconColor};"></i></div>
+                <div class="notification-content"><div class="notification-title">${escapeHtml(notification.title)}</div><div class="notification-message">${escapeHtml(notification.message)}</div><div class="notification-time">${getTimeAgo(notification.time)}</div></div>
+            </div>`;
+        });
+        dropdownBody.innerHTML = html;
+    }
+
+    function updateNotificationDot() {
+        const dot = document.getElementById('notificationDot');
+        if (!dot) return;
+        dot.classList.remove('show', 'has-number');
+        dot.textContent = '';
+        if (unreadCount > 0) {
+            dot.classList.add('show');
+            if (unreadCount > 9) {
+                dot.classList.add('has-number');
+                dot.textContent = unreadCount > 99 ? '99+' : unreadCount;
+            }
+        }
+    }
+
+    async function handleNotificationClick(notificationId, taskId) {
+        const notificationIndex = notifications.findIndex(n => n.id === notificationId);
+        if (notificationIndex !== -1) {
+            notifications.splice(notificationIndex, 1);
+            unreadCount = notifications.length;
+            updateNotificationDot();
+            displayNotifications();
+        }
+        if (taskId) {
+            closeNotificationDropdown();
+            window.location.href = 'profile.html';
+        }
+    }
+
+    async function checkTaskReminders() {
+        const userId = localStorage.getItem('userId');
+        if (!userId) return;
+        try {
+            const response = await fetch(`/api/auth/tasks?userId=${userId}`);
+            const data = await response.json();
+            if (data.success && data.tasks) {
+                generateNotifications(data.tasks);
+                displayNotifications();
+            }
+        } catch (error) {}
+    }
+
+    function markAllNotificationsRead() {
+        notifications = [];
+        unreadCount = 0;
+        updateNotificationDot();
+        displayNotifications();
+    }
+
+    function closeNotificationDropdown() {
+        const dropdown = document.getElementById('notificationDropdown');
+        if (dropdown) dropdown.classList.remove('open');
+    }
+
+    // THIS IS THE KEY FUNCTION - Same as profile.js
+    function openFullNotifications() {
+        closeNotificationDropdown();
+        window.location.href = 'notification.html';
+    }
+
+    function getTimeAgo(date) {
+        const seconds = Math.floor((new Date() - date) / 1000);
+        if (seconds < 60) return 'just now';
+        const minutes = Math.floor(seconds / 60);
+        if (minutes < 60) return `${minutes} minute${minutes > 1 ? 's' : ''} ago`;
+        const hours = Math.floor(minutes / 60);
+        if (hours < 24) return `${hours} hour${hours > 1 ? 's' : ''} ago`;
+        const days = Math.floor(hours / 24);
+        if (days < 7) return `${days} day${days > 1 ? 's' : ''} ago`;
+        return date.toLocaleDateString();
+    }
+
+    function escapeHtml(text) {
+        const div = document.createElement('div');
+        div.textContent = text;
+        return div.innerHTML;
+    }
+
+    // Initialize notifications
+    initNotifications();
+
+    // Profile icon button handler
+    const profileIconBtn = document.getElementById('profileIconBtn');
+    if (profileIconBtn) {
+        profileIconBtn.addEventListener('click', function() {
+            const userName = localStorage.getItem('userName');
+            if (userName && userName !== 'Guest') {
+                window.location.href = 'profile.html';
+            } else {
+                if (confirm('Please login to view profile. Go to login page?')) {
+                    window.location.href = 'login.html';
+                }
+            }
+        });
+    }
+
+    // Close dropdown when clicking outside
+    document.addEventListener('click', function(event) {
+        const dropdown = document.getElementById('notificationDropdown');
+        const iconContainer = document.getElementById('notificationIconContainer');
+        if (dropdown && dropdown.classList.contains('open') && iconContainer && !iconContainer.contains(event.target) && !dropdown.contains(event.target)) {
+            dropdown.classList.remove('open');
+        }
+    });
+
+    // Escape key to close dropdown
+    document.addEventListener('keydown', function(event) {
+        if (event.key === 'Escape') {
+            const dropdown = document.getElementById('notificationDropdown');
+            if (dropdown) dropdown.classList.remove('open');
+        }
+    });
+
+    // Clean up interval
+    window.addEventListener('beforeunload', function() {
+        if (notificationCheckInterval) {
+            clearInterval(notificationCheckInterval);
+        }
+    });
 });
+window.openFullNotifications = openFullNotifications;
