@@ -17,13 +17,21 @@ document.addEventListener('DOMContentLoaded', function() {
     // User Icon Click Handler
     const profileIconBtn = document.getElementById('profileIconBtn');
     if (profileIconBtn) {
-        profileIconBtn.addEventListener('click', function() {
-            const userName = localStorage.getItem('userName');
-            if (userName && userName !== 'Guest') {
+        profileIconBtn.addEventListener('click', async function() {
+            const currentUserName = localStorage.getItem('userName');
+            if (currentUserName && currentUserName !== 'Guest') {
                 window.location.href = 'profile.html';
             } else {
-                if (confirm('Please login to view profile. Go to login page?')) {
-                    window.location.href = 'login.html';
+                // 🟢 ফিক্সড: কাস্টম কনফার্ম দিয়ে প্রপারলি চেক করা হচ্ছে
+                if (window.customConfirmAsync) {
+                    const goToLogin = await window.customConfirmAsync('Please login to view profile. Go to login page?');
+                    if (goToLogin) {
+                        window.location.href = 'login.html';
+                    }
+                } else {
+                    if (confirm('Please login to view profile. Go to login page?')) {
+                        window.location.href = 'login.html';
+                    }
                 }
             }
         });
@@ -50,15 +58,22 @@ function makeCall(phoneNumber) {
     }
 }
 
-// Open WhatsApp
+// Open WhatsApp (🟢 ফিক্সড: পপ-আপ বা অ্যালার্ট ছাড়া সরাসরি ওপেন হবে)
 function openWhatsApp(phoneNumber, partnerName) {
     const userName = localStorage.getItem('userName') || 'Guest';
     const message = `Hello ${partnerName},%0A%0AI'm ${userName} from AuraSense. I would like to schedule an appointment.%0A%0APlease let me know your available time slots.%0A%0AThank you.`;
     const whatsappUrl = `https://wa.me/${phoneNumber}?text=${message}`;
-    window.open(whatsappUrl, '_blank');
     
-    saveToHistory(partnerName, phoneNumber, 'WhatsApp');
-    alert(`📱 Opening WhatsApp to contact ${partnerName}...`);
+    try {
+        // কোনো অ্যালার্ট ছাড়াই সরাসরি নতুন ট্যাবে হোয়াটসঅ্যাপ ওপেন হবে
+        window.open(whatsappUrl, '_blank');
+        
+        // ব্যাকগ্রাউন্ডে হিস্ট্রি সেভ হবে
+        saveToHistory(partnerName, phoneNumber, 'WhatsApp');
+
+    } catch (error) {
+        console.error("Error in openWhatsApp:", error);
+    }
 }
 
 // Save to history
@@ -368,9 +383,16 @@ function resendExistingEmail(emailId) {
     alert(`📧 Opening email to ${email.toName}\n\nTo: ${email.toEmail}\nSubject: ${email.subject}`);
 }
 
-// Delete email
-function deleteEmail(emailId) {
-    if (confirm('Delete this email from history?')) {
+// Delete email from history
+async function deleteEmail(emailId) {
+    let confirmDelete = false;
+    if (window.customConfirmAsync) {
+        confirmDelete = await window.customConfirmAsync('Delete this email from history?');
+    } else {
+        confirmDelete = confirm('Delete this email from history?');
+    }
+
+    if (confirmDelete) {
         let emails = JSON.parse(localStorage.getItem('emailHistory') || '[]');
         emails = emails.filter(e => e.id != emailId);
         localStorage.setItem('emailHistory', JSON.stringify(emails));

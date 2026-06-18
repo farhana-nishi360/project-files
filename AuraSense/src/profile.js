@@ -223,7 +223,7 @@ async function toggleTask(taskId) {
 }
 
 async function deleteTask(taskId) {
-    if (confirm('Delete this task?')) {
+    if (await window.customConfirmAsync('Delete this task?')) {
         try {
             const response = await fetch(`/api/auth/tasks/delete/${taskId}`, {
                 method: 'DELETE',
@@ -347,14 +347,28 @@ async function saveNewPassword() {
         alert('Error updating password');
     }
 }
+//eikhane logout er notun code deselam
+document.addEventListener('DOMContentLoaded', function() {
+    const logoutBtn = document.querySelector('.logout-btn');
 
-function logout() {
-    if (confirm('Logout?')) {
-        localStorage.clear();
-        window.location.href = 'login.html';
+    if (logoutBtn) {
+        // বাটনে ক্লিক করলে কি হবে তা এখানে ডিফাইন করা হলো
+        logoutBtn.addEventListener('click', async function(e) {
+            e.preventDefault(); // পেজ যেন রিফ্রেশ না হয়ে যায়
+            
+            // utils.js এ থাকা আপনার তৈরি কেনার কাস্টম মডাল কল করা হলো
+            const confirmLogout = await window.customConfirmAsync('Are you sure you want to logout?');
+            
+            if (confirmLogout) {
+                // ইউজার OK চাপলে ডাটা ক্লিয়ার হবে
+                localStorage.clear();
+                sessionStorage.clear();
+                alert('Logged out successfully'); 
+                window.location.href = 'login.html'; // লগইন পেজে নিয়ে যাবে
+            }
+        });
     }
-}
-
+});
 function closeModal(modalId) {
     document.getElementById(modalId).style.display = 'none';
 }

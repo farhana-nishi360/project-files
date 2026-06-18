@@ -5,6 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Admin Settings - AuraSense</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <link rel="stylesheet" href="modal.css">
     <style>
         * { margin: 0; padding: 0; box-sizing: border-box; }
         body {
@@ -63,6 +64,7 @@
     </style>
 </head>
 <body>
+
     <nav class="navbar">
         <div class="nav-container">
             <div class="logo">
@@ -86,6 +88,7 @@
         <p style="margin-top: 20px; color: #8e7d91;">Settings page coming soon...</p>
     </div>
     <div class="footer"><p>&copy; 2024 AuraSense - Admin Settings</p></div>
+    <script src="utils.js"></script>
     <script>
         if (!localStorage.getItem('adminId')) window.location.href = 'admin-login.html';
         function logout() { localStorage.clear(); window.location.href = 'admin-login.html'; }

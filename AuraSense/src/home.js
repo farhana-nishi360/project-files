@@ -155,7 +155,7 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     }
 
-    // Lumi chat interaction
+    // Lumi chat interaction (অ্যালার্টটি অটোমেটিক কাস্টম মডালে কনভার্ট হবে)
     const lumiCard = document.querySelector('.lumi-card');
     if (lumiCard) {
         lumiCard.addEventListener('click', function() {
@@ -178,9 +178,9 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     });
 
-    // Bottom navigation
+    // Bottom navigation (কাস্টম কনফার্ম মডাল যুক্ত করা হয়েছে)
     document.querySelectorAll('.bottom-nav i').forEach(icon => {
-        icon.addEventListener('click', function() {
+        icon.addEventListener('click', async function() {
             document.querySelectorAll('.bottom-nav i').forEach(i => {
                 i.classList.remove('active');
             });
@@ -198,7 +198,7 @@ document.addEventListener('DOMContentLoaded', function() {
                 if (userName !== 'Guest') {
                     window.location.href = 'profile.html';
                 } else {
-                    if (confirm('Please login to view profile. Go to login page?')) {
+                    if (await window.customConfirmAsync('Please login to view profile. Go to login page?')) {
                         window.location.href = 'login.html';
                     }
                 }
@@ -206,14 +206,14 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     });
 
-    // Header profile icon
+    // Header profile icon (কাস্টম কনফার্ম মডাল যুক্ত করা হয়েছে)
     const profileIcon = document.querySelector('.fa-user-circle');
     if (profileIcon) {
-        profileIcon.addEventListener('click', function() {
+        profileIcon.addEventListener('click', async function() {
             if (userName !== 'Guest') {
                 window.location.href = 'profile.html';
             } else {
-                if (confirm('You are not logged in. Go to login page?')) {
+                if (await window.customConfirmAsync('You are not logged in. Go to login page?')) {
                     window.location.href = 'login.html';
                 }
             }
@@ -233,7 +233,7 @@ document.addEventListener('DOMContentLoaded', function() {
         }, 100);
     }
 
-    // Add logout button
+    // Add logout button (কাস্টম কনফার্ম মডাল যুক্ত করা হয়েছে)
     function addLogoutButton() {
         const headerIcons = document.querySelector('.header-icons');
         if (headerIcons && !document.getElementById('logout-btn')) {
@@ -246,8 +246,8 @@ document.addEventListener('DOMContentLoaded', function() {
             logoutBtn.style.fontSize = '22px';
             logoutBtn.title = 'Logout';
             
-            logoutBtn.addEventListener('click', function() {
-                if (confirm('Are you sure you want to logout?')) {
+            logoutBtn.addEventListener('click', async function() {
+                if (await window.customConfirmAsync('Are you sure you want to logout?')) {
                     stopCurrentMusic();
                     localStorage.clear();
                     alert('Logged out successfully');
@@ -261,8 +261,7 @@ document.addEventListener('DOMContentLoaded', function() {
     
     addLogoutButton();
 
-    // ============ NOTIFICATION FUNCTIONS (Same as profile.js) ============
-    
+    // ============ NOTIFICATION SYSTEM (Safe Setup) ============
     let notificationCheckInterval = null;
     let notifications = [];
     let unreadCount = 0;
@@ -323,7 +322,7 @@ document.addEventListener('DOMContentLoaded', function() {
         
         notifications.sort((a, b) => b.time - a.time);
         unreadCount = notifications.length;
-        updateNotificationDot();
+        updateNotificationDotLocal();
     }
 
     function displayNotifications() {
@@ -339,7 +338,7 @@ document.addEventListener('DOMContentLoaded', function() {
         notifications.forEach(notification => {
             const icon = notification.type === 'pending' ? 'fa-clock' : 'fa-exclamation-triangle';
             const iconColor = notification.type === 'pending' ? '#ff9800' : '#dc3545';
-            html += `<div class="notification-item" onclick="handleNotificationClick('${notification.id}', '${notification.taskId}')">
+            html += `<div class="notification-item" onclick="handleNotificationClickLocal('${notification.id}', '${notification.taskId}')">
                 <div class="notification-icon" style="background: ${iconColor}20;"><i class="fas ${icon}" style="color: ${iconColor};"></i></div>
                 <div class="notification-content"><div class="notification-title">${escapeHtml(notification.title)}</div><div class="notification-message">${escapeHtml(notification.message)}</div><div class="notification-time">${getTimeAgo(notification.time)}</div></div>
             </div>`;
@@ -347,7 +346,7 @@ document.addEventListener('DOMContentLoaded', function() {
         dropdownBody.innerHTML = html;
     }
 
-    function updateNotificationDot() {
+    function updateNotificationDotLocal() {
         const dot = document.getElementById('notificationDot');
         if (!dot) return;
         dot.classList.remove('show', 'has-number');
@@ -361,19 +360,20 @@ document.addEventListener('DOMContentLoaded', function() {
         }
     }
 
-    async function handleNotificationClick(notificationId, taskId) {
+    window.handleNotificationClickLocal = async function(notificationId, taskId) {
         const notificationIndex = notifications.findIndex(n => n.id === notificationId);
         if (notificationIndex !== -1) {
             notifications.splice(notificationIndex, 1);
             unreadCount = notifications.length;
-            updateNotificationDot();
+            updateNotificationDotLocal();
             displayNotifications();
         }
         if (taskId) {
-            closeNotificationDropdown();
+            const dropdown = document.getElementById('notificationDropdown');
+            if (dropdown) dropdown.classList.remove('open');
             window.location.href = 'profile.html';
         }
-    }
+    };
 
     async function checkTaskReminders() {
         const userId = localStorage.getItem('userId');
@@ -388,23 +388,11 @@ document.addEventListener('DOMContentLoaded', function() {
         } catch (error) {}
     }
 
-    function markAllNotificationsRead() {
-        notifications = [];
-        unreadCount = 0;
-        updateNotificationDot();
-        displayNotifications();
-    }
-
-    function closeNotificationDropdown() {
+    window.openFullNotifications = function() {
         const dropdown = document.getElementById('notificationDropdown');
         if (dropdown) dropdown.classList.remove('open');
-    }
-
-    // THIS IS THE KEY FUNCTION - Same as profile.js
-    function openFullNotifications() {
-        closeNotificationDropdown();
         window.location.href = 'notification.html';
-    }
+    };
 
     function getTimeAgo(date) {
         const seconds = Math.floor((new Date() - date) / 1000);
@@ -424,25 +412,24 @@ document.addEventListener('DOMContentLoaded', function() {
         return div.innerHTML;
     }
 
-    // Initialize notifications
     initNotifications();
 
-    // Profile icon button handler
+    // Header/Profile action buttons fix
     const profileIconBtn = document.getElementById('profileIconBtn');
     if (profileIconBtn) {
-        profileIconBtn.addEventListener('click', function() {
+        profileIconBtn.addEventListener('click', async function() {
             const userName = localStorage.getItem('userName');
             if (userName && userName !== 'Guest') {
                 window.location.href = 'profile.html';
             } else {
-                if (confirm('Please login to view profile. Go to login page?')) {
+                if (await window.customConfirmAsync('Please login to view profile. Go to login page?')) {
                     window.location.href = 'login.html';
                 }
             }
         });
     }
 
-    // Close dropdown when clicking outside
+    // Close dropdown clicks
     document.addEventListener('click', function(event) {
         const dropdown = document.getElementById('notificationDropdown');
         const iconContainer = document.getElementById('notificationIconContainer');
@@ -451,7 +438,6 @@ document.addEventListener('DOMContentLoaded', function() {
         }
     });
 
-    // Escape key to close dropdown
     document.addEventListener('keydown', function(event) {
         if (event.key === 'Escape') {
             const dropdown = document.getElementById('notificationDropdown');
@@ -459,11 +445,9 @@ document.addEventListener('DOMContentLoaded', function() {
         }
     });
 
-    // Clean up interval
     window.addEventListener('beforeunload', function() {
         if (notificationCheckInterval) {
             clearInterval(notificationCheckInterval);
         }
     });
 });
-window.openFullNotifications = openFullNotifications;

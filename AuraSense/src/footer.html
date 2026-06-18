@@ -35,15 +35,17 @@
             });
         }
         
-        // User icon
+        // User icon (এটিকে async করা হয়েছে কাস্টম কনফার্ম মডাল হ্যান্ডেল করার জন্য)
         const userIcon = document.getElementById('footerUser');
         if (userIcon) {
-            userIcon.addEventListener('click', function() {
+            userIcon.addEventListener('click', async function() {
                 const userName = localStorage.getItem('userName');
                 if (userName && userName !== 'Guest') {
                     window.location.href = 'profile.html';
                 } else {
-                    if (confirm('Please login to view profile. Go to login page?')) {
+                    // এখানে আমরা আমাদের কাস্টম এসিনক্রোনাস কনফার্ম মডাল ব্যবহার করছি
+                    const shouldLogin = await window.customConfirmAsync('Please login to view profile. Go to login page?');
+                    if (shouldLogin) {
                         window.location.href = 'login.html';
                     }
                 }

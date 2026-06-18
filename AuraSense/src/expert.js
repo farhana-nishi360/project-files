@@ -13,12 +13,31 @@ document.addEventListener('DOMContentLoaded', function() {
     // User Icon Click Handler
     const profileIconBtn = document.getElementById('profileIconBtn');
     if (profileIconBtn) {
-        profileIconBtn.addEventListener('click', function() {
+        profileIconBtn.addEventListener('click', async function() {
             const userName = localStorage.getItem('userName');
             if (userName && userName !== 'Guest') {
                 window.location.href = 'profile.html';
             } else {
-                if (confirm('Please login to view profile. Go to login page?')) {
+                if (async function deleteTask(taskId) {
+    if (await window.customConfirmAsync('Delete this task?')) {
+        try {
+            const response = await fetch(`/api/auth/tasks/delete/${taskId}`, {
+                method: 'DELETE',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ userId })
+            });
+            const data = await response.json();
+            if (data.success) {
+                await loadTasksFromDB();
+                await checkTaskReminders();
+                alert('Task deleted');
+            }
+        } catch (error) {
+            alert('Error deleting task');
+        }
+    }
+}
+('Please login to view profile. Go to login page?')) {
                     window.location.href = 'login.html';
                 }
             }
@@ -32,25 +51,32 @@ function goBack() {
 }
 
 // Connect with expert
-function connectWithExpert(expertName, phoneNumber) {
-    const userConfirmed = confirm(`Would you like to connect with ${expertName}?\n\nWe'll help you schedule a consultation.`);
+async function connectWithExpert(expertName, phoneNumber) {
+    // ১. প্রথম কনফার্মেশন (ফাংশনের আগে async এবং এখানে await যোগ করা হয়েছে)
+    const userConfirmed = await window.customConfirmAsync(`Would you like to connect with ${expertName}?\n\nWe'll help you schedule a consultation.`);
     
     if (userConfirmed) {
         localStorage.setItem('selectedExpert', expertName);
         localStorage.setItem('expertPhone', phoneNumber);
         
-        const action = confirm(`How would you like to connect?\n\nOK - Call ${expertName}\nCancel - Send Message`);
+        // ২. দ্বিতীয় কনফার্মেশন (এখানেও await যোগ করা হয়েছে)
+        const action = await window.customConfirmAsync(`How would you like to connect?\n\nOK - Call ${expertName}\nCancel - Send Message`);
         
         if (action) {
             if (/(android|iphone|ipad|ipod)/i.test(navigator.userAgent)) {
                 window.location.href = `tel:${phoneNumber}`;
             } else {
+                // এই alert টি অটোমেটিক কাস্টম মডালে ওপেন হবে
                 alert(`Call ${expertName} at: ${phoneNumber}\n\nFor mobile users, tap to call directly.`);
+                
+                // নোট: prompt ব্রাউজারের ডিফল্টটাই থাকবে, কারণ কপি করার জন্য ডিফল্ট ইনপুট বক্স দরকার
                 prompt('Copy this number to call:', phoneNumber);
             }
         } else {
+            // মেসেজ লেখার জন্য ব্রাউজারের ডিফল্ট prompt-ই কাজ করবে
             const message = prompt(`Send a message to ${expertName}:`, "Hello, I'd like to book a consultation.");
             if (message) {
+                // এই alert টিও অটোমেটিক কাস্টম মডালে কনভার্ট হয়ে যাবে
                 alert(`Message sent to ${expertName}!\n\nThey will contact you soon.`);
             }
         }
