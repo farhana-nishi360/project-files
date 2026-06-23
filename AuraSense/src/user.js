@@ -67,6 +67,36 @@ const ProgressReportSchema = new mongoose.Schema({
     }
 });
 
+// Email History Schema
+const EmailHistorySchema = new mongoose.Schema({
+    to: {
+        type: String,
+        required: true
+    },
+    toName: {
+        type: String,
+        required: true
+    },
+    subject: {
+        type: String,
+        required: true
+    },
+    body: {
+        type: String,
+        required: true
+    },
+    sentAt: {
+        type: Date,
+        default: Date.now
+    },
+    status: {
+        type: String,
+        enum: ['sent', 'draft', 'prepared'],
+        default: 'prepared'
+    }
+});
+
+// User Schema
 const UserSchema = new mongoose.Schema({
     name: {
         type: String,
@@ -97,6 +127,7 @@ const UserSchema = new mongoose.Schema({
     },
     tasks: [TaskSchema],
     progressReports: [ProgressReportSchema],
+    emailHistory: [EmailHistorySchema],
     createdAt: {
         type: Date,
         default: Date.now

@@ -30,6 +30,76 @@ mongoose.connect(process.env.MONGODB_URI, {
 // Routes
 app.use('/api/auth', authRoutes);
 
+// ============ DELETE USER (Admin only) ============
+app.delete('/api/auth/users/:userId', async (req, res) => {
+    try {
+        const { userId } = req.params;
+        const { adminId } = req.query;
+        
+        console.log(`Delete request: userId=${userId}, adminId=${adminId}`);
+        
+        // 1. Verify admin is authenticated
+        if (!adminId) {
+            return res.status(401).json({ 
+                success: false, 
+                message: 'Admin authentication required' 
+            });
+        }
+        
+        // 2. Get the User model from mongoose
+        const User = mongoose.model('User');
+        
+        // 3. Check if the admin exists and is actually an admin
+        const admin = await User.findById(adminId);
+        if (!admin) {
+            return res.status(403).json({ 
+                success: false, 
+                message: 'Admin not found' 
+            });
+        }
+        
+        if (!admin.isAdmin) {
+            return res.status(403).json({ 
+                success: false, 
+                message: 'Unauthorized: Admin privileges required' 
+            });
+        }
+        
+        // 4. Check if the user to delete exists
+        const userToDelete = await User.findById(userId);
+        if (!userToDelete) {
+            return res.status(404).json({ 
+                success: false, 
+                message: 'User not found' 
+            });
+        }
+        
+        // 5. Prevent admin from deleting themselves
+        if (userId === adminId) {
+            return res.status(400).json({ 
+                success: false, 
+                message: 'Cannot delete your own admin account' 
+            });
+        }
+        
+        // 6. Delete the user from database
+        await User.findByIdAndDelete(userId);
+        
+        console.log(`User ${userId} deleted successfully by admin ${adminId}`);
+        res.json({ 
+            success: true, 
+            message: 'User deleted successfully' 
+        });
+        
+    } catch (error) {
+        console.error('Delete user error:', error);
+        res.status(500).json({ 
+            success: false, 
+            message: 'Server error while deleting user: ' + error.message 
+        });
+    }
+});
+
 // Serve HTML files
 app.get('/', (req, res) => {
     res.sendFile(path.join(__dirname, 'homepage.html'));

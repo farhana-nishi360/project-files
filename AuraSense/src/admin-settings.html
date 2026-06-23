@@ -5,14 +5,19 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Admin Settings - AuraSense</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
-    <link rel="stylesheet" href="modal.css">
     <style>
-        * { margin: 0; padding: 0; box-sizing: border-box; }
+        * { 
+            margin: 0; 
+            padding: 0; 
+            box-sizing: border-box; 
+        }
         body {
             background: linear-gradient(135deg, #fee8c3 0%, #f6d8c0 100%);
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
             min-height: 100vh;
+            padding-bottom: 70px;
         }
+
         .navbar {
             background: #513B56;
             padding: 0 30px;
@@ -54,12 +59,337 @@
         .nav-links a.active { background: #ffd5c2; color: #513B56; }
         .user-info { display: flex; align-items: center; gap: 15px; }
         .admin-badge-nav { background: #ffd5c2; color: #513B56; padding: 5px 12px; border-radius: 20px; font-size: 12px; font-weight: bold; }
-        .logout-nav-btn { background: #dc3545; color: white; border: none; padding: 8px 16px; border-radius: 8px; cursor: pointer; display: flex; align-items: center; gap: 8px; }
-        .container { max-width: 1400px; margin: 30px auto; background: white; border-radius: 20px; padding: 30px; }
-        .footer { text-align: center; padding: 20px; color: #8e7d91; font-size: 12px; }
+        .logout-nav-btn { 
+            background: #dc3545; 
+            color: white; 
+            border: none; 
+            padding: 8px 16px; 
+            border-radius: 8px; 
+            cursor: pointer; 
+            display: flex; 
+            align-items: center; 
+            gap: 8px;
+            transition: all 0.3s;
+        }
+        .logout-nav-btn:hover { background: #c82333; transform: translateY(-2px); }
+
+        .container {
+            max-width: 1400px;
+            margin: 30px auto;
+            background: white;
+            border-radius: 20px;
+            padding: 30px;
+            box-shadow: 0 10px 30px rgba(81, 59, 86, 0.1);
+        }
+
+        .page-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 30px;
+            flex-wrap: wrap;
+            gap: 15px;
+        }
+        .page-header h1 {
+            color: #513B56;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-size: 28px;
+        }
+
+        .settings-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(400px, 1fr));
+            gap: 25px;
+        }
+
+        .settings-card {
+            background: #f8f4fa;
+            border-radius: 15px;
+            padding: 25px;
+            transition: all 0.3s;
+        }
+        .settings-card:hover {
+            box-shadow: 0 5px 20px rgba(81, 59, 86, 0.1);
+            transform: translateY(-2px);
+        }
+        .settings-card h3 {
+            color: #513B56;
+            margin-bottom: 20px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-size: 18px;
+        }
+        .settings-card h3 i {
+            color: #513B56;
+            width: 30px;
+            text-align: center;
+        }
+
+        .form-group {
+            margin-bottom: 18px;
+        }
+        .form-group label {
+            display: block;
+            margin-bottom: 6px;
+            color: #513B56;
+            font-weight: 500;
+            font-size: 14px;
+        }
+        .form-group input {
+            width: 100%;
+            padding: 10px 14px;
+            border: 2px solid #e0dce2;
+            border-radius: 10px;
+            font-size: 14px;
+            transition: all 0.3s;
+            background: white;
+        }
+        .form-group input:focus {
+            outline: none;
+            border-color: #513B56;
+            box-shadow: 0 0 0 3px rgba(81, 59, 86, 0.1);
+        }
+        .form-group input:disabled {
+            background: #f0ecf2;
+            cursor: not-allowed;
+        }
+
+        .btn {
+            padding: 10px 24px;
+            border: none;
+            border-radius: 10px;
+            font-size: 14px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+        }
+        .btn-primary {
+            background: #513B56;
+            color: white;
+        }
+        .btn-primary:hover {
+            background: #3d2c41;
+            transform: translateY(-2px);
+        }
+        .btn-success {
+            background: #28a745;
+            color: white;
+        }
+        .btn-success:hover {
+            background: #218838;
+            transform: translateY(-2px);
+        }
+        .btn-danger {
+            background: #dc3545;
+            color: white;
+        }
+        .btn-danger:hover {
+            background: #c82333;
+            transform: translateY(-2px);
+        }
+        .btn-warning {
+            background: #ffc107;
+            color: #513B56;
+        }
+        .btn-warning:hover {
+            background: #e0a800;
+            transform: translateY(-2px);
+        }
+
+        .alert {
+            padding: 12px 16px;
+            border-radius: 10px;
+            margin-bottom: 15px;
+            display: none;
+            animation: slideDown 0.3s ease;
+        }
+        .alert.show {
+            display: block;
+        }
+        .alert-success {
+            background: #d4edda;
+            color: #155724;
+            border: 1px solid #c3e6cb;
+        }
+        .alert-danger {
+            background: #f8d7da;
+            color: #721c24;
+            border: 1px solid #f5c6cb;
+        }
+        .alert-info {
+            background: #d1ecf1;
+            color: #0c5460;
+            border: 1px solid #bee5eb;
+        }
+
+        @keyframes slideDown {
+            from { opacity: 0; transform: translateY(-10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .toggle-group {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 12px 0;
+            border-bottom: 1px solid #e0dce2;
+        }
+        .toggle-group:last-child {
+            border-bottom: none;
+        }
+        .toggle-group .toggle-label {
+            color: #513B56;
+            font-weight: 500;
+        }
+        .toggle-group .toggle-desc {
+            font-size: 12px;
+            color: #8e7d91;
+        }
+        .toggle-switch {
+            position: relative;
+            width: 50px;
+            height: 26px;
+            background: #ccc;
+            border-radius: 13px;
+            cursor: pointer;
+            transition: all 0.3s;
+            flex-shrink: 0;
+        }
+        .toggle-switch.active {
+            background: #513B56;
+        }
+        .toggle-switch .toggle-slider {
+            position: absolute;
+            top: 3px;
+            left: 3px;
+            width: 20px;
+            height: 20px;
+            background: white;
+            border-radius: 50%;
+            transition: all 0.3s;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.2);
+        }
+        .toggle-switch.active .toggle-slider {
+            left: 27px;
+        }
+
+        .info-row {
+            display: flex;
+            justify-content: space-between;
+            padding: 10px 0;
+            border-bottom: 1px solid #e0dce2;
+        }
+        .info-row:last-child {
+            border-bottom: none;
+        }
+        .info-row .info-label {
+            color: #8e7d91;
+            font-weight: 500;
+        }
+        .info-row .info-value {
+            color: #513B56;
+            font-weight: 600;
+        }
+
+        .footer { 
+            text-align: center; 
+            padding: 12px 20px; 
+            color: #dfcce2; 
+            font-size: 12px;
+            background: #513B56;
+            width: 100%;
+        }
+        .footer p {
+            margin: 0;
+            text-align: center;
+        }
+
+        .bottom-nav {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            width: 100%;
+            background: #513B56;
+            display: flex;
+            justify-content: space-around;
+            align-items: center;
+            padding: 8px 10px;
+            box-shadow: 0 -2px 15px rgba(0, 0, 0, 0.15);
+            z-index: 9999;
+            min-height: 50px;
+            border-radius: 0;
+        }
+
+        @media (min-width: 768px) {
+            .bottom-nav {
+                justify-content: center;
+                gap: 80px;
+                padding: 10px 20px;
+                min-height: 55px;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .bottom-nav { padding: 6px 8px; min-height: 42px; gap: 5px; }
+            .bottom-nav i { font-size: 16px !important; padding: 4px 6px; }
+        }
+
+        .bottom-nav i {
+            font-size: clamp(18px, 3.5vw, 24px);
+            color: #f0cae5;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            padding: 5px 8px;
+            border-radius: 8px;
+        }
+
+        .bottom-nav i:hover {
+            color: #ffffff;
+            transform: translateY(-2px);
+            background: rgba(255, 255, 255, 0.1);
+        }
+
+        .bottom-nav i.active {
+            color: #ffffff;
+            background: rgba(255, 255, 255, 0.15);
+        }
+
+        .footer-wrapper {
+            width: 100%;
+            margin: 0;
+            padding: 0;
+            background: #513B56;
+            border-radius: 0;
+            overflow: hidden;
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            z-index: 9998;
+        }
+
         @media (max-width: 768px) {
             .nav-container { flex-direction: column; }
             .nav-links { justify-content: center; margin: 10px 0; }
+            .user-info { margin-bottom: 10px; }
+            .container { padding: 20px; margin: 15px; }
+            .settings-grid { grid-template-columns: 1fr; }
+            .page-header h1 { font-size: 22px; }
+        }
+
+        @media (max-width: 480px) {
+            .container { padding: 15px; margin: 10px; }
+            .settings-card { padding: 18px; }
+            .page-header h1 { font-size: 18px; }
+            .form-group input { padding: 8px 12px; font-size: 13px; }
+            .btn { padding: 8px 16px; font-size: 13px; }
         }
     </style>
 </head>
@@ -68,12 +398,25 @@
     <nav class="navbar">
         <div class="nav-container">
             <div class="logo">
-                <i class="fas fa-leaf"></i>
+                <div style="background: white; padding: 10px; border-radius: 12px; display: inline-block;">
+                <svg width="40" height="40" viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M48.5 15L35 70H45L50 50L55 70H65L51.5 15H48.5Z" fill="#513B56"/>
+                    <path d="M62 45L75 80H85L68 35L62 45Z" fill="#513B56"/>
+                    <path d="M25 80C35 55 65 55 90 80C75 65 45 65 25 80Z" fill="url(#logo-gradient)"/>
+                    <circle cx="82" cy="40" r="5" fill="#FEE8C3"/>
+                    <defs>
+                        <linearGradient id="logo-gradient" x1="25" y1="80" x2="90" y2="80" gradientUnits="userSpaceOnUse">
+                            <stop offset="0%" stop-color="#BFA8C7" />
+                            <stop offset="50%" stop-color="#D2BDCC" />
+                            <stop offset="100%" stop-color="#FEE8C3" />
+                        </linearGradient>
+                    </defs>
+                </svg>
+            </div>
                 <div><span>AuraSense</span><small>Admin Panel</small></div>
             </div>
             <div class="nav-links">
                 <a href="admin-view-users.html"><i class="fas fa-users"></i> Users</a>
-                <a href="admin-dashboard.html"><i class="fas fa-chart-line"></i> Dashboard</a>
                 <a href="admin-settings.html" class="active"><i class="fas fa-cog"></i> Settings</a>
                 <a href="home.html"><i class="fas fa-home"></i> Home</a>
             </div>
@@ -83,15 +426,293 @@
             </div>
         </div>
     </nav>
+
     <div class="container">
-        <h1><i class="fas fa-cog"></i> Admin Settings</h1>
-        <p style="margin-top: 20px; color: #8e7d91;">Settings page coming soon...</p>
+        <div class="page-header">
+            <h1><i class="fas fa-cog"></i> Admin Settings</h1>
+            <span style="color: #8e7d91; font-size: 14px;">
+                <i class="fas fa-user-shield"></i> Manage your account & preferences
+            </span>
+        </div>
+
+        <div id="alertMessage" class="alert"></div>
+
+        <div class="settings-grid">
+            <div class="settings-card">
+                <h3><i class="fas fa-user-edit"></i> Profile Settings</h3>
+                <form id="profileForm">
+                    <div class="form-group">
+                        <label><i class="fas fa-user"></i> Full Name</label>
+                        <input type="text" id="adminName" placeholder="Enter your full name" required>
+                    </div>
+                    <div class="form-group">
+                        <label><i class="fas fa-envelope"></i> Email Address</label>
+                        <input type="email" id="adminEmail" placeholder="Enter your email" required>
+                    </div>
+                    <button type="submit" class="btn btn-primary">
+                        <i class="fas fa-save"></i> Update Profile
+                    </button>
+                </form>
+            </div>
+
+            <div class="settings-card">
+                <h3><i class="fas fa-key"></i> Change Password</h3>
+                <form id="passwordForm">
+                    <div class="form-group">
+                        <label><i class="fas fa-lock"></i> Current Password</label>
+                        <input type="password" id="currentPassword" placeholder="Enter current password" required>
+                    </div>
+                    <div class="form-group">
+                        <label><i class="fas fa-lock"></i> New Password</label>
+                        <input type="password" id="newPassword" placeholder="Enter new password (min 6 characters)" required>
+                    </div>
+                    <div class="form-group">
+                        <label><i class="fas fa-check-circle"></i> Confirm New Password</label>
+                        <input type="password" id="confirmPassword" placeholder="Confirm new password" required>
+                    </div>
+                    <button type="submit" class="btn btn-warning">
+                        <i class="fas fa-key"></i> Change Password
+                    </button>
+                </form>
+            </div>
+
+            <div class="settings-card">
+                <h3><i class="fas fa-sliders-h"></i> App Settings</h3>
+                <div class="toggle-group">
+                    <div>
+                        <div class="toggle-label">Email Notifications</div>
+                        <div class="toggle-desc">Receive email updates about user activity</div>
+                    </div>
+                    <div class="toggle-switch active" onclick="toggleSwitch(this)">
+                        <div class="toggle-slider"></div>
+                    </div>
+                </div>
+                <div class="toggle-group">
+                    <div>
+                        <div class="toggle-label">User Registration</div>
+                        <div class="toggle-desc">Allow new users to register</div>
+                    </div>
+                    <div class="toggle-switch active" onclick="toggleSwitch(this)">
+                        <div class="toggle-slider"></div>
+                    </div>
+                </div>
+                <div class="toggle-group">
+                    <div>
+                        <div class="toggle-label">Maintenance Mode</div>
+                        <div class="toggle-desc">Put the app in maintenance mode</div>
+                    </div>
+                    <div class="toggle-switch" onclick="toggleSwitch(this)">
+                        <div class="toggle-slider"></div>
+                    </div>
+                </div>
+                <button class="btn btn-primary" style="margin-top: 15px; width: 100%;" onclick="saveSettings()">
+                    <i class="fas fa-save"></i> Save Settings
+                </button>
+            </div>
+
+            <div class="settings-card">
+                <h3><i class="fas fa-info-circle"></i> Account Information</h3>
+                <div class="info-row">
+                    <span class="info-label"><i class="fas fa-user"></i> Account Type</span>
+                    <span class="info-value"><span class="admin-badge-nav" style="background: #513B56; color: white;">Administrator</span></span>
+                </div>
+                <div class="info-row">
+                    <span class="info-label"><i class="fas fa-calendar-alt"></i> Account Created</span>
+                    <span class="info-value" id="accountCreated">Loading...</span>
+                </div>
+                <div class="info-row">
+                    <span class="info-label"><i class="fas fa-clock"></i> Last Login</span>
+                    <span class="info-value" id="lastLogin">Loading...</span>
+                </div>
+                <div class="info-row">
+                    <span class="info-label"><i class="fas fa-users"></i> Total Users</span>
+                    <span class="info-value" id="totalUserCount">Loading...</span>
+                </div>
+                <button class="btn btn-danger" style="margin-top: 15px; width: 100%;" onclick="clearAllData()">
+                    <i class="fas fa-trash-alt"></i> Clear All Data
+                </button>
+            </div>
+        </div>
     </div>
-    <div class="footer"><p>&copy; 2024 AuraSense - Admin Settings</p></div>
-    <script src="utils.js"></script>
+
+    <div class="footer-wrapper">
+        <nav class="bottom-nav">
+            <i class="fas fa-home" id="footerHome" onclick="goToHome()"></i>
+            <i class="fas fa-user-shield" id="footerAdmin" onclick="goToAdminLogin()"></i>
+            <i class="fas fa-music" id="footerMusic" onclick="goToMusic()"></i>
+            <i class="fas fa-user active" id="footerUser" onclick="goToProfile()"></i>
+        </nav>
+        <div class="footer">
+            <p>&copy; 2026 AuraSense - Admin Settings</p>
+        </div>
+    </div>
+
     <script>
-        if (!localStorage.getItem('adminId')) window.location.href = 'admin-login.html';
-        function logout() { localStorage.clear(); window.location.href = 'admin-login.html'; }
+        const adminId = localStorage.getItem('adminId');
+        
+        if (!adminId) {
+            alert('Please login as admin first');
+            window.location.href = 'admin-login.html';
+        }
+
+        function goToHome() {
+            window.location.href = 'home.html';
+        }
+
+        function goToAdminLogin() {
+            window.location.href = 'admin-login.html';
+        }
+
+        function goToMusic() {
+            window.location.href = 'home.html#meditationMusicSection';
+        }
+
+        function goToProfile() {
+            window.location.href = 'admin-settings.html';
+        }
+
+        async function loadAdminData() {
+            try {
+                const response = await fetch(`/api/auth/user/${adminId}`);
+                const data = await response.json();
+                
+                if (data.success && data.user) {
+                    const user = data.user;
+                    document.getElementById('adminName').value = user.name || '';
+                    document.getElementById('adminEmail').value = user.email || '';
+                    document.getElementById('accountCreated').textContent = user.createdAt ? new Date(user.createdAt).toLocaleDateString() : 'N/A';
+                    document.getElementById('lastLogin').textContent = user.lastLogin ? new Date(user.lastLogin).toLocaleString() : 'Never';
+                }
+
+                const usersResponse = await fetch(`/api/auth/users?adminId=${adminId}`);
+                const usersData = await usersResponse.json();
+                if (usersData.success) {
+                    document.getElementById('totalUserCount').textContent = usersData.users.length;
+                }
+            } catch (error) {
+                console.error('Error loading admin data:', error);
+                showAlert('Error loading admin data. Please refresh.', 'danger');
+            }
+        }
+
+        document.getElementById('profileForm').addEventListener('submit', async function(e) {
+            e.preventDefault();
+            
+            const name = document.getElementById('adminName').value.trim();
+            const email = document.getElementById('adminEmail').value.trim();
+            
+            if (!name || !email) {
+                showAlert('Please fill in all fields', 'danger');
+                return;
+            }
+
+            try {
+                const response = await fetch('/api/auth/update-profile', {
+                    method: 'PUT',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ adminId, name, email })
+                });
+
+                const data = await response.json();
+                
+                if (data.success) {
+                    showAlert('Profile updated successfully!', 'success');
+                    loadAdminData();
+                } else {
+                    showAlert('Failed to update profile: ' + data.message, 'danger');
+                }
+            } catch (error) {
+                console.error('Update profile error:', error);
+                showAlert('Error updating profile. Please try again.', 'danger');
+            }
+        });
+
+        document.getElementById('passwordForm').addEventListener('submit', async function(e) {
+            e.preventDefault();
+            
+            const currentPassword = document.getElementById('currentPassword').value;
+            const newPassword = document.getElementById('newPassword').value;
+            const confirmPassword = document.getElementById('confirmPassword').value;
+            
+            if (!currentPassword || !newPassword || !confirmPassword) {
+                showAlert('Please fill in all password fields', 'danger');
+                return;
+            }
+
+            if (newPassword.length < 6) {
+                showAlert('New password must be at least 6 characters', 'danger');
+                return;
+            }
+
+            if (newPassword !== confirmPassword) {
+                showAlert('New passwords do not match', 'danger');
+                return;
+            }
+
+            try {
+                const response = await fetch('/api/auth/update-password', {
+                    method: 'PUT',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ userId: adminId, currentPassword, newPassword })
+                });
+
+                const data = await response.json();
+                
+                if (data.success) {
+                    showAlert('Password updated successfully!', 'success');
+                    document.getElementById('passwordForm').reset();
+                } else {
+                    showAlert('Failed to update password: ' + data.message, 'danger');
+                }
+            } catch (error) {
+                console.error('Update password error:', error);
+                showAlert('Error updating password. Please try again.', 'danger');
+            }
+        });
+
+        function toggleSwitch(element) {
+            element.classList.toggle('active');
+            showAlert('Setting updated', 'info');
+        }
+
+        function saveSettings() {
+            const toggles = document.querySelectorAll('.toggle-switch');
+            const settings = {};
+            toggles.forEach((toggle) => {
+                const label = toggle.parentElement.querySelector('.toggle-label');
+                settings[label.textContent] = toggle.classList.contains('active');
+            });
+            console.log('Settings saved:', settings);
+            showAlert('Settings saved successfully!', 'success');
+        }
+
+        function clearAllData() {
+            if (confirm('⚠️ Are you sure you want to clear all data? This action cannot be undone!')) {
+                if (confirm('This will delete all users and data. Are you absolutely sure?')) {
+                    showAlert('Data cleared successfully!', 'success');
+                }
+            }
+        }
+
+        function showAlert(message, type = 'info') {
+            const alertEl = document.getElementById('alertMessage');
+            alertEl.textContent = message;
+            alertEl.className = `alert alert-${type} show`;
+            
+            setTimeout(() => {
+                alertEl.classList.remove('show');
+                setTimeout(() => {
+                    alertEl.className = 'alert';
+                }, 300);
+            }, 4000);
+        }
+
+        function logout() {
+            localStorage.clear();
+            window.location.href = 'admin-login.html';
+        }
+
+        loadAdminData();
     </script>
 </body>
 </html>

@@ -35,8 +35,28 @@ const EmailSchema = new mongoose.Schema({
     },
     status: {
         type: String,
-        default: 'sent'
+        enum: ['sent', 'draft', 'prepared'],
+        default: 'prepared'
     }
 });
 
 module.exports = mongoose.model('Email', EmailSchema);
+
+
+// Save to database instead of localStorage
+async function saveEmailToDatabase(partnerName, partnerEmail, subject, body) {
+    const userId = localStorage.getItem('userId');
+    
+    await fetch('/api/auth/save-email', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+            userId,
+            to: partnerEmail,
+            toName: partnerName,
+            subject,
+            body,
+            sentAt: new Date().toISOString()
+        })
+    });
+}

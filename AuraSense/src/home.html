@@ -303,10 +303,10 @@
         </main>
 
         <nav class="bottom-nav">
-            <i class="fas fa-home active" id="footerHome"></i>
-            <i class="fas fa-user-shield" id="footerAdmin"></i>
-            <i class="fas fa-music" id="bottomMusicIcon"></i>
-            <i class="fas fa-user" id="footerUser"></i>
+            <i class="fas fa-home active" id="footerHome" onclick="goToHome()"></i>
+            <i class="fas fa-user-shield" id="footerAdmin" onclick="goToAdminLogin()"></i>
+            <i class="fas fa-music" id="bottomMusicIcon" onclick="scrollToMeditationMusic()"></i>
+            <i class="fas fa-user" id="footerUser" onclick="goToProfile()"></i>
         </nav>
     </div>
     
@@ -319,7 +319,6 @@
         const closeLumiTrigger = document.getElementById("closeLumiModalBtn");
         const lumiChatArea = document.getElementById("lumi-chat-body");
 
-        // PHQ-9 & GAD-7 ক্লিনিকাল প্রশ্নমালা লোড করা হলো
         const lumiAssessmentQuestions = [
             { id: 'phq1', type: 'phq', text: 'Little interest or pleasure in doing things?' },
             { id: 'phq2', type: 'phq', text: 'Feeling down, depressed, or hopeless?' },
@@ -382,7 +381,6 @@
             `;
         }
 
-        // ==================== OPTION 1: SENTIMENT PROCESSING (TEXTBLOB) ====================
         function launchSentimentInterface() {
             lumiChatArea.innerHTML = `
                 <p><strong>Lumi:</strong> Please write down how you feel right now. I will evaluate your mood using Sentiment Analysis:</p>
@@ -400,7 +398,6 @@
 
             lumiChatArea.innerHTML = `<p><strong>Lumi:</strong> Analyzing entry keywords and sentiment balances...</p>`;
 
-            // পাইথন রিয়েল-টাইম এন্ডপয়েন্টে পাঠানো হচ্ছে
             fetch('http://127.0.0.1:5000/api/lumi/sentiment', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
@@ -416,7 +413,6 @@
             });
         }
 
-        // ==================== OPTION 2: CLINICAL ASSESSMENT CORE ====================
         function launchLumiSurvey() {
             activeQuestionIndex = 0;
             cumulativePhqPoints = 0;
@@ -458,22 +454,17 @@
         function evaluateClinicalScoreMetrics() {
             let metricVerdict = "normal";
 
-            // PHQ-9 (>=15) অথবা GAD-7 (>=15) স্কোর সিভিয়ার কন্ডিশন নির্দেশ করে
             if (cumulativePhqPoints >= 15 || cumulativeGadPoints >= 15) {
                 metricVerdict = "severe";
-            } 
-            // মডারেট ক্যাটাগরি স্কোরিং রেঞ্জ ভ্যালিডেশন
-            else if (cumulativePhqPoints >= 5 || cumulativeGadPoints >= 5) {
+            } else if (cumulativePhqPoints >= 5 || cumulativeGadPoints >= 5) {
                 metricVerdict = "moderate";
-            } 
-            else {
+            } else {
                 metricVerdict = "normal";
             }
 
             renderLumiClinicalVerdict(metricVerdict);
         }
 
-        // ==================== DYNAMIC DIAGNOSTIC VIEW CONTROLLER ====================
         function renderLumiClinicalVerdict(computedStatus) {
             let rawSuggestionBox = "";
 
@@ -485,8 +476,7 @@
                         <button class="lumi-action-btn secondary" onclick="window.location.href='booking.html'"><i class="fas fa-calendar-check"></i> Take an Appointment</button>
                     </div>
                 `;
-            } 
-            else if (computedStatus === "moderate") {
+            } else if (computedStatus === "moderate") {
                 rawSuggestionBox = `
                     <div class="lumi-message" style="border-left: 4px solid #f0ad4e;">
                         <p><strong>Lumi Suggestions:</strong> You seem to be experiencing moderate levels of stress or low mood. Engaging in gentle self-care routines or structures could help ground your thoughts and ease the pressure.</p>
@@ -494,9 +484,7 @@
                         <button class="lumi-action-btn secondary" onclick="lumiModal.style.display='none'; document.getElementById('footerUser').click();"><i class="fas fa-tasks"></i> Follow a task schedule</button>
                     </div>
                 `;
-            } 
-            else {
-                // Normal Condition (Temporary Sadness)
+            } else {
                 rawSuggestionBox = `
                     <div class="lumi-message" style="border-left: 4px solid #5bc0de;">
                         <p><strong>Lumi Suggestions:</strong> Talk to a friend. Sharing what's on your mind with someone close can bring quick relief. Alternatively, let's calm your nervous system with a brief breathing reset.</p>
@@ -509,7 +497,6 @@
                 `;
             }
 
-            // রিস্টার্ট চ্যাট বাটন যুক্ত করা হলো
             rawSuggestionBox += `
                 <button onclick="initializeLumiMenu()" style="margin-top: 15px; background: none; border: none; color: #513B56; font-weight: 700; cursor: pointer;">
                     <i class="fas fa-redo"></i> Restart Conversation

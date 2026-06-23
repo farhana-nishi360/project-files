@@ -1,7 +1,19 @@
 document.addEventListener('DOMContentLoaded', function() {
     
-    const userName = localStorage.getItem('userName') || 'Guest';
+    // ============ GET USER NAME (PRIORITIZE ADMIN) ============
+    let userName = localStorage.getItem('userName') || 'Guest';
     const userEmail = localStorage.getItem('userEmail') || '';
+    
+    const isAdmin = localStorage.getItem('isAdmin') === 'true';
+    const adminName = localStorage.getItem('adminName');
+    
+    if (isAdmin && adminName) {
+        userName = adminName;
+        localStorage.setItem('userName', adminName);
+        console.log('👑 Admin logged in as:', userName);
+    } else {
+        console.log('👤 Regular user logged in as:', userName);
+    }
     
     console.log('Home page loaded for:', userName);
     
@@ -155,7 +167,7 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     }
 
-    // Lumi chat interaction (অ্যালার্টটি অটোমেটিক কাস্টম মডালে কনভার্ট হবে)
+    // Lumi chat interaction
     const lumiCard = document.querySelector('.lumi-card');
     if (lumiCard) {
         lumiCard.addEventListener('click', function() {
@@ -178,7 +190,7 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     });
 
-    // Bottom navigation (কাস্টম কনফার্ম মডাল যুক্ত করা হয়েছে)
+    // ============ BOTTOM NAVIGATION ============
     document.querySelectorAll('.bottom-nav i').forEach(icon => {
         icon.addEventListener('click', async function() {
             document.querySelectorAll('.bottom-nav i').forEach(i => {
@@ -195,7 +207,13 @@ document.addEventListener('DOMContentLoaded', function() {
             } else if (iconClass.includes('fa-music')) {
                 scrollToMeditationMusic();
             } else if (iconClass.includes('fa-user')) {
-                if (userName !== 'Guest') {
+                const currentUser = localStorage.getItem('userName') || 'Guest';
+                const isAdminUser = localStorage.getItem('isAdmin') === 'true';
+                const adminNameUser = localStorage.getItem('adminName');
+                
+                if (isAdminUser && adminNameUser) {
+                    window.location.href = 'admin-view-users.html';
+                } else if (currentUser !== 'Guest') {
                     window.location.href = 'profile.html';
                 } else {
                     if (await window.customConfirmAsync('Please login to view profile. Go to login page?')) {
@@ -206,11 +224,17 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     });
 
-    // Header profile icon (কাস্টম কনফার্ম মডাল যুক্ত করা হয়েছে)
+    // ============ HEADER PROFILE ICON ============
     const profileIcon = document.querySelector('.fa-user-circle');
     if (profileIcon) {
         profileIcon.addEventListener('click', async function() {
-            if (userName !== 'Guest') {
+            const currentUser = localStorage.getItem('userName') || 'Guest';
+            const isAdminUser = localStorage.getItem('isAdmin') === 'true';
+            const adminNameUser = localStorage.getItem('adminName');
+            
+            if (isAdminUser && adminNameUser) {
+                window.location.href = 'admin-view-users.html';
+            } else if (currentUser && currentUser !== 'Guest') {
                 window.location.href = 'profile.html';
             } else {
                 if (await window.customConfirmAsync('You are not logged in. Go to login page?')) {
@@ -220,7 +244,7 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     }
 
-    // Greeting animation
+    // ============ GREETING ANIMATION ============
     const greeting = document.querySelector('.greeting h1');
     if (greeting) {
         greeting.style.opacity = '0';
@@ -233,7 +257,7 @@ document.addEventListener('DOMContentLoaded', function() {
         }, 100);
     }
 
-    // Add logout button (কাস্টম কনফার্ম মডাল যুক্ত করা হয়েছে)
+    // ============ LOGOUT BUTTON ============
     function addLogoutButton() {
         const headerIcons = document.querySelector('.header-icons');
         if (headerIcons && !document.getElementById('logout-btn')) {
@@ -261,7 +285,7 @@ document.addEventListener('DOMContentLoaded', function() {
     
     addLogoutButton();
 
-    // ============ NOTIFICATION SYSTEM (Safe Setup) ============
+    // ============ NOTIFICATION SYSTEM ============
     let notificationCheckInterval = null;
     let notifications = [];
     let unreadCount = 0;
@@ -317,7 +341,16 @@ document.addEventListener('DOMContentLoaded', function() {
         notifications = [];
         const todayTasks = tasks.filter(task => new Date(task.createdAt).toDateString() === today && !task.completed);
         todayTasks.forEach(task => {
-            notifications.push({ id: `task_${task._id}`, type: 'pending', title: 'Pending Task', message: `You have a pending task: "${task.title}"`, time: new Date(task.createdAt), priority: task.priority, taskId: task._id, read: false });
+            notifications.push({ 
+                id: `task_${task._id}`, 
+                type: 'pending', 
+                title: 'Pending Task', 
+                message: `You have a pending task: "${task.title}"`, 
+                time: new Date(task.createdAt), 
+                priority: task.priority, 
+                taskId: task._id, 
+                read: false 
+            });
         });
         
         notifications.sort((a, b) => b.time - a.time);
@@ -340,7 +373,11 @@ document.addEventListener('DOMContentLoaded', function() {
             const iconColor = notification.type === 'pending' ? '#ff9800' : '#dc3545';
             html += `<div class="notification-item" onclick="handleNotificationClickLocal('${notification.id}', '${notification.taskId}')">
                 <div class="notification-icon" style="background: ${iconColor}20;"><i class="fas ${icon}" style="color: ${iconColor};"></i></div>
-                <div class="notification-content"><div class="notification-title">${escapeHtml(notification.title)}</div><div class="notification-message">${escapeHtml(notification.message)}</div><div class="notification-time">${getTimeAgo(notification.time)}</div></div>
+                <div class="notification-content">
+                    <div class="notification-title">${escapeHtml(notification.title)}</div>
+                    <div class="notification-message">${escapeHtml(notification.message)}</div>
+                    <div class="notification-time">${getTimeAgo(notification.time)}</div>
+                </div>
             </div>`;
         });
         dropdownBody.innerHTML = html;
@@ -414,12 +451,17 @@ document.addEventListener('DOMContentLoaded', function() {
 
     initNotifications();
 
-    // Header/Profile action buttons fix
+    // ============ HEADER PROFILE BUTTON ============
     const profileIconBtn = document.getElementById('profileIconBtn');
     if (profileIconBtn) {
         profileIconBtn.addEventListener('click', async function() {
-            const userName = localStorage.getItem('userName');
-            if (userName && userName !== 'Guest') {
+            const currentUser = localStorage.getItem('userName') || 'Guest';
+            const isAdminUser = localStorage.getItem('isAdmin') === 'true';
+            const adminNameUser = localStorage.getItem('adminName');
+            
+            if (isAdminUser && adminNameUser) {
+                window.location.href = 'admin-view-users.html';
+            } else if (currentUser && currentUser !== 'Guest') {
                 window.location.href = 'profile.html';
             } else {
                 if (await window.customConfirmAsync('Please login to view profile. Go to login page?')) {
@@ -429,7 +471,7 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     }
 
-    // Close dropdown clicks
+    // ============ CLOSE DROPDOWN ON OUTSIDE CLICK ============
     document.addEventListener('click', function(event) {
         const dropdown = document.getElementById('notificationDropdown');
         const iconContainer = document.getElementById('notificationIconContainer');
@@ -451,3 +493,60 @@ document.addEventListener('DOMContentLoaded', function() {
         }
     });
 });
+
+// ============ GLOBAL FUNCTIONS (for onclick attributes) ============
+function goToHome() {
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+}
+
+function goToAdminLogin() {
+    window.location.href = 'admin-login.html';
+}
+
+function goToProfile() {
+    const userName = localStorage.getItem('userName');
+    const isAdmin = localStorage.getItem('isAdmin') === 'true';
+    const adminName = localStorage.getItem('adminName');
+    
+    if (isAdmin && adminName) {
+        window.location.href = 'admin-view-users.html';
+    } else if (userName && userName !== 'Guest') {
+        window.location.href = 'profile.html';
+    } else {
+        if (confirm('Please login to view profile. Go to login page?')) {
+            window.location.href = 'login.html';
+        }
+    }
+}
+
+function goToMusic() {
+    const musicSection = document.getElementById('meditationMusicSection');
+    if (musicSection) {
+        musicSection.scrollIntoView({ 
+            behavior: 'smooth', 
+            block: 'start' 
+        });
+        musicSection.style.transition = 'background 0.5s ease';
+        musicSection.style.background = 'rgba(81, 59, 86, 0.05)';
+        musicSection.style.borderRadius = '20px';
+        setTimeout(() => {
+            musicSection.style.background = '';
+        }, 1000);
+    }
+}
+
+window.scrollToMeditationMusic = function() {
+    const musicSection = document.getElementById('meditationMusicSection');
+    if (musicSection) {
+        musicSection.scrollIntoView({ 
+            behavior: 'smooth', 
+            block: 'start' 
+        });
+        musicSection.style.transition = 'background 0.5s ease';
+        musicSection.style.background = 'rgba(81, 59, 86, 0.05)';
+        musicSection.style.borderRadius = '20px';
+        setTimeout(() => {
+            musicSection.style.background = '';
+        }, 1000);
+    }
+};

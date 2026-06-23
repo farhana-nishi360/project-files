@@ -1,6 +1,7 @@
 const express = require('express');
 const router = express.Router();
 const User = require('./user');
+const Email = require('./email');  // ← ADD THIS LINE
 const nodemailer = require('nodemailer');
 
 // Configure email transporter
@@ -184,6 +185,73 @@ router.get('/users', async (req, res) => {
     } catch (error) {
         console.error('Users fetch error:', error);
         res.status(500).json({ success: false, message: error.message });
+    }
+});
+
+// ============ DELETE USER (Admin only) ============
+router.delete('/users/:userId', async (req, res) => {
+    try {
+        const { userId } = req.params;
+        const { adminId } = req.query;
+        
+        console.log(`Delete request: userId=${userId}, adminId=${adminId}`);
+        
+        // 1. Verify admin is authenticated
+        if (!adminId) {
+            return res.status(401).json({ 
+                success: false, 
+                message: 'Admin authentication required' 
+            });
+        }
+        
+        // 2. Check if the admin exists and is actually an admin
+        const admin = await User.findById(adminId);
+        if (!admin) {
+            return res.status(403).json({ 
+                success: false, 
+                message: 'Admin not found' 
+            });
+        }
+        
+        if (!admin.isAdmin) {
+            return res.status(403).json({ 
+                success: false, 
+                message: 'Unauthorized: Admin privileges required' 
+            });
+        }
+        
+        // 3. Check if the user to delete exists
+        const userToDelete = await User.findById(userId);
+        if (!userToDelete) {
+            return res.status(404).json({ 
+                success: false, 
+                message: 'User not found' 
+            });
+        }
+        
+        // 4. Prevent admin from deleting themselves
+        if (userId === adminId) {
+            return res.status(400).json({ 
+                success: false, 
+                message: 'Cannot delete your own admin account' 
+            });
+        }
+        
+        // 5. Delete the user from database
+        await User.findByIdAndDelete(userId);
+        
+        console.log(`User ${userId} (${userToDelete.email}) deleted successfully by admin ${adminId}`);
+        res.json({ 
+            success: true, 
+            message: 'User deleted successfully' 
+        });
+        
+    } catch (error) {
+        console.error('Delete user error:', error);
+        res.status(500).json({ 
+            success: false, 
+            message: 'Server error while deleting user: ' + error.message 
+        });
     }
 });
 
@@ -653,6 +721,229 @@ router.post('/reset-password', async (req, res) => {
             success: false, 
             message: 'Server error. Please try again.' 
         });
+    }
+});
+
+// ============ EMAIL HISTORY ROUTES (NEW - ADDED WITHOUT CHANGING ANYTHING ELSE) ============
+
+// Save email to database
+router.post('/save-email', async (req, res) => {
+    try {
+        const { userId, to, toName, subject, body, emailType, status } = req.body;
+        
+        if (!userId || !to || !subject || !body) {
+            return res.status(400).json({ 
+                success: false, 
+                message: 'Missing required fields' 
+            });
+        }
+        
+        // Get user details
+        const user = await User.findById(userId);
+        if (!user) {
+            return res.status(404).json({ 
+                success: false, 
+                message: 'User not found' 
+            });
+        }
+        
+        // Create email object for Email collection
+        const emailData = {
+            user: user.name,
+            userEmail: user.email,
+            to: to,
+            toName: toName || 'Recipient',
+            subject: subject,
+            body: body,
+            emailType: emailType || 'appointment',
+            status: status || 'sent'
+        };
+        
+        // Save to Email collection
+        const email = new Email(emailData);
+        await email.save();
+        
+        // Also update user's embedded emailHistory
+        if (!user.emailHistory) {
+            user.emailHistory = [];
+        }
+        user.emailHistory.push({
+            to: to,
+            toName: toName || 'Recipient',
+            subject: subject,
+            body: body,
+            sentAt: new Date(),
+            status: status || 'sent'
+        });
+        await user.save();
+        
+        res.json({ 
+            success: true, 
+            message: 'Email saved successfully',
+            email: email
+        });
+        
+    } catch (error) {
+        console.error('Save email error:', error);
+        res.status(500).json({ 
+            success: false, 
+            message: error.message 
+        });
+    }
+});
+
+// Get email history
+router.get('/email-history', async (req, res) => {
+    try {
+        const { userId } = req.query;
+        
+        if (!userId) {
+            return res.status(400).json({ 
+                success: false, 
+                message: 'User ID required' 
+            });
+        }
+        
+        const user = await User.findById(userId);
+        if (!user) {
+            return res.status(404).json({ 
+                success: false, 
+                message: 'User not found' 
+            });
+        }
+        
+        // Get emails from Email collection using userEmail
+        const emails = await Email.find({ userEmail: user.email })
+            .sort({ sentAt: -1 })
+            .limit(100);
+        
+        res.json({ 
+            success: true, 
+            emails: emails 
+        });
+        
+    } catch (error) {
+        console.error('Get email history error:', error);
+        res.status(500).json({ 
+            success: false, 
+            message: error.message 
+        });
+    }
+});
+
+// ============ DELETE USER (Admin only) ============
+router.delete('/users/:userId', async (req, res) => {
+    try {
+        const { userId } = req.params;
+        const { adminId } = req.query;
+        
+        console.log(`Delete request: userId=${userId}, adminId=${adminId}`);
+        console.log('Type of userId:', typeof userId);
+        console.log('userId value:', userId);
+        
+        // 1. Verify admin is authenticated
+        if (!adminId) {
+            return res.status(401).json({ 
+                success: false, 
+                message: 'Admin authentication required' 
+            });
+        }
+        
+        // 2. Validate userId
+        if (!userId || userId === 'undefined' || userId === 'null') {
+            return res.status(400).json({ 
+                success: false, 
+                message: 'Invalid user ID provided' 
+            });
+        }
+        
+        // 3. Check if the admin exists and is actually an admin
+        const admin = await User.findById(adminId);
+        if (!admin) {
+            return res.status(403).json({ 
+                success: false, 
+                message: 'Admin not found' 
+            });
+        }
+        
+        if (!admin.isAdmin) {
+            return res.status(403).json({ 
+                success: false, 
+                message: 'Unauthorized: Admin privileges required' 
+            });
+        }
+        
+        // 4. Check if the user to delete exists
+        try {
+            const userToDelete = await User.findById(userId);
+            if (!userToDelete) {
+                return res.status(404).json({ 
+                    success: false, 
+                    message: 'User not found' 
+                });
+            }
+            
+            // 5. Prevent admin from deleting themselves
+            if (userId === adminId) {
+                return res.status(400).json({ 
+                    success: false, 
+                    message: 'Cannot delete your own admin account' 
+                });
+            }
+            
+            // 6. Delete the user from database
+            await User.findByIdAndDelete(userId);
+            
+            console.log(`User ${userId} (${userToDelete.email}) deleted successfully by admin ${adminId}`);
+            res.json({ 
+                success: true, 
+                message: 'User deleted successfully' 
+            });
+        } catch (err) {
+            if (err.name === 'CastError') {
+                return res.status(400).json({ 
+                    success: false, 
+                    message: 'Invalid user ID format' 
+                });
+            }
+            throw err;
+        }
+        
+    } catch (error) {
+        console.error('Delete user error:', error);
+        res.status(500).json({ 
+            success: false, 
+            message: 'Server error while deleting user: ' + error.message 
+        });
+    }
+});
+// ============ END OF EMAIL HISTORY ROUTES ============
+// Update Profile
+router.put('/update-profile', async (req, res) => {
+    try {
+        const { adminId, name, email } = req.body;
+        
+        const user = await User.findById(adminId);
+        if (!user) {
+            return res.status(404).json({ success: false, message: 'User not found' });
+        }
+        
+        // Check if email is already taken by another user
+        if (email !== user.email) {
+            const existingUser = await User.findOne({ email });
+            if (existingUser) {
+                return res.status(400).json({ success: false, message: 'Email already in use' });
+            }
+        }
+        
+        user.name = name;
+        user.email = email;
+        await user.save();
+        
+        res.json({ success: true, message: 'Profile updated successfully' });
+    } catch (error) {
+        console.error('Update profile error:', error);
+        res.status(500).json({ success: false, message: error.message });
     }
 });
 

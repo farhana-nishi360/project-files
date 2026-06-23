@@ -161,7 +161,7 @@
                         <button class="call-btn" onclick="makeCall('+8801618106530')">
                             <i class="fas fa-phone-alt"></i> Call Now
                         </button>
-                        <button class="email-btn" onclick="showEmailOptions('Green Life Hospital', 'appointments@greenlifehospital.com.bd')">
+                        <button class="email-btn" onclick="showEmailOptions('Green Life Hospital', 'farhananishi2025@gmail.com')">
                             <i class="fas fa-envelope"></i> Send Email
                         </button>
                         <button class="whatsapp-btn" onclick="openWhatsApp('+8801618106530', 'Green Life Hospital')">
@@ -201,23 +201,25 @@
                     <h3 class="section-subtitle">
                         <i class="fas fa-history"></i> Your Email History
                     </h3>
-                    <button class="refresh-history-btn" onclick="loadEmailHistoryFromLocal()">
-                        <i class="fas fa-sync-alt"></i> Refresh
-                    </button>
+                    <!-- Update the refresh button -->
+<button class="refresh-history-btn" onclick="loadEmailHistoryFromDB()">
+    <i class="fas fa-sync-alt"></i> Refresh
+</button>
                 </div>
                 
                 <div id="emailHistoryContainer" class="email-history-container">
                     <div class="table-wrapper">
                         <table class="email-history-table">
-                            <thead>
-                                <tr>
-                                    <th>Date</th>
-                                    <th>To</th>
-                                    <th>Email Address</th>
-                                    <th>Subject</th>
-                                    <th>Actions</th>
-                                </tr>
-                            </thead>
+    <thead>
+        <tr>
+            <th>Date</th>
+            <th>To</th>
+            <th>Email Address</th>
+            <th>Subject</th>
+            <th>Status</th>
+            <th>Actions</th>
+        </tr>
+    </thead>
                             <tbody id="emailHistoryTableBody">
                                 <tr>
                                     <td colspan="5" style="text-align: center; padding: 40px;">📭 No emails sent yet. Click "Send Email" to get started!</td>
