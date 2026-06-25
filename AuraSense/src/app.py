@@ -3,48 +3,56 @@ from flask_cors import CORS
 from textblob import TextBlob
 
 app = Flask(__name__)
-
 CORS(app)
+
+SUICIDE_KEYWORDS = [
+    "suicide",
+    "suicidal",
+    "kill myself",
+    "end my life",
+    "want to die",
+    "die",
+    "don't want to live",
+    "self harm",
+    "self-harm",
+    "end it all",
+    "no reason to live"
+]
 
 @app.route('/api/lumi/sentiment', methods=['POST'])
 def lumi_sentiment_analysis():
-    try:
-        
-        data = request.get_json()
-        if not data or 'text' not in data:
-            return jsonify({'status': 'normal', 'polarity': 0, 'error': 'No text provided'}), 400
-            
-        user_text = data.get('text', '')
-        
-        if not user_text.strip():
-            return jsonify({'status': 'normal', 'polarity': 0})
-            
-       
-        blob = TextBlob(user_text)
-        polarity = blob.sentiment.polarity  
-        
-       
-        if polarity < -0.3:
-           
-            condition_status = "severe"      
-        elif -0.3 <= polarity < 0.1:
-           
-            condition_status = "moderate"    
-        else:
-          
-            condition_status = "normal"      
-            
+
+    data = request.get_json()
+    user_text = data.get("text", "").lower()
+
+    # Highest priority
+    if any(word in user_text for word in SUICIDE_KEYWORDS):
         return jsonify({
-            'status': condition_status,
-            'polarity': polarity
+            "status": "severe",
+            "polarity": -1,
+            "recommendation": "Please seek immediate professional support."
         })
 
-    except Exception as e:
-       
-        print(f"Error in Lumi Sentiment Engine: {e}")
-        return jsonify({'status': 'normal', 'polarity': 0, 'error': str(e)}), 500
+    polarity = TextBlob(user_text).sentiment.polarity
+    if polarity <= -0.60:
+      condition_status = "severe"
+      recommendation = "Please seek immediate professional support."
 
-if __name__ == '__main__':
+    elif polarity < 0:
+      condition_status = "moderate"
+      recommendation = "Take some rest and talk with someone you trust."
+
+    else:
+      condition_status = "normal"
+      recommendation = "Your mood appears stable."
+
     
-    print("Lumi AI Engine is running on http://127.0.0.1:5000")
-    app.run(port=5000, debug=True)
+    
+    return jsonify({
+        "status": status,
+        "polarity": polarity,
+        "recommendation": recommendation
+    })
+
+if __name__ == "__main__":
+    app.run(debug=True)

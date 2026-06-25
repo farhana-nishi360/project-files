@@ -392,33 +392,42 @@
             `;
         }
 
-        function dispatchSentimentPayload() {
-            const textString = document.getElementById("userInputSentimentText").value;
-            if (!textString.trim()) return;
+       function dispatchSentimentPayload() {
+    const textString = document.getElementById("userInputSentimentText").value;
 
-            lumiChatArea.innerHTML = `<p><strong>Lumi:</strong> Analyzing entry keywords and sentiment balances...</p>`;
+    if (!textString.trim()) return;
 
-            fetch('http://127.0.0.1:5000/api/lumi/sentiment', {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ text: textString })
-            })
-            .then(res => res.json())
-            .then(data => {
-                renderLumiClinicalVerdict(data.status);
-            })
-            .catch(err => {
-                console.error("Fallback execution handled.", err);
-                renderLumiClinicalVerdict("normal");
-            });
-        }
+    lumiChatArea.innerHTML =
+        `<p><strong>Lumi:</strong> Analyzing entry keywords and sentiment balances...</p>`;
 
-        function launchLumiSurvey() {
-            activeQuestionIndex = 0;
-            cumulativePhqPoints = 0;
-            cumulativeGadPoints = 0;
-            displaySurveyQuestion();
-        }
+    fetch("http://127.0.0.1:5000/api/lumi/sentiment", {
+        method: "POST",
+        headers: {
+            "Content-Type": "application/json"
+        },
+        body: JSON.stringify({
+            text: textString
+        })
+    })
+    .then(res => res.json())
+.then(data => {
+    console.log("Backend Response:", data);
+    alert(JSON.stringify(data));
+
+    renderLumiClinicalVerdict(data.status);
+})
+    .catch(err => {
+        console.error(err);
+        renderLumiClinicalVerdict("normal");
+    });
+}   // <-- dispatchSentimentPayload এখানে শেষ হবে
+
+function launchLumiSurvey() {
+    activeQuestionIndex = 0;
+    cumulativePhqPoints = 0;
+    cumulativeGadPoints = 0;
+    displaySurveyQuestion();
+}
 
         function displaySurveyQuestion() {
             const currentQuestion = lumiAssessmentQuestions[activeQuestionIndex];
@@ -466,6 +475,9 @@
         }
 
         function renderLumiClinicalVerdict(computedStatus) {
+            alert("Status = " + computedStatus);
+    console.log("Status =", computedStatus);
+
             let rawSuggestionBox = "";
 
             if (computedStatus === "severe") {
