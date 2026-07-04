@@ -1,0 +1,106 @@
+body {
+    background-color: #fee8c3;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    margin: 0;
+}
+
+.app-container {
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.login-card {
+    background: white;
+    padding: 2rem;
+    border-radius: 20px;
+    box-shadow: 0 10px 25px rgba(0,0,0,0.05);
+    width: 100%;
+    max-width: 350px;
+    text-align: center;
+}
+
+.form-title {
+    color: #513B56;
+    font-size: 1.8rem;
+    margin-bottom: 30px;
+}
+
+.input-group {
+    text-align: left;
+    margin-bottom: 20px;
+}
+
+.input-group input {
+    width: 100%;
+    padding: 12px;
+    border: 1.5px solid #e0dce2;
+    border-radius: 10px;
+    box-sizing: border-box;
+    transition: border-color 0.3s;
+    font-size: 1rem;
+}
+
+.input-group input:focus {
+    outline: none;
+    border-color: #513B56;
+}
+
+.forgot-password-container {
+    text-align: right;
+    margin-top: 8px;
+}
+
+.forgot-link {
+    color: #8e7d91;
+    font-size: 0.8rem;
+    text-decoration: none;
+}
+
+.forgot-link:hover {
+    color: #513B56;
+}
+
+.signup-redirect {
+    margin: 20px 0;
+    text-align: center;
+}
+
+.signup-redirect p {
+    color: #8e7d91;
+    font-size: 0.9rem;
+    margin-bottom: 5px;
+}
+
+.signup-hyperlink {
+    color: #513B56;
+    text-decoration: none;
+    font-weight: bold;
+    font-size: 1rem;
+}
+
+.signup-hyperlink:hover {
+    text-decoration: underline;
+}
+
+.btn-primary {
+    width: 100%;
+    padding: 14px;
+    background-color: #513B56;
+    color: white;
+    border: none;
+    border-radius: 10px;
+    font-size: 1rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: background 0.3s;
+}
+
+.btn-primary:hover {
+    background-color: #3d2c41;
+}

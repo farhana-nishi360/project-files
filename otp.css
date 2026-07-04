@@ -1,0 +1,113 @@
+body {
+    background-color: #fee8c3;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    margin: 0;
+}
+
+.card {
+    background: white;
+    padding: 2rem;
+    border-radius: 20px;
+    box-shadow: 0 10px 25px rgba(0,0,0,0.05);
+    width: 100%;
+    max-width: 350px;
+    text-align: center;
+}
+
+.form-title {
+    color: #513B56;
+    margin-bottom: 8px;
+}
+
+.otp-boxes {
+    display: flex;
+    gap: 10px;
+    justify-content: center;
+    margin: 30px 0;
+}
+
+.otp-box {
+    width: 60px;
+    height: 60px;
+    border: 2px solid #e0dce2;
+    border-radius: 10px;
+    font-size: 2rem;
+    text-align: center;
+    color: #513B56;
+}
+
+.otp-box:focus {
+    outline: none;
+    border-color: #513B56;
+}
+
+.otp-box::-webkit-outer-spin-button,
+.otp-box::-webkit-inner-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
+}
+
+.btn-primary {
+    width: 100%;
+    padding: 14px;
+    background-color: #513B56;
+    color: white;
+    border: none;
+    border-radius: 12px;
+    font-size: 1rem;
+    font-weight: bold;
+    cursor: pointer;
+}
+
+.btn-primary:hover {
+    background-color: #3d2c41;
+}
+/* Add these message styles to your existing otp.css */
+
+.message-error {
+    color: #dc3545 !important;
+    font-size: 13px;
+    padding: 8px;
+    background: #ffe6e6;
+    border-radius: 8px;
+}
+
+.message-success {
+    color: #28a745 !important;
+    font-size: 13px;
+    padding: 8px;
+    background: #e6ffe6;
+    border-radius: 8px;
+}
+
+.message-info {
+    color: #513B56 !important;
+    font-size: 13px;
+    padding: 8px;
+    background: #f0e8f5;
+    border-radius: 8px;
+}
+
+.message-warning {
+    color: #856404 !important;
+    font-size: 13px;
+    padding: 8px;
+    background: #fff3cd;
+    border-radius: 8px;
+}
+
+/* Disabled button style */
+.btn-primary:disabled {
+    background: #8e7d91;
+    cursor: not-allowed;
+    opacity: 0.7;
+}
+
+.btn-primary:disabled:hover {
+    background: #8e7d91;
+    transform: none;
+}

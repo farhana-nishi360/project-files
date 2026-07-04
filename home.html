@@ -1,0 +1,1181 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=yes">
+    <meta charset="UTF-8">
+    <title>AuraSense - Home</title>
+    <link rel="stylesheet" href="home.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <link rel="stylesheet" href="modal.css">
+    
+    <style>
+        /* ==================== LUMI CHAT MODAL STYLES ==================== */
+        .lumi-modal {
+            display: none; 
+            position: fixed; 
+            z-index: 2000; 
+            left: 0; 
+            top: 0; 
+            width: 100%; 
+            height: 100%; 
+            background-color: rgba(0,0,0,0.5);
+            align-items: center; 
+            justify-content: center;
+        }
+        .lumi-modal-content {
+            background-color: #fff; 
+            padding: 20px; 
+            border-radius: 16px; 
+            width: 90%; 
+            max-width: 450px; 
+            box-shadow: 0 8px 30px rgba(0,0,0,0.3);
+            display: flex;
+            flex-direction: column;
+            max-height: 85vh;
+        }
+        .lumi-modal-header {
+            display: flex; 
+            justify-content: space-between; 
+            align-items: center; 
+            border-bottom: 1px solid #eee; 
+            padding-bottom: 10px;
+            color: #513B56;
+        }
+        .lumi-modal-header h3 { margin: 0; font-size: 1.2rem; }
+        .close-lumi { cursor: pointer; font-size: 1.4rem; color: #aaa; }
+        .close-lumi:hover { color: #333; }
+        
+        .chat-box-output {
+            flex-grow: 1; 
+            overflow-y: auto; 
+            margin: 15px 0; 
+            padding: 12px; 
+            background: #fdfbfd; 
+            border-radius: 8px;
+            min-height: 250px;
+        }
+        .lumi-initial-options {
+            display: flex; 
+            flex-direction: column; 
+            gap: 10px; 
+            margin-top: 15px;
+        }
+        .lumi-opt-btn {
+            background: #513B56; 
+            color: white; 
+            border: none; 
+            padding: 12px; 
+            border-radius: 8px; 
+            cursor: pointer; 
+            font-weight: 600; 
+            transition: background 0.2s;
+            text-align: left;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        .lumi-opt-btn:hover { background: #6b5072; }
+        
+        .lumi-message {
+            background: #f4edf7;
+            padding: 15px;
+            border-radius: 12px;
+            margin-top: 10px;
+            border-left: 4px solid #513B56;
+        }
+        .lumi-message p { margin: 0 0 12px 0; color: #333; line-height: 1.5; font-size: 0.95rem; }
+        
+        .lumi-action-btn {
+            background: #513B56;
+            color: white;
+            border: none;
+            padding: 10px 14px;
+            border-radius: 6px;
+            margin-top: 5px;
+            cursor: pointer;
+            font-weight: 600;
+            width: 100%;
+            text-align: center;
+            transition: 0.2s;
+            display: block;
+        }
+        .lumi-action-btn.secondary {
+            background: transparent;
+            color: #513B56;
+            border: 1px solid #513B56;
+        }
+        .lumi-action-btn:hover {
+            opacity: 0.9;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(81, 59, 86, 0.3);
+        }
+        .lumi-action-btn.secondary:hover {
+            background: rgba(81, 59, 86, 0.1);
+        }
+        
+        /* Emergency button style */
+        .lumi-action-btn.emergency {
+            background: #d9534f !important;
+            border-color: #d9534f !important;
+            animation: pulse 1.5s infinite;
+        }
+        .lumi-action-btn.emergency:hover {
+            background: #c9302c !important;
+            transform: scale(1.05);
+        }
+        
+        .lumi-action-btn.helpline {
+            background: #2196F3 !important;
+            border-color: #2196F3 !important;
+        }
+        .lumi-action-btn.helpline:hover {
+            background: #1976D2 !important;
+        }
+        
+        .lumi-action-btn.booking {
+            background: #f0ad4e !important;
+            border-color: #f0ad4e !important;
+        }
+        .lumi-action-btn.booking:hover {
+            background: #ec971f !important;
+        }
+        
+        @keyframes pulse {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.02); }
+            100% { transform: scale(1); }
+        }
+        
+        .typing-indicator {
+            display: none;
+            padding: 8px 0;
+            color: #513B56;
+        }
+        .typing-dots {
+            display: inline-block;
+            animation: dots 1.4s infinite;
+        }
+        @keyframes dots {
+            0%, 20% { content: '.'; }
+            40% { content: '..'; }
+            60%, 100% { content: '...'; }
+        }
+        
+        .lumi-message ul {
+            padding-left: 20px;
+            margin: 10px 0;
+        }
+        .lumi-message li {
+            margin-bottom: 8px;
+            color: #444;
+        }
+        
+        .emergency-banner {
+            background: #d9534f;
+            color: white;
+            padding: 12px;
+            border-radius: 8px;
+            text-align: center;
+            font-weight: bold;
+            margin-bottom: 10px;
+            animation: pulse 2s infinite;
+        }
+        
+        /* Notification Styles */
+        .notification-dropdown {
+            display: none;
+            position: absolute;
+            top: 60px;
+            right: 10px;
+            background: white;
+            border-radius: 12px;
+            box-shadow: 0 8px 30px rgba(0,0,0,0.15);
+            width: 350px;
+            max-height: 500px;
+            overflow-y: auto;
+            z-index: 1000;
+        }
+        .notification-dropdown.open {
+            display: block;
+        }
+        .notification-dropdown-header {
+            padding: 15px;
+            border-bottom: 1px solid #eee;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .notification-dropdown-header h3 {
+            margin: 0;
+            color: #513B56;
+        }
+        .mark-all-read {
+            background: none;
+            border: none;
+            color: #513B56;
+            cursor: pointer;
+            font-size: 0.8rem;
+        }
+        .notification-dropdown-body {
+            padding: 10px;
+            max-height: 350px;
+            overflow-y: auto;
+        }
+        .notification-item {
+            display: flex;
+            padding: 10px;
+            border-bottom: 1px solid #f5f5f5;
+            cursor: pointer;
+            transition: background 0.2s;
+        }
+        .notification-item:hover {
+            background: #f8f5f9;
+        }
+        .notification-icon {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-right: 12px;
+        }
+        .notification-content {
+            flex: 1;
+        }
+        .notification-title {
+            font-weight: 600;
+            color: #333;
+            font-size: 0.9rem;
+        }
+        .notification-message {
+            color: #666;
+            font-size: 0.85rem;
+        }
+        .notification-time {
+            color: #999;
+            font-size: 0.75rem;
+            margin-top: 4px;
+        }
+        .empty-notifications {
+            text-align: center;
+            padding: 30px 0;
+            color: #999;
+        }
+        .empty-notifications i {
+            font-size: 2rem;
+            color: #513B56;
+            margin-bottom: 10px;
+        }
+        .notification-dropdown-footer {
+            padding: 10px;
+            border-top: 1px solid #eee;
+            text-align: center;
+        }
+        .notification-dropdown-footer button {
+            background: none;
+            border: none;
+            color: #513B56;
+            font-weight: 600;
+            cursor: pointer;
+        }
+        .notification-dot {
+            display: none;
+            position: absolute;
+            top: -5px;
+            right: -5px;
+            width: 10px;
+            height: 10px;
+            background: #d9534f;
+            border-radius: 50%;
+            border: 2px solid white;
+        }
+        .notification-dot.show {
+            display: block;
+        }
+        .notification-dot.has-number {
+            width: auto;
+            min-width: 20px;
+            height: 20px;
+            border-radius: 10px;
+            font-size: 10px;
+            color: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 0 5px;
+        }
+        .notification-icon-container {
+            position: relative;
+            display: inline-block;
+        }
+    </style>
+</head>
+<body>
+    <div class="app-container">
+        <header class="header">
+            <div class="greeting">
+                <div style="background: white; padding: 0;margin-top: 10px; border-radius: 12px; display: inline-block;align-content: center;">
+                    <svg width="50" height="50" viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <path d="M48.5 15L35 70H45L50 50L55 70H65L51.5 15H48.5Z" fill="#513B56"/>
+                        <path d="M62 45L75 80H85L68 35L62 45Z" fill="#513B56"/>
+                        <path d="M25 80C35 55 65 55 90 80C75 65 45 65 25 80Z" fill="url(#logo-gradient)"/>
+                        <circle cx="82" cy="40" r="5" fill="#FEE8C3"/>
+                        <defs>
+                            <linearGradient id="logo-gradient" x1="25" y1="80" x2="90" y2="80" gradientUnits="userSpaceOnUse">
+                                <stop offset="0%" stop-color="#BFA8C7" />
+                                <stop offset="50%" stop-color="#D2BDCC" />
+                                <stop offset="100%" stop-color="#FEE8C3" />
+                            </linearGradient>
+                        </defs>
+                    </svg>
+                </div>
+                <h1>Hi!! <span class="user-name">Guest</span></h1>
+                <p class="welcome-message">Welcome back!</p>
+            </div>
+            <div class="header-icons">
+                <div class="notification-icon-container" id="notificationIconContainer">
+                    <i class="fas fa-bell" id="notificationBell"></i>
+                    <span class="notification-dot" id="notificationDot"></span>
+                </div>
+                <i class="fas fa-user-circle" id="profileIconBtn"></i>
+            </div>
+        </header>
+
+        <div class="notification-dropdown" id="notificationDropdown">
+            <div class="notification-dropdown-header">
+                <h3><i class="fas fa-bell"></i> Notifications</h3>
+                <button class="mark-all-read" onclick="markAllNotificationsRead()">Mark all as read</button>
+            </div>
+            <div class="notification-dropdown-body" id="notificationDropdownBody">
+                <div class="loading-notifications">Loading notifications...</div>
+            </div>
+            <div class="notification-dropdown-footer">
+                <button onclick="window.location.href='notification.html'">View All Notifications</button>
+            </div>
+        </div>
+
+        <main class="main-content">
+            <section class="consultation-section">
+                <h2 class="section-title">Online consultation</h2>
+                
+                <div class="consultation-cards">
+                    <div class="consult-card feeling-low" onclick="window.location.href='expert.html'" style="cursor: pointer;">
+                        <div class="card-content">
+                            <p class="card-title">Feeling low?</p>
+                            <p class="card-subtitle">Let's talk!<br>With real experts</p>
+                            <button class="card-btn">Talk with an expert</button>
+                        </div>
+                        <div class="card-icon">
+                            <i class="fas fa-heart"></i>
+                        </div>
+                    </div>
+
+                    <div class="consult-card take-appointment" onclick="window.location.href='booking.html'" style="cursor: pointer;">
+                        <div class="card-content">
+                            <p class="card-title">Take an Appointment</p>
+                            <p class="card-subtitle">Chat with an expert!!</p>
+                            <button class="card-btn">Book a call</button>
+                        </div>
+                        <div class="card-icon">
+                            <i class="fas fa-calendar-check"></i>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <section class="lumi-section">
+                <div class="lumi-header">
+                    <h2 class="section-title">Talk with Lumi</h2>
+                    <i class="fas fa-robot"></i>
+                </div>
+                
+                <div class="lumi-chat-container" id="openLumiModalBtn" style="cursor: pointer;">
+                    <div class="lumi-card">
+                        <div class="lumi-avatar">
+                            <i class="fas fa-leaf"></i>
+                        </div>
+                        <div class="lumi-info">
+                            <p class="lumi-name">Lumi</p>
+                            <p class="lumi-message">How are you feeling today? Click to talk.</p>
+                        </div>
+                        <i class="fas fa-chevron-right"></i>
+                    </div>
+                </div>
+            </section>
+
+            <div id="lumiChatModal" class="lumi-modal">
+                <div class="lumi-modal-content">
+                    <div class="lumi-modal-header">
+                        <h3><i class="fas fa-leaf"></i> Chat with Lumi</h3>
+                        <span class="close-lumi" id="closeLumiModalBtn">&times;</span>
+                    </div>
+                    
+                    <div class="chat-box-output" id="lumi-chat-body">
+                        <!-- Dynamic content -->
+                    </div>
+                    
+                    <div class="typing-indicator" id="lumiTyping">
+                        <span>Lumi is thinking</span>
+                        <span class="typing-dots">...</span>
+                    </div>
+
+                    <div style="font-size: 0.72rem; color: #999; text-align: center; padding-top: 8px; border-top: 1px solid #eee;">
+                        <i class="fas fa-exclamation-triangle"></i> Lumi is an AI, it can make mistakes.
+                    </div>
+                </div>
+            </div>
+
+            <section class="music-section" id="meditationMusicSection">
+                <h2 class="section-title">Meditation Music</h2>
+                
+                <div class="music-grid">
+                    <div class="music-card">
+                        <div class="music-thumbnail" onclick="toggleMusic('oceanWaves')">
+                            <i class="fas fa-play-circle" id="play-oceanWaves"></i>
+                            <img src="https://images.stockcake.com/public/b/6/6/b66c3aa6-305d-4b30-a473-73fda35826d6_large/majestic-ocean-wave-stockcake.jpg" alt="Ocean Waves" style="width: 100%; height: 100%; object-fit: cover;">
+                        </div>
+                        <p class="music-name">Ocean Waves</p>
+                        <div class="youtube-player" id="oceanWaves" style="display: none;">
+                            <iframe width="100%" height="100%" src="https://www.youtube.com/embed/bn9F19Hi1Lk?si=2sYZId1lyj4I89ir" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe>
+                        </div>
+                    </div>
+
+                    <div class="music-card">
+                        <div class="music-thumbnail" onclick="toggleMusic('forestRain')">
+                            <i class="fas fa-play-circle" id="play-forestRain"></i>
+                            <img src="https://images.stockcake.com/public/f/3/5/f3528741-c600-4ce2-a663-0a9f7cf44fbf_large/rainy-forest-view-stockcake.jpg" alt="Forest Rain" style="width: 100%; height: 100%; object-fit: cover;">
+                        </div>
+                        <p class="music-name">Forest Rain</p>
+                        <div class="youtube-player" id="forestRain" style="display: none;">
+                            <iframe width="100%" height="100%" src="https://www.youtube.com/embed/9LaKPpsFRHI?si=xtxDbsVnoAD4YDFx" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe>
+                        </div>
+                    </div>
+
+                    <div class="music-card">
+                        <div class="music-thumbnail" onclick="toggleMusic('mountainStream')">
+                            <i class="fas fa-play-circle" id="play-mountainStream"></i>
+                            <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQt513NbZgDauzKXf923ZOPJ6wWir9VdlsO6g&s" alt="Mountain Stream" style="width: 100%; height: 100%; object-fit: cover;">
+                        </div>
+                        <p class="music-name">Mountain Stream</p>
+                        <div class="youtube-player" id="mountainStream" style="display: none;">
+                            <iframe width="100%" height="100%" src="https://www.youtube.com/embed/c2NmyoXBXmE?si=hFaXMMuLl0k4_k7c" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe>
+                        </div>
+                    </div>
+
+                    <div class="music-card">
+                        <div class="music-thumbnail" onclick="toggleMusic('calmPiano')">
+                            <i class="fas fa-play-circle" id="play-calmPiano"></i>
+                            <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSZP9-2vk54HY6ju8svTtspraR1hpzMtzakgQ&s" alt="Calm Piano" style="width: 100%; height: 100%; object-fit: cover;">
+                        </div>
+                        <p class="music-name">Calm Piano</p>
+                        <div class="youtube-player" id="calmPiano" style="display: none;">
+                            <iframe width="100%" height="100%" src="https://www.youtube.com/embed/eKO9BGdQ7Wk?si=FT8QkD21QqIIAIFj" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe>
+                        </div>
+                    </div>
+
+                    <div class="music-card">
+                        <div class="music-thumbnail" onclick="toggleMusic('relaxingMusic')">
+                            <i class="fas fa-play-circle" id="play-relaxingMusic"></i>
+                            <img src="https://images.pexels.com/photos/66997/pexels-photo-66997.jpeg?w=400&h=225&fit=crop" alt="Relaxing Music" style="width: 100%; height: 100%; object-fit: cover;">
+                        </div>
+                        <p class="music-name">Relaxing Music</p>
+                        <div class="youtube-player" id="relaxingMusic" style="display: none;">
+                            <iframe width="100%" height="100%" src="https://www.youtube.com/embed/I3OJUwILelU?si=ig1Paj-Av1LJJZct" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe>
+                        </div>
+                    </div>
+
+                    <div class="music-card">
+                        <div class="music-thumbnail" onclick="toggleMusic('concentrationMusic')">
+                            <i class="fas fa-play-circle" id="play-concentrationMusic"></i>
+                            <img src="https://images.pexels.com/photos/210647/pexels-photo-210647.jpeg?w=400&h=225&fit=crop" alt="Concentration Music" style="width: 100%; height: 100%; object-fit: cover;">
+                        </div>
+                        <p class="music-name">Concentration Music</p>
+                        <div class="youtube-player" id="concentrationMusic" style="display: none;">
+                            <iframe width="100%" height="100%" src="https://www.youtube.com/embed/oPVte6aMprI?si=MQFIvecMP5XLS2o4" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="stop-music-container">
+                    <button id="stopAllMusic" class="stop-music-btn">
+                        <i class="fas fa-stop-circle"></i> Stop All Music
+                    </button>
+                </div>
+
+                <div id="nowPlaying" class="now-playing" style="display: none;">
+                    <i class="fas fa-music"></i>
+                    <span id="nowPlayingText">Now playing: </span>
+                </div>
+            </section>
+        </main>
+
+        <nav class="bottom-nav">
+            <i class="fas fa-home active" id="footerHome" onclick="goToHome()"></i>
+            <i class="fas fa-user-shield" id="footerAdmin" onclick="goToAdminLogin()"></i>
+            <i class="fas fa-music" id="bottomMusicIcon" onclick="scrollToMeditationMusic()"></i>
+            <i class="fas fa-user" id="footerUser" onclick="goToProfile()"></i>
+        </nav>
+    </div>
+    
+    <script src="utils.js"></script>
+    <script src="home.js"></script>
+
+    <script>
+        // ============================================
+        // LUMI CHAT FUNCTIONALITY - COMPLETE VERSION
+        // ============================================
+        
+        const lumiModal = document.getElementById("lumiChatModal");
+        const openLumiTrigger = document.getElementById("openLumiModalBtn");
+        const closeLumiTrigger = document.getElementById("closeLumiModalBtn");
+        const lumiChatArea = document.getElementById("lumi-chat-body");
+        const typingIndicator = document.getElementById("lumiTyping");
+
+        const lumiAssessmentQuestions = [
+            { id: 'phq1', type: 'phq', text: 'Little interest or pleasure in doing things?' },
+            { id: 'phq2', type: 'phq', text: 'Feeling down, depressed, or hopeless?' },
+            { id: 'phq3', type: 'phq', text: 'Trouble falling or staying asleep, or sleeping too much?' },
+            { id: 'phq4', type: 'phq', text: 'Feeling tired or having little energy?' },
+            { id: 'phq5', type: 'phq', text: 'Poor appetite or overeating?' },
+            { id: 'phq6', type: 'phq', text: 'Feeling bad about yourself — or that you are a failure or have let yourself or your family down?' },
+            { id: 'phq7', type: 'phq', text: 'Trouble concentrating on things, such as reading the newspaper or watching television?' },
+            { id: 'phq8', type: 'phq', text: 'Moving or speaking so slowly that other people could have noticed? Or the opposite — being so fidgety or restless that you have been moving around a lot more than usual?' },
+            { id: 'phq9', type: 'phq', text: 'Thoughts that you would be better off dead, or of hurting yourself in some way?' },
+            { id: 'gad1', type: 'gad', text: 'Feeling nervous, anxious, or on edge?' },
+            { id: 'gad2', type: 'gad', text: 'Not being able to stop or control worrying?' },
+            { id: 'gad3', type: 'gad', text: 'Worrying too much about different things?' },
+            { id: 'gad4', type: 'gad', text: 'Trouble relaxing?' },
+            { id: 'gad5', type: 'gad', text: 'Being so restless that it is hard to sit still?' },
+            { id: 'gad6', type: 'gad', text: 'Becoming easily annoyed or irritable?' },
+            { id: 'gad7', type: 'gad', text: 'Feeling afraid, as if something awful might happen?' }
+        ];
+
+        let activeQuestionIndex = 0;
+        let cumulativePhqPoints = [];
+        let cumulativeGadPoints = [];
+        let surveyStarted = false;
+
+        // Open modal
+        if (openLumiTrigger) {
+            openLumiTrigger.onclick = function() {
+                lumiModal.style.display = "flex";
+                initializeLumiMenu();
+            };
+        }
+
+        // Close modal with confirmation
+        if (closeLumiTrigger) {
+            closeLumiTrigger.onclick = function() {
+                if (surveyStarted && activeQuestionIndex > 0 && activeQuestionIndex < lumiAssessmentQuestions.length) {
+                    lumiChatArea.innerHTML = `
+                        <div class="lumi-message" style="border-left: 4px solid #d9534f; background: #fff5f5;">
+                            <p><strong>Exit Assessment?</strong></p>
+                            <p style="font-size: 0.9rem; color: #666;">If you close now, your answers will not be saved.</p>
+                            <button class="lumi-action-btn" onclick="lumiModal.style.display = 'none'; initializeLumiMenu();">Yes, Exit</button>
+                            <button class="lumi-action-btn secondary" onclick="displaySurveyQuestion()">Resume Assessment</button>
+                        </div>
+                    `;
+                } else {
+                    lumiModal.style.display = "none";
+                    initializeLumiMenu();
+                }
+            };
+        }
+
+        // Initialize Lumi menu
+        function initializeLumiMenu() {
+            surveyStarted = false;
+            activeQuestionIndex = 0;
+            cumulativePhqPoints = [];
+            cumulativeGadPoints = [];
+            
+            lumiChatArea.innerHTML = `
+                <p><strong>Lumi:</strong> Hello! I'm here to support you. How would you like to proceed?</p>
+                <div class="lumi-initial-options">
+                    <button class="lumi-opt-btn" onclick="launchSentimentInterface()">
+                        <i class="fas fa-comment-alt"></i> 1. Tell me how you feel
+                    </button>
+                    <button class="lumi-opt-btn" onclick="launchLumiSurvey()">
+                        <i class="fas fa-poll-h"></i> 2. Take a mental health assessment
+                    </button>
+                </div>
+            `;
+        }
+
+        // ============================================
+        // SENTIMENT ANALYSIS INTERFACE
+        // ============================================
+        
+        function launchSentimentInterface() {
+            lumiChatArea.innerHTML = `
+                <p><strong>Lumi:</strong> Please share how you're feeling right now. Be as detailed as you like - this helps me understand you better.</p>
+                <div style="display:flex; gap: 8px; margin-top:10px;">
+                    <input type="text" id="userInputSentimentText" placeholder="Type your feelings here..." style="flex-grow:1; padding:10px; border-radius:6px; border:1px solid #ccc;">
+                    <button onclick="analyzeUserFeeling()" style="background:#513B56; color:white; border:none; padding:10px 15px; border-radius:6px; cursor:pointer;">
+                        <i class="fas fa-paper-plane"></i>
+                    </button>
+                </div>
+                <button onclick="initializeLumiMenu()" style="margin-top:15px; background:none; border:none; color:#513B56; cursor:pointer; font-weight:600;">
+                    <i class="fas fa-arrow-left"></i> Back
+                </button>
+            `;
+            
+            const inputField = document.getElementById('userInputSentimentText');
+            if (inputField) {
+                inputField.addEventListener('keypress', function(e) {
+                    if (e.key === 'Enter') {
+                        analyzeUserFeeling();
+                    }
+                });
+            }
+        }
+
+        // ============================================
+        // ANALYZE USER FEELING - MAIN FUNCTION
+        // ============================================
+        
+        async function analyzeUserFeeling() {
+            const inputField = document.getElementById('userInputSentimentText');
+            if (!inputField) return;
+            
+            const text = inputField.value.trim();
+            if (!text) {
+                lumiChatArea.innerHTML += `
+                    <div class="lumi-message" style="border-left: 4px solid #f0ad4e; background: #fff8e1;">
+                        <p><strong>Lumi:</strong> Please write something so I can understand how you're feeling.</p>
+                    </div>
+                `;
+                return;
+            }
+            
+            typingIndicator.style.display = 'block';
+            lumiChatArea.innerHTML += `
+                <div style="text-align: right; margin: 10px 0;">
+                    <span style="background: #513B56; color: white; padding: 10px 15px; border-radius: 12px; display: inline-block; max-width: 80%;">
+                        ${escapeHtml(text)}
+                    </span>
+                </div>
+            `;
+            inputField.value = '';
+            
+            try {
+                const response = await fetch('/api/lumi/analyze', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ text: text })
+                });
+                
+                const result = await response.json();
+                typingIndicator.style.display = 'none';
+                
+                if (result.success) {
+                    displayAnalysisResult(result);
+                } else {
+                    displayErrorResult(result);
+                }
+                
+            } catch (error) {
+                typingIndicator.style.display = 'none';
+                displayErrorResult({ message: "I'm having trouble connecting. Please try again or take the survey." });
+            }
+        }
+
+        // ============================================
+        // DISPLAY ANALYSIS RESULTS WITH EMERGENCY SUPPORT
+        // ============================================
+        
+        function displayAnalysisResult(result) {
+            const borderColors = {
+                'severe': '#d9534f',
+                'moderate': '#f0ad4e',
+                'insufficient': '#5bc0de',
+                'normal': '#5cb85c',
+                'error': '#d9534f'
+            };
+            
+            const bgColors = {
+                'severe': '#fff5f5',
+                'moderate': '#fff8e1',
+                'insufficient': '#f0f8ff',
+                'normal': '#f0fff4',
+                'error': '#fff5f5'
+            };
+            
+            const borderColor = borderColors[result.status] || '#513B56';
+            const bgColor = bgColors[result.status] || '#f4edf7';
+            
+            let html = '';
+            
+            // Emergency banner for severe cases
+            if (result.status === 'severe' || result.is_emergency) {
+                html += `
+                    <div class="emergency-banner">
+                        <i class="fas fa-exclamation-triangle"></i> 
+                        <strong>EMERGENCY SUPPORT AVAILABLE</strong>
+                        <i class="fas fa-exclamation-triangle"></i>
+                    </div>
+                `;
+            }
+            
+            html += `
+                <div class="lumi-message" style="border-left: 4px solid ${borderColor}; background: ${bgColor};">
+                    <p><strong>Lumi:</strong> ${escapeHtml(result.message)}</p>
+            `;
+            
+            // Actions
+            if (result.actions && result.actions.length > 0) {
+                html += `<div style="margin-top: 12px;">`;
+                result.actions.forEach(action => {
+                    if (action.type === 'expert') {
+                        html += `<button class="lumi-action-btn emergency" onclick="window.location.href='expert.html'">
+                            <i class="fas ${action.icon}"></i> ${action.label}
+                        </button>`;
+                    } else if (action.type === 'helpline') {
+                        html += `<button class="lumi-action-btn helpline" onclick="showHelpline()">
+                            <i class="fas ${action.icon}"></i> ${action.label}
+                        </button>`;
+                    } else if (action.type === 'booking') {
+                        html += `<button class="lumi-action-btn booking" onclick="window.location.href='booking.html'">
+                            <i class="fas ${action.icon}"></i> ${action.label}
+                        </button>`;
+                    } else if (action.type === 'survey') {
+                        html += `<button class="lumi-action-btn secondary" onclick="launchLumiSurvey()">
+                            <i class="fas ${action.icon}"></i> ${action.label}
+                        </button>`;
+                    } else if (action.type === 'tips') {
+                        html += `<button class="lumi-action-btn secondary" onclick="showWritingTips()">
+                            <i class="fas ${action.icon}"></i> ${action.label}
+                        </button>`;
+                    } else if (action.type === 'breathing') {
+                        html += `<button class="lumi-action-btn secondary" onclick="showBreathingExercise()">
+                            <i class="fas ${action.icon}"></i> ${action.label}
+                        </button>`;
+                    } else if (action.type === 'meditation') {
+                        html += `<button class="lumi-action-btn secondary" onclick="closeLumiModalAndScrollToMusic()">
+                            <i class="fas ${action.icon}"></i> ${action.label}
+                        </button>`;
+                    } else if (action.type === 'maintain') {
+                        html += `<button class="lumi-action-btn secondary" onclick="showSelfCareTips()">
+                            <i class="fas ${action.icon}"></i> ${action.label}
+                        </button>`;
+                    } else if (action.type === 'retry') {
+                        html += `<button class="lumi-action-btn secondary" onclick="launchSentimentInterface()">
+                            <i class="fas ${action.icon}"></i> ${action.label}
+                        </button>`;
+                    }
+                });
+                html += `</div>`;
+            }
+            
+            html += `
+                <button onclick="initializeLumiMenu()" style="margin-top: 15px; background: none; border: none; color: #513B56; font-weight: 600; cursor: pointer;">
+                    <i class="fas fa-redo"></i> Start Over
+                </button>
+            </div>`;
+            
+            lumiChatArea.innerHTML += html;
+            lumiChatArea.scrollTop = lumiChatArea.scrollHeight;
+        }
+
+        function displayErrorResult(result) {
+            lumiChatArea.innerHTML += `
+                <div class="lumi-message" style="border-left: 4px solid #d9534f; background: #fff5f5;">
+                    <p><strong>Lumi:</strong> ${escapeHtml(result.message || 'Something went wrong. Please try again.')}</p>
+                    <button class="lumi-action-btn secondary" onclick="launchSentimentInterface()">
+                        <i class="fas fa-redo"></i> Try Again
+                    </button>
+                    <button class="lumi-action-btn secondary" onclick="launchLumiSurvey()">
+                        <i class="fas fa-poll"></i> Take the Survey
+                    </button>
+                </div>
+            `;
+        }
+
+        // ============================================
+        // SHOW HELPLINE NUMBERS (EMERGENCY)
+        // ============================================
+        
+        function showHelpline() {
+            lumiChatArea.innerHTML += `
+                <div class="lumi-message" style="border-left: 4px solid #2196F3; background: #f0f8ff;">
+                    <div class="emergency-banner" style="background:#d9534f;">
+                        <i class="fas fa-phone"></i> 24/7 CRISIS HELPLINES
+                    </div>
+                    <ul style="list-style:none; padding:0;">
+                        <li style="padding:12px; background:#fff; border-radius:8px; margin:8px 0; border-left: 4px solid #d9534f;">
+                            <strong style="color:#d9534f;">🔴 National Suicide Prevention Lifeline</strong><br>
+                            <a href="tel:988" style="color:#d9534f; font-size:1.4rem; font-weight:bold; text-decoration:none;">988</a>
+                            <span style="display:block; font-size:0.8rem; color:#666;">(Available 24/7)</span>
+                        </li>
+                        <li style="padding:12px; background:#fff; border-radius:8px; margin:8px 0; border-left: 4px solid #2196F3;">
+                            <strong style="color:#2196F3;">🟠 Crisis Text Line</strong><br>
+                            Text <strong style="color:#d9534f;">HOME</strong> to <strong style="color:#d9534f; font-size:1.2rem;">741741</strong>
+                            <span style="display:block; font-size:0.8rem; color:#666;">(24/7 Text Support)</span>
+                        </li>
+                        <li style="padding:12px; background:#fff; border-radius:8px; margin:8px 0; border-left: 4px solid #4CAF50;">
+                            <strong style="color:#4CAF50;">🟢 SAMHSA National Helpline</strong><br>
+                            <a href="tel:18006624357" style="color:#4CAF50; font-size:1.2rem; font-weight:bold; text-decoration:none;">1-800-662-4357</a>
+                            <span style="display:block; font-size:0.8rem; color:#666;">(Free, Confidential, 24/7)</span>
+                        </li>
+                    </ul>
+                    <p style="font-size:0.9rem; color:#666; text-align:center; margin-top:10px;">
+                        <i class="fas fa-heart" style="color:#d9534f;"></i> 
+                        You are not alone. Help is available.
+                    </p>
+                    <button class="lumi-action-btn secondary" onclick="launchSentimentInterface()">
+                        <i class="fas fa-arrow-left"></i> Back
+                    </button>
+                </div>
+            `;
+            lumiChatArea.scrollTop = lumiChatArea.scrollHeight;
+        }
+
+        // ============================================
+        // WRITING TIPS
+        // ============================================
+        
+        function showWritingTips() {
+            lumiChatArea.innerHTML += `
+                <div class="lumi-message" style="border-left: 4px solid #5bc0de; background: #f0f8ff;">
+                    <p><strong>Lumi Tips for Expressing Feelings:</strong></p>
+                    <ul>
+                        <li>📝 <strong>Describe your body sensations:</strong> "My chest feels tight," or "I have a headache."</li>
+                        <li>😊 <strong>Name your emotions:</strong> "I feel anxious," or "I'm feeling frustrated."</li>
+                        <li>💭 <strong>Share your thoughts:</strong> "I keep thinking about...," or "I'm worried that..."</li>
+                        <li>🎯 <strong>Be specific:</strong> "I've been feeling this way since..."</li>
+                        <li>🌱 <strong>Consider the physical impact:</strong> "It's affecting my sleep/appetite/energy."</li>
+                    </ul>
+                    <button class="lumi-action-btn secondary" onclick="launchSentimentInterface()">
+                        <i class="fas fa-arrow-left"></i> Try Again
+                    </button>
+                </div>
+            `;
+            lumiChatArea.scrollTop = lumiChatArea.scrollHeight;
+        }
+
+        // ============================================
+        // BREATHING EXERCISE
+        // ============================================
+        
+        function showBreathingExercise() {
+            lumiChatArea.innerHTML += `
+                <div class="lumi-message" style="border-left: 4px solid #5bc0de; background: #f0f8ff;">
+                    <p><strong>🧘 Lumi Breathing Exercise:</strong></p>
+                    <p style="font-weight: 600; color: #513B56; font-size:1.1rem;">The 4-4-4-4 Technique</p>
+                    <p>Follow these steps to calm your mind:</p>
+                    <ul style="list-style:none; padding:0;">
+                        <li style="padding:8px; background:#fff; border-radius:6px; margin:5px 0;">
+                            🌬️ <strong>Inhale</strong> deeply through your nose for <strong style="color:#513B56;">4 seconds</strong>
+                            <div style="width:100%; height:4px; background:#e0d4e6; border-radius:2px; margin-top:4px;">
+                                <div style="width:0%; height:100%; background:#513B56; border-radius:2px; animation: breatheIn 4s infinite;"></div>
+                            </div>
+                        </li>
+                        <li style="padding:8px; background:#fff; border-radius:6px; margin:5px 0;">
+                            ⏸️ <strong>Hold</strong> your breath for <strong style="color:#513B56;">4 seconds</strong>
+                        </li>
+                        <li style="padding:8px; background:#fff; border-radius:6px; margin:5px 0;">
+                            💨 <strong>Exhale</strong> slowly through your mouth for <strong style="color:#513B56;">4 seconds</strong>
+                        </li>
+                        <li style="padding:8px; background:#fff; border-radius:6px; margin:5px 0;">
+                            ⏸️ <strong>Hold</strong> with empty lungs for <strong style="color:#513B56;">4 seconds</strong>
+                        </li>
+                    </ul>
+                    <p style="font-size: 0.9rem; color: #666; text-align:center;">Repeat this cycle 3-4 times for best results.</p>
+                    <button class="lumi-action-btn secondary" onclick="launchSentimentInterface()">
+                        <i class="fas fa-arrow-left"></i> Back
+                    </button>
+                </div>
+            `;
+            lumiChatArea.scrollTop = lumiChatArea.scrollHeight;
+        }
+
+        // ============================================
+        // SELF-CARE TIPS
+        // ============================================
+        
+        function showSelfCareTips() {
+            lumiChatArea.innerHTML += `
+                <div class="lumi-message" style="border-left: 4px solid #5cb85c; background: #f0fff4;">
+                    <p><strong>🌿 Lumi Self-Care Tips:</strong></p>
+                    <ul>
+                        <li>🌞 <strong>Start your day with gratitude:</strong> Write 3 things you're grateful for</li>
+                        <li>🧘 <strong>Take mindful breaks:</strong> 5 minutes of deep breathing during the day</li>
+                        <li>💧 <strong>Stay hydrated:</strong> Drink water throughout the day</li>
+                        <li>🏃 <strong>Move your body:</strong> Even a short walk can boost your mood</li>
+                        <li>😴 <strong>Prioritize sleep:</strong> Aim for 7-8 hours of quality sleep</li>
+                        <li>📱 <strong>Digital detox:</strong> Take breaks from social media</li>
+                        <li>🤝 <strong>Connect with others:</strong> Talk to a friend or family member</li>
+                    </ul>
+                    <button class="lumi-action-btn secondary" onclick="initializeLumiMenu()">
+                        <i class="fas fa-arrow-left"></i> Back to Menu
+                    </button>
+                </div>
+            `;
+            lumiChatArea.scrollTop = lumiChatArea.scrollHeight;
+        }
+
+        // ============================================
+        // SURVEY FUNCTIONALITY
+        // ============================================
+        
+        function launchLumiSurvey() {
+            surveyStarted = true;
+            activeQuestionIndex = 0;
+            cumulativePhqPoints = [];
+            cumulativeGadPoints = [];
+            displaySurveyQuestion();
+        }
+
+        function displaySurveyQuestion() {
+            if (activeQuestionIndex >= lumiAssessmentQuestions.length) {
+                evaluateClinicalScoreMetrics();
+                return;
+            }
+            
+            const currentQuestion = lumiAssessmentQuestions[activeQuestionIndex];
+            lumiChatArea.innerHTML = `
+                <div style="color: #6b4f7a; font-size: 0.75rem; font-weight: 700; margin-bottom: 6px;">
+                    QUESTION ${activeQuestionIndex + 1} OF ${lumiAssessmentQuestions.length}
+                </div>
+                <p style="font-weight: 500; color: #222; margin-bottom: 15px;">${escapeHtml(currentQuestion.text)}</p>
+                <div style="display: flex; flex-direction: column; gap: 8px;">
+                    <button class="lumi-opt-btn" style="background:#fff; color:#513B56; border:1px solid #e2d9f3;" onclick="commitAssessmentAnswer(0)">Not at all (0)</button>
+                    <button class="lumi-opt-btn" style="background:#fff; color:#513B56; border:1px solid #e2d9f3;" onclick="commitAssessmentAnswer(1)">Several days (1)</button>
+                    <button class="lumi-opt-btn" style="background:#fff; color:#513B56; border:1px solid #e2d9f3;" onclick="commitAssessmentAnswer(2)">More than half the days (2)</button>
+                    <button class="lumi-opt-btn" style="background:#fff; color:#513B56; border:1px solid #e2d9f3;" onclick="commitAssessmentAnswer(3)">Nearly every day (3)</button>
+                </div>
+                <div style="margin-top: 15px; display: flex; gap: 10px; justify-content: space-between;">
+                    <button onclick="initializeLumiMenu()" style="background:none; border:none; color:#999; cursor:pointer; font-size:0.9rem;">
+                        <i class="fas fa-times"></i> Exit Survey
+                    </button>
+                    <span style="color:#999; font-size:0.8rem;">${Math.round((activeQuestionIndex / lumiAssessmentQuestions.length) * 100)}% complete</span>
+                </div>
+            `;
+            lumiChatArea.scrollTop = lumiChatArea.scrollHeight;
+        }
+
+        function commitAssessmentAnswer(selectedPoints) {
+            const currentQuestion = lumiAssessmentQuestions[activeQuestionIndex];
+            if (currentQuestion.type === 'phq') {
+                cumulativePhqPoints.push(selectedPoints);
+            } else {
+                cumulativeGadPoints.push(selectedPoints);
+            }
+            
+            activeQuestionIndex++;
+            
+            if (activeQuestionIndex < lumiAssessmentQuestions.length) {
+                displaySurveyQuestion();
+            } else {
+                evaluateClinicalScoreMetrics();
+            }
+        }
+
+        // ============================================
+        // SURVEY RESULTS EVALUATION
+        // ============================================
+        
+        async function evaluateClinicalScoreMetrics() {
+            const totalPhq = cumulativePhqPoints.reduce((a, b) => a + b, 0);
+            const totalGad = cumulativeGadPoints.reduce((a, b) => a + b, 0);
+            
+            typingIndicator.style.display = 'block';
+            
+            try {
+                const response = await fetch('/api/lumi/analyze-survey', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        phq_scores: cumulativePhqPoints,
+                        gad_scores: cumulativeGadPoints
+                    })
+                });
+                
+                const result = await response.json();
+                typingIndicator.style.display = 'none';
+                
+                if (result.success) {
+                    displaySurveyResults(result);
+                } else {
+                    displayErrorResult({ message: "Error analyzing survey results. Please try again." });
+                }
+                
+            } catch (error) {
+                typingIndicator.style.display = 'none';
+                displayErrorResult({ message: "Error connecting to server. Please try again." });
+            }
+        }
+
+        function displaySurveyResults(result) {
+            const borderColors = {
+                'severe': '#d9534f',
+                'moderate': '#f0ad4e',
+                'mild': '#5bc0de',
+                'normal': '#5cb85c'
+            };
+            
+            const borderColor = borderColors[result.severity] || '#513B56';
+            
+            let html = `
+                <div class="lumi-message" style="border-left: 4px solid ${borderColor};">
+                    <p><strong>📊 Assessment Complete!</strong></p>
+                    <p style="font-size: 0.9rem; color: #666; margin-bottom: 10px;">
+                        PHQ-9 Score: ${result.total_phq}/27 | GAD-7 Score: ${result.total_gad}/21
+                    </p>
+                    <p><strong>Lumi:</strong> ${escapeHtml(result.recommendation)}</p>
+            `;
+            
+            // ============================================
+            // SEVERE - Expert + Helpline + Booking
+            // ============================================
+            if (result.severity === 'severe') {
+                html += `
+                    <button class="lumi-action-btn emergency" onclick="window.location.href='expert.html'">
+                        <i class="fas fa-user-md"></i> 🚨 Talk to an Expert NOW
+                    </button>
+                    <button class="lumi-action-btn helpline" onclick="showHelpline()">
+                        <i class="fas fa-phone"></i> 📞 Crisis Helpline (24/7)
+                    </button>
+                    <button class="lumi-action-btn booking" onclick="window.location.href='booking.html'">
+                        <i class="fas fa-calendar-check"></i> 📅 Take an Appointment
+                    </button>
+                    <button class="lumi-action-btn secondary" onclick="showSelfCareTips()">
+                        <i class="fas fa-heart"></i> Self-Care Tips
+                    </button>
+                `;
+            } 
+            // ============================================
+            // MODERATE - Support
+            // ============================================
+            else if (result.severity === 'moderate') {
+                html += `
+                    <button class="lumi-action-btn secondary" onclick="closeLumiModalAndScrollToMusic()">
+                        <i class="fas fa-spa"></i> Try Meditation
+                    </button>
+                    <button class="lumi-action-btn secondary" onclick="showBreathingExercise()">
+                        <i class="fas fa-lungs"></i> Breathing Exercise
+                    </button>
+                    <button class="lumi-action-btn secondary" onclick="showSelfCareTips()">
+                        <i class="fas fa-heart"></i> Self-Care Tips
+                    </button>
+                `;
+            } 
+            // ============================================
+            // MILD - Self-care
+            // ============================================
+            else if (result.severity === 'mild') {
+                html += `
+                    <button class="lumi-action-btn secondary" onclick="showSelfCareTips()">
+                        <i class="fas fa-heart"></i> Self-Care Tips
+                    </button>
+                    <button class="lumi-action-btn secondary" onclick="closeLumiModalAndScrollToMusic()">
+                        <i class="fas fa-spa"></i> Meditation Music
+                    </button>
+                    <button class="lumi-action-btn secondary" onclick="showBreathingExercise()">
+                        <i class="fas fa-lungs"></i> Breathing Exercise
+                    </button>
+                `;
+            } 
+            // ============================================
+            // NORMAL - Maintain
+            // ============================================
+            else {
+                html += `
+                    <button class="lumi-action-btn secondary" onclick="showSelfCareTips()">
+                        <i class="fas fa-heart"></i> Self-Care Tips
+                    </button>
+                `;
+            }
+            
+            html += `
+                <button onclick="initializeLumiMenu()" style="margin-top: 15px; background: none; border: none; color: #513B56; font-weight: 600; cursor: pointer;">
+                    <i class="fas fa-redo"></i> Start Over
+                </button>
+            </div>`;
+            
+            lumiChatArea.innerHTML = html;
+            lumiChatArea.scrollTop = lumiChatArea.scrollHeight;
+        }
+
+        // ============================================
+        // UTILITY FUNCTIONS
+        // ============================================
+        
+        function escapeHtml(text) {
+            const div = document.createElement('div');
+            div.textContent = text;
+            return div.innerHTML;
+        }
+
+        function closeLumiModalAndScrollToMusic() {
+            lumiModal.style.display = 'none';
+            const musicSection = document.getElementById('meditationMusicSection');
+            if (musicSection) {
+                musicSection.scrollIntoView({ behavior: 'smooth', block: 'start' });
+            }
+            initializeLumiMenu();
+        }
+
+        // ============================================
+        // EXPOSE FUNCTIONS GLOBALLY
+        // ============================================
+        
+        window.launchSentimentInterface = launchSentimentInterface;
+        window.analyzeUserFeeling = analyzeUserFeeling;
+        window.launchLumiSurvey = launchLumiSurvey;
+        window.displaySurveyQuestion = displaySurveyQuestion;
+        window.commitAssessmentAnswer = commitAssessmentAnswer;
+        window.showWritingTips = showWritingTips;
+        window.showBreathingExercise = showBreathingExercise;
+        window.showSelfCareTips = showSelfCareTips;
+        window.showHelpline = showHelpline;
+        window.initializeLumiMenu = initializeLumiMenu;
+        window.closeLumiModalAndScrollToMusic = closeLumiModalAndScrollToMusic;
+        window.escapeHtml = escapeHtml;
+        window.displayAnalysisResult = displayAnalysisResult;
+        window.displayErrorResult = displayErrorResult;
+
+        // ============================================
+        // CLOSE MODAL ON OUTSIDE CLICK
+        // ============================================
+        
+        window.onclick = function(event) {
+            if (event.target === lumiModal) {
+                if (surveyStarted && activeQuestionIndex > 0 && activeQuestionIndex < lumiAssessmentQuestions.length) {
+                    lumiChatArea.innerHTML = `
+                        <div class="lumi-message" style="border-left: 4px solid #d9534f; background: #fff5f5;">
+                            <p><strong>Exit Assessment?</strong></p>
+                            <p style="font-size: 0.9rem; color: #666;">If you close now, your answers will not be saved.</p>
+                            <button class="lumi-action-btn" onclick="lumiModal.style.display = 'none'; initializeLumiMenu();">Yes, Exit</button>
+                            <button class="lumi-action-btn secondary" onclick="displaySurveyQuestion()">Resume Assessment</button>
+                        </div>
+                    `;
+                } else {
+                    lumiModal.style.display = "none";
+                    initializeLumiMenu();
+                }
+            }
+        };
+
+        // ============================================
+        // ADD BREATHING ANIMATION
+        // ============================================
+        
+        // Add keyframe for breathing animation if not exists
+        const styleSheet = document.createElement("style");
+        styleSheet.textContent = `
+            @keyframes breatheIn {
+                0% { width: 0%; }
+                100% { width: 100%; }
+            }
+        `;
+        document.head.appendChild(styleSheet);
+
+        console.log('✅ Lumi Chat System Loaded Successfully!');
+        console.log('🚨 Emergency Detection Active');
+        console.log('📞 Helpline Numbers Ready');
+        console.log('📅 Booking Option Added for Severe Cases');
+    </script>
+</body>
+</html>

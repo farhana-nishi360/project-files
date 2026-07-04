@@ -1,0 +1,192 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=yes">
+    <title>Profile & Settings - AuraSense</title>
+    <link rel="stylesheet" href="profile.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <link rel="stylesheet" href="modal.css">
+   
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+<body>
+    <div class="app-container">
+        <!-- Header -->
+        <header class="header">
+            <div class="back-btn" onclick="goBack()">
+                <i class="fas fa-arrow-left"></i>
+            </div>
+            <div class="header-title">
+                <div style="background: white; padding: 10px; border-radius: 12px; display: inline-block;">
+                    <svg width="40" height="40" viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <path d="M48.5 15L35 70H45L50 50L55 70H65L51.5 15H48.5Z" fill="#513B56"/>
+                        <path d="M62 45L75 80H85L68 35L62 45Z" fill="#513B56"/>
+                        <path d="M25 80C35 55 65 55 90 80C75 65 45 65 25 80Z" fill="url(#logo-gradient)"/>
+                        <circle cx="82" cy="40" r="5" fill="#FEE8C3"/>
+                        <defs>
+                            <linearGradient id="logo-gradient" x1="25" y1="80" x2="90" y2="80" gradientUnits="userSpaceOnUse">
+                                <stop offset="0%" stop-color="#BFA8C7" />
+                                <stop offset="50%" stop-color="#D2BDCC" />
+                                <stop offset="100%" stop-color="#FEE8C3" />
+                            </linearGradient>
+                        </defs>
+                    </svg>
+                    <p style="color: #513B56; margin-top: 0%;padding: 0%;"><b>AuraSense</b></p>
+                </div>
+                <h1>Profile & Settings</h1>
+                <p>Manage your account</p>
+            </div>
+            <div class="header-icons">
+                <div class="notification-icon-container" id="notificationIconContainer">
+                    <i class="fas fa-bell" id="notificationBell"></i>
+                    <span class="notification-dot" id="notificationDot"></span>
+                </div>
+                <i class="fas fa-user-circle" id="profileIconBtn"></i>
+            </div>
+        </header>
+
+        <!-- Notification Dropdown Panel -->
+        <div class="notification-dropdown" id="notificationDropdown">
+            <div class="notification-dropdown-header">
+                <h3><i class="fas fa-bell"></i> Notifications</h3>
+                <button class="mark-all-read" onclick="markAllNotificationsRead()">Mark all as read</button>
+            </div>
+            <div class="notification-dropdown-body" id="notificationDropdownBody">
+                <div class="loading-notifications">Loading notifications...</div>
+            </div>
+            <div class="notification-dropdown-footer">
+                <button onclick="openFullNotifications()">View All Notifications</button>
+            </div>
+        </div>
+
+        <main class="main-content">
+            <!-- Profile Section -->
+            <section class="profile-section">
+                <div class="profile-card">
+                    <div class="profile-avatar">
+                        <img src="https://ui-avatars.com/api/?background=513B56&color=fff&rounded=true&size=80&bold=true&name=Farhana" alt="Profile">
+                        <div class="avatar-edit">
+                            <i class="fas fa-camera"></i>
+                        </div>
+                    </div>
+                    <div class="profile-info">
+                        <h2 class="profile-name" id="userName">Farhana</h2>
+                        <p class="profile-email" id="userEmail">farhananishi2020@gmail.com</p>
+                        <p class="profile-member">Member since <span id="memberSince">2024</span></p>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Menu Items -->
+            <section class="menu-section">
+                <div class="menu-item" onclick="editUserName()">
+                    <div class="menu-icon"><i class="fas fa-user-circle"></i></div>
+                    <div class="menu-content"><h3>User name</h3><p id="displayUserName">Farhana</p></div>
+                    <div class="menu-arrow"><i class="fas fa-chevron-right"></i></div>
+                </div>
+                <div class="menu-item" onclick="viewTaskSchedule()">
+                    <div class="menu-icon"><i class="fas fa-calendar-alt"></i></div>
+                    <div class="menu-content"><h3>Task schedule</h3><p>View your daily wellness tasks</p></div>
+                    <div class="menu-arrow"><i class="fas fa-chevron-right"></i></div>
+                </div>
+                <div class="menu-item" onclick="viewProgress()">
+                    <div class="menu-icon"><i class="fas fa-chart-line"></i></div>
+                    <div class="menu-content"><h3>Progress</h3><p>Track your mental wellness journey</p></div>
+                    <div class="menu-arrow"><i class="fas fa-chevron-right"></i></div>
+                </div>
+                <div class="menu-item" onclick="changePassword()">
+                    <div class="menu-icon"><i class="fas fa-lock"></i></div>
+                    <div class="menu-content"><h3>Change password</h3><p>Update your account security</p></div>
+                    <div class="menu-arrow"><i class="fas fa-chevron-right"></i></div>
+                </div>
+            </section>
+
+            <!-- Logout Button -->
+            <div class="logout-section">
+                <button class="logout-btn"><i class="fas fa-sign-out-alt"></i> Logout</button>
+            </div>
+        </main>
+
+        <!-- Bottom Navigation -->
+        <nav class="bottom-nav">
+            <i class="fas fa-home" id="footerHome"></i>
+            <i class="fas fa-user-shield" id="footerAdmin"></i>
+            <i class="fas fa-music" id="footerMusic"></i>
+            <i class="fas fa-user" id="footerUser"></i>
+        </nav>
+    </div>
+
+    <!-- Task Schedule Modal -->
+    <div id="taskScheduleModal" class="modal" style="display: none;">
+        <div class="modal-content task-modal">
+            <div class="modal-header"><h3><i class="fas fa-tasks"></i> My Task Schedule</h3><button class="close-modal" onclick="closeModal('taskScheduleModal')">&times;</button></div>
+            <div class="modal-body">
+                <div class="task-stats">
+                    <div class="stat-box"><span class="stat-number" id="totalTasks">0</span><span class="stat-label">Total Tasks</span></div>
+                    <div class="stat-box"><span class="stat-number" id="completedTasks">0</span><span class="stat-label">Completed</span></div>
+                    <div class="stat-box"><span class="stat-number" id="completionRate">0%</span><span class="stat-label">Completion Rate</span></div>
+                </div>
+                <div class="add-task-section">
+                    <input type="text" id="newTaskInput" placeholder="Add a new task..." class="task-input">
+                    <select id="taskPriority" class="task-priority">
+                        <option value="high">🔴 High Priority</option>
+                        <option value="medium">🟡 Medium Priority</option>
+                        <option value="low">🟢 Low Priority</option>
+                    </select>
+                    <button onclick="addTask()" class="add-task-btn">+ Add</button>
+                </div>
+                <div class="task-filters">
+                    <button class="filter-btn active" onclick="filterTasks('all')">All</button>
+                    <button class="filter-btn" onclick="filterTasks('pending')">Pending</button>
+                    <button class="filter-btn" onclick="filterTasks('completed')">Completed</button>
+                </div>
+                <div class="tasks-list" id="tasksList"><div class="empty-tasks">No tasks yet. Add your first task!</div></div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Progress Modal -->
+    <div id="progressModal" class="modal" style="display: none;">
+        <div class="modal-content progress-modal">
+            <div class="modal-header"><h3><i class="fas fa-chart-line"></i> Your Progress</h3><button class="close-modal" onclick="closeModal('progressModal')">&times;</button></div>
+            <div class="modal-body">
+                <div class="progress-summary">
+                    <div class="summary-card"><i class="fas fa-fire"></i><span id="weeklyStreak">0</span><label>Day Streak</label></div>
+                    <div class="summary-card"><i class="fas fa-check-circle"></i><span id="weeklyCompleted">0</span><label>Completed</label></div>
+                    <div class="summary-card"><i class="fas fa-trophy"></i><span id="achievementRate">0%</span><label>Achievement</label></div>
+                </div>
+                <canvas id="progressChart" width="400" height="200"></canvas>
+                <div class="ai-insights"><h4><i class="fas fa-robot"></i> Lumi's Insights</h4><p id="insightMessage">Complete your first task to get insights!</p></div>
+                <button class="generate-report-btn" onclick="generateWeeklyReport()"><i class="fas fa-chart-line"></i> Generate Weekly Report</button>
+            </div>
+            <div class="modal-footer"><button class="modal-cancel" onclick="closeModal('progressModal')">Close</button><button class="modal-save" onclick="viewReportsHistory()">View All Reports</button></div>
+        </div>
+    </div>
+
+    <!-- Edit Name Modal -->
+    <div id="editNameModal" class="modal" style="display: none;">
+        <div class="modal-content">
+            <div class="modal-header"><h3>Edit User Name</h3><button class="close-modal" onclick="closeModal('editNameModal')">&times;</button></div>
+            <div class="modal-body"><input type="text" id="newUserName" class="modal-input" placeholder="Enter your name"></div>
+            <div class="modal-footer"><button class="modal-cancel" onclick="closeModal('editNameModal')">Cancel</button><button class="modal-save" onclick="saveUserName()">Save</button></div>
+        </div>
+    </div>
+
+    <!-- Change Password Modal -->
+    <div id="changePasswordModal" class="modal" style="display: none;">
+        <div class="modal-content">
+            <div class="modal-header"><h3>Change Password</h3><button class="close-modal" onclick="closeModal('changePasswordModal')">&times;</button></div>
+            <div class="modal-body">
+                <input type="password" id="currentPassword" class="modal-input" placeholder="Current Password">
+                <input type="password" id="newPassword" class="modal-input" placeholder="New Password (min 6 characters)">
+                <input type="password" id="confirmNewPassword" class="modal-input" placeholder="Confirm New Password">
+            </div>
+            <div class="modal-footer"><button class="modal-cancel" onclick="closeModal('changePasswordModal')">Cancel</button><button class="modal-save" onclick="saveNewPassword()">Update Password</button></div>
+        </div>
+    </div>
+
+    <script src="utils.js"></script>
+    <script src="profile.js"></script>
+</body>
+</html>

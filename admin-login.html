@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Login - AuraSense</title>
+    <link rel="stylesheet" href="login.css">
+    <link rel="stylesheet" href="modal.css">
+</head>
+<body>
+    <div class="app-container">
+        <main class="login-card">
+            <h1 class="form-title">🔐 Admin Login</h1>
+            <p style="text-align: center; color: #8e7d91; margin-bottom: 20px;">
+                Secure access for administrators only
+            </p>
+            
+            <form id="adminLoginForm" onsubmit="event.preventDefault(); adminLogin();">
+                <div class="input-group">
+                    <input type="email" id="adminEmail" placeholder="Admin Email" required>
+                </div>
+                
+                <div class="input-group">
+                    <input type="password" id="adminPassword" placeholder="Password" required>
+                </div>
+
+                <button type="submit" class="btn-primary">
+                    Admin Login
+                </button>
+                
+                <div style="margin-top: 20px; text-align: center;">
+                    <a href="login.html" style="color: #513B56;">← Back to User Login</a>
+                </div>
+            </form>
+        </main>
+    </div>
+    <script src="utils.js"></script>
+    <script>
+    // Admin Login Function
+    async function adminLogin() {
+        const email = document.getElementById('adminEmail').value;
+        const password = document.getElementById('adminPassword').value;
+        
+        if (!email || !password) {
+            alert('Please enter both email and password');
+            return;
+        }
+        
+        try {
+            const response = await fetch('/api/auth/admin-login', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ email, password })
+            });
+            
+            const data = await response.json();
+            
+            if (data.success) {
+                // Clear ALL existing localStorage first
+                localStorage.clear();
+                
+                // Store admin data
+                localStorage.setItem('adminId', data.user.id);
+                localStorage.setItem('adminName', data.user.name);
+                localStorage.setItem('adminEmail', data.user.email);
+                localStorage.setItem('isAdmin', 'true');
+                
+                // Also set regular user data for home page
+                localStorage.setItem('userId', data.user.id);
+                localStorage.setItem('userName', data.user.name);
+                localStorage.setItem('userEmail', data.user.email);
+                
+                console.log('✅ Admin logged in:', data.user.name);
+                
+                // Redirect to admin view users page
+                window.location.href = 'admin-view-users.html';
+            } else {
+                alert('Login failed: ' + data.message);
+            }
+        } catch (error) {
+            console.error('Login error:', error);
+            alert('Server error. Please try again.');
+        }
+    }
+
+    // Check if already logged in
+    document.addEventListener('DOMContentLoaded', function() {
+        const isAdmin = localStorage.getItem('isAdmin') === 'true';
+        const adminId = localStorage.getItem('adminId');
+        
+        if (isAdmin && adminId) {
+            window.location.href = 'admin-view-users.html';
+        }
+    });
+    </script>
+</body>
+</html>

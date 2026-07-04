@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Reset Password - AuraSense</title>
+    <link rel="stylesheet" href="reset.css">
+    <link rel="stylesheet" href="modal.css">
+</head>
+<body>
+    <div class="card">
+        <div style="background: white; padding: 10px; border-radius: 12px; display: inline-block;">
+    <svg width="40" height="40" viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <path d="M48.5 15L35 70H45L50 50L55 70H65L51.5 15H48.5Z" fill="#513B56"/>
+        <path d="M62 45L75 80H85L68 35L62 45Z" fill="#513B56"/>
+        <path d="M25 80C35 55 65 55 90 80C75 65 45 65 25 80Z" fill="url(#logo-gradient)"/>
+        <circle cx="82" cy="40" r="5" fill="#FEE8C3"/>
+        <defs>
+            <linearGradient id="logo-gradient" x1="25" y1="80" x2="90" y2="80" gradientUnits="userSpaceOnUse">
+                <stop offset="0%" stop-color="#BFA8C7" />
+                <stop offset="50%" stop-color="#D2BDCC" />
+                <stop offset="100%" stop-color="#FEE8C3" />
+            </linearGradient>
+        </defs>
+    </svg>
+    <p style="color: #513B56; margin-top: 0%;padding: 0%;"><b>AuraSense</b></p>
+</div>
+        <h2 class="form-title">Reset your password</h2>
+        <p class="form-subtitle">Enter your email to receive a verification code</p>
+        
+        <div class="input-group">
+            <label>Email</label>
+            <input type="email" id="reset-email" placeholder="Enter your email">
+        </div>
+        
+        <button class="btn-primary" id="sendOtpBtn">Send Reset Code</button>
+        
+        <div id="messageDiv" style="margin-top: 15px; font-size: 14px; text-align: center;"></div>
+        
+        <p style="margin-top:20px; font-size:0.9rem;">
+            <a href="login.html" style="color:#513B56; text-decoration:none; font-weight:600;">Back to Login</a>
+        </p>
+    </div>
+    <script src="utils.js"></script>
+    <script src="reset.js"></script>
+</body>
+</html>
