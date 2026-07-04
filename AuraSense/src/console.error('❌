@@ -1,0 +1,1 @@
+.catch(err = MongoDB connection error:', err));

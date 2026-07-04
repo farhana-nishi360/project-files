@@ -1,0 +1,522 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=yes">
+    <meta charset="UTF-8">
+    <title>AuraSense - Home</title>
+    <link rel="stylesheet" href="home.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <link rel="stylesheet" href="modal.css">
+    
+    <style>
+        /* ==================== LUMI CHAT MODAL STYLES ==================== */
+        .lumi-modal {
+            display: none; 
+            position: fixed; 
+            z-index: 2000; 
+            left: 0; 
+            top: 0; 
+            width: 100%; 
+            height: 100%; 
+            background-color: rgba(0,0,0,0.5);
+            align-items: center; 
+            justify-content: center;
+        }
+        .lumi-modal-content {
+            background-color: #fff; 
+            padding: 20px; 
+            border-radius: 16px; 
+            width: 90%; 
+            max-width: 450px; 
+            box-shadow: 0 8px 30px rgba(0,0,0,0.3);
+            display: flex;
+            flex-direction: column;
+            max-height: 85vh;
+        }
+        .lumi-modal-header {
+            display: flex; 
+            justify-content: space-between; 
+            align-items: center; 
+            border-bottom: 1px solid #eee; 
+            padding-bottom: 10px;
+            color: #513B56;
+        }
+        .lumi-modal-header h3 { margin: 0; font-size: 1.2rem; }
+        .close-lumi { cursor: pointer; font-size: 1.4rem; color: #aaa; }
+        .close-lumi:hover { color: #333; }
+        
+        .chat-box-output {
+            flex-grow: 1; 
+            overflow-y: auto; 
+            margin: 15px 0; 
+            padding: 12px; 
+            background: #fdfbfd; 
+            border-radius: 8px;
+            min-height: 250px;
+        }
+        .lumi-initial-options {
+            display: flex; 
+            flex-direction: column; 
+            gap: 10px; 
+            margin-top: 15px;
+        }
+        .lumi-opt-btn {
+            background: #513B56; 
+            color: white; 
+            border: none; 
+            padding: 12px; 
+            border-radius: 8px; 
+            cursor: pointer; 
+            font-weight: 600; 
+            transition: background 0.2s;
+            text-align: left;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        .lumi-opt-btn:hover { background: #6b5072; }
+        
+        .lumi-message {
+            background: #f4edf7;
+            padding: 15px;
+            border-radius: 12px;
+            margin-top: 10px;
+            border-left: 4px solid #513B56;
+        }
+        .lumi-message p { margin: 0 0 12px 0; color: #333; line-height: 1.5; font-size: 0.95rem; }
+        
+        .lumi-action-btn {
+            background: #513B56;
+            color: white;
+            border: none;
+            padding: 10px 14px;
+            border-radius: 6px;
+            margin-top: 5px;
+            cursor: pointer;
+            font-weight: 600;
+            width: 100%;
+            text-align: center;
+            transition: 0.2s;
+            display: block;
+        }
+        .lumi-action-btn.secondary {
+            background: transparent;
+            color: #513B56;
+            border: 1px solid #513B56;
+        }
+        .lumi-action-btn:hover {
+            opacity: 0.9;
+        }
+    </style>
+</head>
+<body>
+    <div class="app-container">
+        <header class="header">
+            <div class="greeting">
+                <div style="background: white; padding: 0;margin-top: 10px; border-radius: 12px; display: inline-block;align-content: center;">
+                    <svg width="50" height="50" viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <path d="M48.5 15L35 70H45L50 50L55 70H65L51.5 15H48.5Z" fill="#513B56"/>
+                        <path d="M62 45L75 80H85L68 35L62 45Z" fill="#513B56"/>
+                        <path d="M25 80C35 55 65 55 90 80C75 65 45 65 25 80Z" fill="url(#logo-gradient)"/>
+                        <circle cx="82" cy="40" r="5" fill="#FEE8C3"/>
+                        <defs>
+                            <linearGradient id="logo-gradient" x1="25" y1="80" x2="90" y2="80" gradientUnits="userSpaceOnUse">
+                                <stop offset="0%" stop-color="#BFA8C7" />
+                                <stop offset="50%" stop-color="#D2BDCC" />
+                                <stop offset="100%" stop-color="#FEE8C3" />
+                            </linearGradient>
+                        </defs>
+                    </svg>
+                </div>
+                <h1>Hi!! <span class="user-name">Guest</span></h1>
+                <p class="welcome-message">Welcome back!</p>
+            </div>
+            <div class="header-icons">
+                <div class="notification-icon-container" id="notificationIconContainer">
+                    <i class="fas fa-bell" id="notificationBell"></i>
+                    <span class="notification-dot" id="notificationDot"></span>
+                </div>
+                <i class="fas fa-user-circle" id="profileIconBtn"></i>
+            </div>
+        </header>
+
+        <div class="notification-dropdown" id="notificationDropdown">
+            <div class="notification-dropdown-header">
+                <h3><i class="fas fa-bell"></i> Notifications</h3>
+                <button class="mark-all-read" onclick="markAllNotificationsRead()">Mark all as read</button>
+            </div>
+            <div class="notification-dropdown-body" id="notificationDropdownBody">
+                <div class="loading-notifications">Loading notifications...</div>
+            </div>
+            <div class="notification-dropdown-footer">
+                <button onclick="window.location.href='notification.html'">View All Notifications</button>
+            </div>
+        </div>
+
+        <main class="main-content">
+            <section class="consultation-section">
+                <h2 class="section-title">Online consultation</h2>
+                
+                <div class="consultation-cards">
+                    <div class="consult-card feeling-low" onclick="window.location.href='expert.html'" style="cursor: pointer;">
+                        <div class="card-content">
+                            <p class="card-title">Feeling low?</p>
+                            <p class="card-subtitle">Let's talk!<br>With real experts</p>
+                            <button class="card-btn">Talk with an expert</button>
+                        </div>
+                        <div class="card-icon">
+                            <i class="fas fa-heart"></i>
+                        </div>
+                    </div>
+
+                    <div class="consult-card take-appointment" onclick="window.location.href='booking.html'" style="cursor: pointer;">
+                        <div class="card-content">
+                            <p class="card-title">Take an Appointment</p>
+                            <p class="card-subtitle">Chat with an expert!!</p>
+                            <button class="card-btn">Book a call</button>
+                        </div>
+                        <div class="card-icon">
+                            <i class="fas fa-calendar-check"></i>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <section class="lumi-section">
+                <div class="lumi-header">
+                    <h2 class="section-title">Talk with Lumi</h2>
+                    <i class="fas fa-robot"></i>
+                </div>
+                
+                <div class="lumi-chat-container" id="openLumiModalBtn" style="cursor: pointer;">
+                    <div class="lumi-card">
+                        <div class="lumi-avatar">
+                            <i class="fas fa-leaf"></i>
+                        </div>
+                        <div class="lumi-info">
+                            <p class="lumi-name">Lumi</p>
+                            <p class="lumi-message">How are you feeling today? Click to talk.</p>
+                        </div>
+                        <i class="fas fa-chevron-right"></i>
+                    </div>
+                </div>
+            </section>
+
+            <div id="lumiChatModal" class="lumi-modal">
+                <div class="lumi-modal-content">
+                    <div class="lumi-modal-header">
+                        <h3><i class="fas fa-leaf"></i> Chat with Lumi</h3>
+                        <span class="close-lumi" id="closeLumiModalBtn">&times;</span>
+                    </div>
+                    
+                    <div class="chat-box-output" id="lumi-chat-body">
+                        </div>
+
+                    <div style="font-size: 0.72rem; color: #999; text-align: center; padding-top: 8px; border-top: 1px solid #eee;">
+                        <i class="fas fa-exclamation-triangle"></i> Lumi is an AI, it can make mistakes.
+                    </div>
+                </div>
+            </div>
+
+            <section class="music-section" id="meditationMusicSection">
+                <h2 class="section-title">Meditation Music</h2>
+                
+                <div class="music-grid">
+                    <div class="music-card">
+                        <div class="music-thumbnail" onclick="toggleMusic('oceanWaves')">
+                            <i class="fas fa-play-circle" id="play-oceanWaves"></i>
+                            <img src="https://images.stockcake.com/public/b/6/6/b66c3aa6-305d-4b30-a473-73fda35826d6_large/majestic-ocean-wave-stockcake.jpg" alt="Ocean Waves" style="width: 100%; height: 100%; object-fit: cover;">
+                        </div>
+                        <p class="music-name">Ocean Waves</p>
+                        <div class="youtube-player" id="oceanWaves" style="display: none;">
+                            <iframe width="100%" height="100%" src="https://www.youtube.com/embed/bn9F19Hi1Lk?si=2sYZId1lyj4I89ir" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe>
+                        </div>
+                    </div>
+
+                    <div class="music-card">
+                        <div class="music-thumbnail" onclick="toggleMusic('forestRain')">
+                            <i class="fas fa-play-circle" id="play-forestRain"></i>
+                            <img src="https://images.stockcake.com/public/f/3/5/f3528741-c600-4ce2-a663-0a9f7cf44fbf_large/rainy-forest-view-stockcake.jpg" alt="Forest Rain" style="width: 100%; height: 100%; object-fit: cover;">
+                        </div>
+                        <p class="music-name">Forest Rain</p>
+                        <div class="youtube-player" id="forestRain" style="display: none;">
+                            <iframe width="100%" height="100%" src="https://www.youtube.com/embed/9LaKPpsFRHI?si=xtxDbsVnoAD4YDFx" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe>
+                        </div>
+                    </div>
+
+                    <div class="music-card">
+                        <div class="music-thumbnail" onclick="toggleMusic('mountainStream')">
+                            <i class="fas fa-play-circle" id="play-mountainStream"></i>
+                            <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQt513NbZgDauzKXf923ZOPJ6wWir9VdlsO6g&s" alt="Mountain Stream" style="width: 100%; height: 100%; object-fit: cover;">
+                        </div>
+                        <p class="music-name">Mountain Stream</p>
+                        <div class="youtube-player" id="mountainStream" style="display: none;">
+                            <iframe width="100%" height="100%" src="https://www.youtube.com/embed/c2NmyoXBXmE?si=hFaXMMuLl0k4_k7c" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe>
+                        </div>
+                    </div>
+
+                    <div class="music-card">
+                        <div class="music-thumbnail" onclick="toggleMusic('calmPiano')">
+                            <i class="fas fa-play-circle" id="play-calmPiano"></i>
+                            <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSZP9-2vk54HY6ju8svTtspraR1hpzMtzakgQ&s" alt="Calm Piano" style="width: 100%; height: 100%; object-fit: cover;">
+                        </div>
+                        <p class="music-name">Calm Piano</p>
+                        <div class="youtube-player" id="calmPiano" style="display: none;">
+                            <iframe width="100%" height="100%" src="https://www.youtube.com/embed/eKO9BGdQ7Wk?si=FT8QkD21QqIIAIFj" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe>
+                        </div>
+                    </div>
+
+                    <div class="music-card">
+                        <div class="music-thumbnail" onclick="toggleMusic('relaxingMusic')">
+                            <i class="fas fa-play-circle" id="play-relaxingMusic"></i>
+                            <img src="https://images.pexels.com/photos/66997/pexels-photo-66997.jpeg?w=400&h=225&fit=crop" alt="Relaxing Music" style="width: 100%; height: 100%; object-fit: cover;">
+                        </div>
+                        <p class="music-name">Relaxing Music</p>
+                        <div class="youtube-player" id="relaxingMusic" style="display: none;">
+                            <iframe width="100%" height="100%" src="https://www.youtube.com/embed/I3OJUwILelU?si=ig1Paj-Av1LJJZct" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe>
+                        </div>
+                    </div>
+
+                    <div class="music-card">
+                        <div class="music-thumbnail" onclick="toggleMusic('concentrationMusic')">
+                            <i class="fas fa-play-circle" id="play-concentrationMusic"></i>
+                            <img src="https://images.pexels.com/photos/210647/pexels-photo-210647.jpeg?w=400&h=225&fit=crop" alt="Concentration Music" style="width: 100%; height: 100%; object-fit: cover;">
+                        </div>
+                        <p class="music-name">Concentration Music</p>
+                        <div class="youtube-player" id="concentrationMusic" style="display: none;">
+                            <iframe width="100%" height="100%" src="https://www.youtube.com/embed/oPVte6aMprI?si=MQFIvecMP5XLS2o4" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="stop-music-container">
+                    <button id="stopAllMusic" class="stop-music-btn">
+                        <i class="fas fa-stop-circle"></i> Stop All Music
+                    </button>
+                </div>
+
+                <div id="nowPlaying" class="now-playing" style="display: none;">
+                    <i class="fas fa-music"></i>
+                    <span id="nowPlayingText">Now playing: </span>
+                </div>
+            </section>
+        </main>
+
+        <nav class="bottom-nav">
+            <i class="fas fa-home active" id="footerHome" onclick="goToHome()"></i>
+            <i class="fas fa-user-shield" id="footerAdmin" onclick="goToAdminLogin()"></i>
+            <i class="fas fa-music" id="bottomMusicIcon" onclick="scrollToMeditationMusic()"></i>
+            <i class="fas fa-user" id="footerUser" onclick="goToProfile()"></i>
+        </nav>
+    </div>
+    
+    <script src="utils.js"></script>
+    <script src="home.js"></script>
+
+    <script>
+        const lumiModal = document.getElementById("lumiChatModal");
+        const openLumiTrigger = document.getElementById("openLumiModalBtn");
+        const closeLumiTrigger = document.getElementById("closeLumiModalBtn");
+        const lumiChatArea = document.getElementById("lumi-chat-body");
+
+        const lumiAssessmentQuestions = [
+            { id: 'phq1', type: 'phq', text: 'Little interest or pleasure in doing things?' },
+            { id: 'phq2', type: 'phq', text: 'Feeling down, depressed, or hopeless?' },
+            { id: 'phq3', type: 'phq', text: 'Trouble falling or staying asleep, or sleeping too much?' },
+            { id: 'phq4', type: 'phq', text: 'Feeling tired or having little energy?' },
+            { id: 'phq5', type: 'phq', text: 'Poor appetite or overeating?' },
+            { id: 'phq6', type: 'phq', text: 'Feeling bad about yourself — or that you are a failure or have let yourself or your family down?' },
+            { id: 'phq7', type: 'phq', text: 'Trouble concentrating on things, such as reading the newspaper or watching television?' },
+            { id: 'phq8', type: 'phq', text: 'Moving or speaking so slowly that other people could have noticed? Or the opposite — being so fidgety or restless that you have been moving around a lot more than usual?' },
+            { id: 'phq9', type: 'phq', text: 'Thoughts that you would be better off dead, or of hurting yourself in some way?' },
+            
+            { id: 'gad1', type: 'gad', text: 'Feeling nervous, anxious, or on edge?' },
+            { id: 'gad2', type: 'gad', text: 'Not being able to stop or control worrying?' },
+            { id: 'gad3', type: 'gad', text: 'Worrying too much about different things?' },
+            { id: 'gad4', type: 'gad', text: 'Trouble relaxing?' },
+            { id: 'gad5', type: 'gad', text: 'Being so restless that it is hard to sit still?' },
+            { id: 'gad6', type: 'gad', text: 'Becoming easily annoyed or irritable?' },
+            { id: 'gad7', type: 'gad', text: 'Feeling afraid, as if something awful might happen?' }
+        ];
+
+        let activeQuestionIndex = 0;
+        let cumulativePhqPoints = 0;
+        let cumulativeGadPoints = 0;
+
+        if (openLumiTrigger) {
+            openLumiTrigger.onclick = function() {
+                lumiModal.style.display = "flex";
+                initializeLumiMenu();
+            };
+        }
+
+        if (closeLumiTrigger) {
+            closeLumiTrigger.onclick = function() {
+                if (activeQuestionIndex > 0 && activeQuestionIndex < lumiAssessmentQuestions.length) {
+                    lumiChatArea.innerHTML = `
+                        <div class="lumi-message" style="border-left: 4px solid #d9534f; background: #fff5f5;">
+                            <p><strong>Exit Assessment?</strong></p>
+                            <p style="font-size: 0.9rem; color: #666;">If you close now, your answers will not be evaluated.</p>
+                            <button class="lumi-action-btn" onclick="lumiModal.style.display = 'none'; initializeLumiMenu();">Yes, Exit</button>
+                            <button class="lumi-action-btn secondary" onclick="displaySurveyQuestion()">Resume Assessment</button>
+                        </div>
+                    `;
+                } else {
+                    lumiModal.style.display = "none";
+                    initializeLumiMenu();
+                }
+            };
+        }
+
+        function initializeLumiMenu() {
+            activeQuestionIndex = 0;
+            cumulativePhqPoints = 0;
+            cumulativeGadPoints = 0;
+            lumiChatArea.innerHTML = `
+                <p><strong>Lumi:</strong> Hello! I am here to assist you. Choose one of the options below to begin:</p>
+                <div class="lumi-initial-options">
+                    <button class="lumi-opt-btn" onclick="launchSentimentInterface()"><i class="fas fa-comment-alt"></i> 1. Tell us how do you feel</button>
+                    <button class="lumi-opt-btn" onclick="launchLumiSurvey()"><i class="fas fa-poll-h"></i> 2. Do the survey</button>
+                </div>
+            `;
+        }
+
+        function launchSentimentInterface() {
+            lumiChatArea.innerHTML = `
+                <p><strong>Lumi:</strong> Please write down how you feel right now. I will evaluate your mood using Sentiment Analysis:</p>
+                <div style="display:flex; gap: 8px; margin-top:10px;">
+                    <input type="text" id="userInputSentimentText" placeholder="Type your mind here..." style="flex-grow:1; padding:10px; border-radius:6px; border:1px solid #ccc;">
+                    <button onclick="dispatchSentimentPayload()" style="background:#513B56; color:white; border:none; padding:10px 15px; border-radius:6px; cursor:pointer;"><i class="fas fa-paper-plane"></i></button>
+                </div>
+                <button onclick="initializeLumiMenu()" style="margin-top:15px; background:none; border:none; color:#513B56; cursor:pointer; font-weight:600;"><i class="fas fa-arrow-left"></i> Back</button>
+            `;
+        }
+
+       function dispatchSentimentPayload() {
+    const textString = document.getElementById("userInputSentimentText").value;
+
+    if (!textString.trim()) return;
+
+    lumiChatArea.innerHTML =
+        `<p><strong>Lumi:</strong> Analyzing entry keywords and sentiment balances...</p>`;
+
+    fetch("http://127.0.0.1:5000/api/lumi/sentiment", {
+        method: "POST",
+        headers: {
+            "Content-Type": "application/json"
+        },
+        body: JSON.stringify({
+            text: textString
+        })
+    })
+    .then(res => res.json())
+.then(data => {
+    console.log("Backend Response:", data);
+    alert(JSON.stringify(data));
+
+    renderLumiClinicalVerdict(data.status);
+})
+    .catch(err => {
+        console.error(err);
+        renderLumiClinicalVerdict("normal");
+    });
+}   // <-- dispatchSentimentPayload এখানে শেষ হবে
+
+function launchLumiSurvey() {
+    activeQuestionIndex = 0;
+    cumulativePhqPoints = 0;
+    cumulativeGadPoints = 0;
+    displaySurveyQuestion();
+}
+
+        function displaySurveyQuestion() {
+            const currentQuestion = lumiAssessmentQuestions[activeQuestionIndex];
+            lumiChatArea.innerHTML = `
+                <div style="color: #6b4f7a; font-size: 0.75rem; font-weight: 700; margin-bottom: 6px;">QUESTION ${activeQuestionIndex + 1} OF 16</div>
+                <p style="font-weight: 500; color: #222; margin-bottom: 15px;">${currentQuestion.text}</p>
+                <div style="display: flex; flex-direction: column; gap: 8px;">
+                    <button class="lumi-opt-btn" style="background:#fff; color:#513B56; border:1px solid #e2d9f3;" onclick="commitAssessmentAnswer(0)">Not at all (0)</button>
+                    <button class="lumi-opt-btn" style="background:#fff; color:#513B56; border:1px solid #e2d9f3;" onclick="commitAssessmentAnswer(1)">Several days (1)</button>
+                    <button class="lumi-opt-btn" style="background:#fff; color:#513B56; border:1px solid #e2d9f3;" onclick="commitAssessmentAnswer(2)">More than half the days (2)</button>
+                    <button class="lumi-opt-btn" style="background:#fff; color:#513B56; border:1px solid #e2d9f3;" onclick="commitAssessmentAnswer(3)">Nearly every day (3)</button>
+                </div>
+            `;
+        }
+
+        function commitAssessmentAnswer(selectedPoints) {
+            const currentQuestion = lumiAssessmentQuestions[activeQuestionIndex];
+            if (currentQuestion.type === 'phq') {
+                cumulativePhqPoints += selectedPoints;
+            } else {
+                cumulativeGadPoints += selectedPoints;
+            }
+
+            activeQuestionIndex++;
+
+            if (activeQuestionIndex < lumiAssessmentQuestions.length) {
+                displaySurveyQuestion();
+            } else {
+                evaluateClinicalScoreMetrics();
+            }
+        }
+
+        function evaluateClinicalScoreMetrics() {
+            let metricVerdict = "normal";
+
+            if (cumulativePhqPoints >= 15 || cumulativeGadPoints >= 15) {
+                metricVerdict = "severe";
+            } else if (cumulativePhqPoints >= 5 || cumulativeGadPoints >= 5) {
+                metricVerdict = "moderate";
+            } else {
+                metricVerdict = "normal";
+            }
+
+            renderLumiClinicalVerdict(metricVerdict);
+        }
+
+        function renderLumiClinicalVerdict(computedStatus) {
+            alert("Status = " + computedStatus);
+    console.log("Status =", computedStatus);
+
+            let rawSuggestionBox = "";
+
+            if (computedStatus === "severe") {
+                rawSuggestionBox = `
+                    <div class="lumi-message" style="border-left: 4px solid #d9534f;">
+                        <p><strong>Lumi Suggestions:</strong> It sounds like you are carrying a very heavy load right now, and things might feel overwhelming. Please remember you don't have to navigate this alone. Speaking with a professional can provide valuable guidance and support.</p>
+                        <button class="lumi-action-btn" onclick="window.location.href='expert.html'"><i class="fas fa-user-md"></i> Talk with an expert</button>
+                        <button class="lumi-action-btn secondary" onclick="window.location.href='booking.html'"><i class="fas fa-calendar-check"></i> Take an Appointment</button>
+                    </div>
+                `;
+            } else if (computedStatus === "moderate") {
+                rawSuggestionBox = `
+                    <div class="lumi-message" style="border-left: 4px solid #f0ad4e;">
+                        <p><strong>Lumi Suggestions:</strong> You seem to be experiencing moderate levels of stress or low mood. Engaging in gentle self-care routines or structures could help ground your thoughts and ease the pressure.</p>
+                        <button class="lumi-action-btn" onclick="lumiModal.style.display='none'; document.getElementById('meditationMusicSection').scrollIntoView({behavior: 'smooth'});"><i class="fas fa-spa"></i> Try meditation</button>
+                        <button class="lumi-action-btn secondary" onclick="lumiModal.style.display='none'; document.getElementById('footerUser').click();"><i class="fas fa-tasks"></i> Follow a task schedule</button>
+                    </div>
+                `;
+            } else {
+                rawSuggestionBox = `
+                    <div class="lumi-message" style="border-left: 4px solid #5bc0de;">
+                        <p><strong>Lumi Suggestions:</strong> Talk to a friend. Sharing what's on your mind with someone close can bring quick relief. Alternatively, let's calm your nervous system with a brief breathing reset.</p>
+                        <p style="margin-bottom:6px; font-weight:600; color:#513B56;">Try this:</p>
+                        <p style="font-size:0.9rem; margin-bottom:4px; color:#444;"><i class="fas fa-dot-circle" style="font-size:0.7rem; color:#6b4f7a;"></i> Inhale deeply through your nose for a count of 4.</p>
+                        <p style="font-size:0.9rem; margin-bottom:4px; color:#444;"><i class="fas fa-dot-circle" style="font-size:0.7rem; color:#6b4f7a;"></i> Hold your breath for a count of 4.</p>
+                        <p style="font-size:0.9rem; margin-bottom:4px; color:#444;"><i class="fas fa-dot-circle" style="font-size:0.7rem; color:#6b4f7a;"></i> Exhale slowly through your mouth for a count of 4.</p>
+                        <p style="font-size:0.9rem; margin-bottom:0px; color:#444;"><i class="fas fa-dot-circle" style="font-size:0.7rem; color:#6b4f7a;"></i> Hold your breath with empty lungs for a count of 4.</p>
+                    </div>
+                `;
+            }
+
+            rawSuggestionBox += `
+                <button onclick="initializeLumiMenu()" style="margin-top: 15px; background: none; border: none; color: #513B56; font-weight: 700; cursor: pointer;">
+                    <i class="fas fa-redo"></i> Restart Conversation
+                </button>
+            `;
+
+            lumiChatArea.innerHTML = rawSuggestionBox;
+        }
+    </script>
+</body>
+</html>

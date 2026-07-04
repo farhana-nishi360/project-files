@@ -1,0 +1,91 @@
+/* reset.css */
+body {
+    background-color: #f4f1f5;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    margin: 0;
+}
+
+.card {
+    background: white;
+    padding: 2rem;
+    border-radius: 20px;
+    box-shadow: 0 10px 25px rgba(0,0,0,0.05);
+    width: 100%;
+    max-width: 350px;
+    text-align: center;
+}
+
+.form-title {
+    color: #513B56; /* Dark Plum */
+    font-size: 1.6rem;
+    margin-bottom: 10px;
+}
+
+.form-subtitle {
+    color: #8e7d91;
+    font-size: 0.9rem;
+    margin-bottom: 30px;
+}
+
+.input-group {
+    text-align: left;
+    margin-bottom: 20px;
+}
+
+label {
+    display: block;
+    font-size: 0.85rem;
+    color: #513B56;
+    margin-bottom: 8px;
+    font-weight: 600;
+}
+
+input[type="email"] {
+    width: 100%;
+    padding: 12px;
+    border: 1.5px solid #e0dce2;
+    border-radius: 10px;
+    box-sizing: border-box;
+    transition: border-color 0.3s;
+}
+
+input[type="email"]:focus {
+    outline: none;
+    border-color: #513B56;
+}
+
+.btn-primary {
+    width: 100%;
+    padding: 14px;
+    background-color: #513B56;
+    color: white;
+    border: none;
+    border-radius: 10px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: background 0.3s;
+}
+
+.btn-primary:hover {
+    background-color: #3d2c41;
+}
+
+/* Spinner for the loading state */
+.spinner {
+    display: inline-block;
+    width: 14px;
+    height: 14px;
+    border: 2px solid rgba(255, 255, 255, 0.3);
+    border-radius: 50%;
+    border-top-color: #fff;
+    animation: spin 0.8s linear infinite;
+    margin-right: 8px;
+}
+
+@keyframes spin {
+    to { transform: rotate(360deg); }
+}

@@ -1,0 +1,80 @@
+<!-- Footer Component -->
+<nav class="bottom-nav">
+    <i class="fas fa-home" id="footerHome"></i>
+    <i class="fas fa-user-shield" id="footerAdmin"></i>
+    <i class="fas fa-music" id="footerMusic"></i>
+    <i class="fas fa-user" id="footerUser"></i>
+</nav>
+
+<script>
+    // Footer navigation functionality
+    function initFooterNavigation() {
+        // Home icon
+        const homeIcon = document.getElementById('footerHome');
+        if (homeIcon) {
+            homeIcon.addEventListener('click', function() {
+                window.location.href = 'home.html';
+            });
+        }
+        
+        // Admin icon
+        const adminIcon = document.getElementById('footerAdmin');
+        if (adminIcon) {
+            adminIcon.addEventListener('click', function() {
+                window.location.href = 'admin-login.html';
+            });
+        }
+        
+        // Music icon
+        const musicIcon = document.getElementById('footerMusic');
+        if (musicIcon) {
+            musicIcon.addEventListener('click', function() {
+                // Store intent to scroll to music
+                sessionStorage.setItem('scrollToMusic', 'true');
+                window.location.href = 'home.html';
+            });
+        }
+        
+        // User icon (এটিকে async করা হয়েছে কাস্টম কনফার্ম মডাল হ্যান্ডেল করার জন্য)
+        const userIcon = document.getElementById('footerUser');
+        if (userIcon) {
+            userIcon.addEventListener('click', async function() {
+                const userName = localStorage.getItem('userName');
+                if (userName && userName !== 'Guest') {
+                    window.location.href = 'profile.html';
+                } else {
+                    // এখানে আমরা আমাদের কাস্টম এসিনক্রোনাস কনফার্ম মডাল ব্যবহার করছি
+                    const shouldLogin = await window.customConfirmAsync('Please login to view profile. Go to login page?');
+                    if (shouldLogin) {
+                        window.location.href = 'login.html';
+                    }
+                }
+            });
+        }
+        
+        // Set active state based on current page
+        const currentPage = window.location.pathname.split('/').pop();
+        const icons = document.querySelectorAll('.bottom-nav i');
+        icons.forEach(icon => {
+            icon.classList.remove('active');
+        });
+        
+        if (currentPage === 'home.html' || currentPage === '' || currentPage === '/') {
+            const homeIcon = document.getElementById('footerHome');
+            if (homeIcon) homeIcon.classList.add('active');
+        } else if (currentPage === 'profile.html') {
+            const userIcon = document.getElementById('footerUser');
+            if (userIcon) userIcon.classList.add('active');
+        } else if (currentPage === 'admin-login.html' || currentPage === 'admin-view-users.html' || currentPage === 'admin-dashboard.html') {
+            const adminIcon = document.getElementById('footerAdmin');
+            if (adminIcon) adminIcon.classList.add('active');
+        }
+    }
+    
+    // Initialize when DOM is loaded
+    if (document.readyState === 'loading') {
+        document.addEventListener('DOMContentLoaded', initFooterNavigation);
+    } else {
+        initFooterNavigation();
+    }
+</script>
